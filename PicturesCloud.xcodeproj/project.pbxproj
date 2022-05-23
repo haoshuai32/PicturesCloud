@@ -110,6 +110,9 @@
 				Base,
 			);
 			mainGroup = 2E650F33283B8563000E74CC;
+			packageReferences = (
+				2EAD5E28283B93660045E309 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+			);
 			productRefGroup = 2E650F3D283B8563000E74CC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -358,6 +361,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2EAD5E28283B93660045E309 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-protobuf.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 2E650F34283B8563000E74CC /* Project object */;
 }
