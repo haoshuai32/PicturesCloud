@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  LocalViewController.swift
 //  PicturesCloud
 //
 //  Created by haoshuai on 2022/5/23.
@@ -7,13 +7,12 @@
 
 import UIKit
 
-class MainViewController: UIViewController {
+// 本地照片
+class LocalViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
     }
 
-
 }
-

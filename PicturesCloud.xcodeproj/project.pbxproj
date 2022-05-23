@@ -9,8 +9,14 @@
 /* Begin PBXBuildFile section */
 		2E3CF47F283BC04100243139 /* PictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF47D283BC04100243139 /* PictureCell.swift */; };
 		2E3CF480283BC04100243139 /* PictureCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3CF47E283BC04100243139 /* PictureCell.xib */; };
+		2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF481283BC8E500243139 /* HFileManager.swift */; };
+		2E3CF484283BCA1600243139 /* LocalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF483283BCA1600243139 /* LocalViewController.swift */; };
+		2E3CF486283BCCB800243139 /* HUploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF485283BCCB700243139 /* HUploadManager.swift */; };
+		2E3CF488283BCCC500243139 /* HDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF487283BCCC500243139 /* HDownloadManager.swift */; };
+		2E3CF48A283BCCF400243139 /* PictureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF489283BCCF400243139 /* PictureModel.swift */; };
+		2E3CF48C283BD40700243139 /* HPhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF48B283BD40700243139 /* HPhotoManager.swift */; };
 		2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E650F3F283B8563000E74CC /* AppDelegate.swift */; };
-		2E650F44283B8563000E74CC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E650F43283B8563000E74CC /* ViewController.swift */; };
+		2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E650F43283B8563000E74CC /* CloudViewController.swift */; };
 		2E650F47283B8563000E74CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F45283B8563000E74CC /* Main.storyboard */; };
 		2E650F49283B8568000E74CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F48283B8568000E74CC /* Assets.xcassets */; };
 		2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */; };
@@ -19,14 +25,20 @@
 /* Begin PBXFileReference section */
 		2E3CF47D283BC04100243139 /* PictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCell.swift; sourceTree = "<group>"; };
 		2E3CF47E283BC04100243139 /* PictureCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PictureCell.xib; sourceTree = "<group>"; };
+		2E3CF481283BC8E500243139 /* HFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HFileManager.swift; sourceTree = "<group>"; };
+		2E3CF483283BCA1600243139 /* LocalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalViewController.swift; sourceTree = "<group>"; };
+		2E3CF485283BCCB700243139 /* HUploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUploadManager.swift; sourceTree = "<group>"; };
+		2E3CF487283BCCC500243139 /* HDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDownloadManager.swift; sourceTree = "<group>"; };
+		2E3CF489283BCCF400243139 /* PictureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureModel.swift; sourceTree = "<group>"; };
+		2E3CF48B283BD40700243139 /* HPhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPhotoManager.swift; sourceTree = "<group>"; };
 		2E650F3C283B8563000E74CC /* PicturesCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicturesCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E650F3F283B8563000E74CC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		2E650F43283B8563000E74CC /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		2E650F43283B8563000E74CC /* CloudViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudViewController.swift; sourceTree = "<group>"; };
 		2E650F46283B8563000E74CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		2E650F48283B8568000E74CC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E650F4B283B8568000E74CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E650F4D283B8568000E74CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2E650F53283B8A24000E74CC /* Empty.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Empty.md; sourceTree = "<group>"; };
+		2E650F53283B8A24000E74CC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,7 +55,7 @@
 		2E650F33283B8563000E74CC = {
 			isa = PBXGroup;
 			children = (
-				2E650F53283B8A24000E74CC /* Empty.md */,
+				2E650F53283B8A24000E74CC /* README.md */,
 				2E650F3E283B8563000E74CC /* PicturesCloud */,
 				2E650F3D283B8563000E74CC /* Products */,
 			);
@@ -61,13 +73,19 @@
 			isa = PBXGroup;
 			children = (
 				2E650F3F283B8563000E74CC /* AppDelegate.swift */,
-				2E650F43283B8563000E74CC /* ViewController.swift */,
+				2E650F43283B8563000E74CC /* CloudViewController.swift */,
+				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
+				2E3CF481283BC8E500243139 /* HFileManager.swift */,
+				2E3CF485283BCCB700243139 /* HUploadManager.swift */,
+				2E3CF487283BCCC500243139 /* HDownloadManager.swift */,
+				2E3CF489283BCCF400243139 /* PictureModel.swift */,
 				2E650F45283B8563000E74CC /* Main.storyboard */,
 				2E650F48283B8568000E74CC /* Assets.xcassets */,
 				2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */,
 				2E650F4D283B8568000E74CC /* Info.plist */,
 				2E3CF47D283BC04100243139 /* PictureCell.swift */,
 				2E3CF47E283BC04100243139 /* PictureCell.xib */,
+				2E3CF48B283BD40700243139 /* HPhotoManager.swift */,
 			);
 			path = PicturesCloud;
 			sourceTree = "<group>";
@@ -151,7 +169,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E650F44283B8563000E74CC /* ViewController.swift in Sources */,
+				2E3CF488283BCCC500243139 /* HDownloadManager.swift in Sources */,
+				2E3CF484283BCA1600243139 /* LocalViewController.swift in Sources */,
+				2E3CF48A283BCCF400243139 /* PictureModel.swift in Sources */,
+				2E3CF486283BCCB800243139 /* HUploadManager.swift in Sources */,
+				2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */,
+				2E3CF48C283BD40700243139 /* HPhotoManager.swift in Sources */,
+				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
 				2E3CF47F283BC04100243139 /* PictureCell.swift in Sources */,
 			);
