@@ -22,6 +22,7 @@
 		2E650F48283B8568000E74CC /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2E650F4B283B8568000E74CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2E650F4D283B8568000E74CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2E650F53283B8A24000E74CC /* Empty.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Empty.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +39,7 @@
 		2E650F33283B8563000E74CC = {
 			isa = PBXGroup;
 			children = (
+				2E650F53283B8A24000E74CC /* Empty.md */,
 				2E650F3E283B8563000E74CC /* PicturesCloud */,
 				2E650F3D283B8563000E74CC /* Products */,
 			);
