@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E1C7FBD283CB55600B9222E /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = 2E1C7FBC283CB55600B9222E /* ObjectMapper */; };
 		2E3CF47F283BC04100243139 /* PictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF47D283BC04100243139 /* PictureCell.swift */; };
 		2E3CF480283BC04100243139 /* PictureCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3CF47E283BC04100243139 /* PictureCell.xib */; };
 		2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF481283BC8E500243139 /* HFileManager.swift */; };
@@ -23,6 +24,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E1C7FBA283CB53E00B9222E /* ObjectMapper */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ObjectMapper; path = ../Depend/ObjectMapper; sourceTree = "<group>"; };
+		2E1C7FC7283CBAA000B9222E /* Moya */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Moya; path = ../Depend/Moya; sourceTree = "<group>"; };
+		2E1C7FC8283CBAB800B9222E /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SQLite.swift; path = ../Depend/SQLite.swift; sourceTree = "<group>"; };
 		2E3CF47D283BC04100243139 /* PictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCell.swift; sourceTree = "<group>"; };
 		2E3CF47E283BC04100243139 /* PictureCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PictureCell.xib; sourceTree = "<group>"; };
 		2E3CF481283BC8E500243139 /* HFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HFileManager.swift; sourceTree = "<group>"; };
@@ -46,18 +50,38 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E1C7FBD283CB55600B9222E /* ObjectMapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2E1C7FB9283CB53E00B9222E /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				2E1C7FBA283CB53E00B9222E /* ObjectMapper */,
+				2E1C7FC7283CBAA000B9222E /* Moya */,
+				2E1C7FC8283CBAB800B9222E /* SQLite.swift */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		2E1C7FBB283CB55600B9222E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		2E650F33283B8563000E74CC = {
 			isa = PBXGroup;
 			children = (
+				2E1C7FB9283CB53E00B9222E /* Packages */,
 				2E650F53283B8A24000E74CC /* README.md */,
 				2E650F3E283B8563000E74CC /* PicturesCloud */,
 				2E650F3D283B8563000E74CC /* Products */,
+				2E1C7FBB283CB55600B9222E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -106,6 +130,9 @@
 			dependencies = (
 			);
 			name = PicturesCloud;
+			packageProductDependencies = (
+				2E1C7FBC283CB55600B9222E /* ObjectMapper */,
+			);
 			productName = PicturesCloud;
 			productReference = 2E650F3C283B8563000E74CC /* PicturesCloud.app */;
 			productType = "com.apple.product-type.application";
@@ -135,11 +162,6 @@
 			);
 			mainGroup = 2E650F33283B8563000E74CC;
 			packageReferences = (
-				2EAD5E28283B93660045E309 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
-				2EAD5E29283B94B30045E309 /* XCRemoteSwiftPackageReference "Kingfisher" */,
-				2EAD5E2A283B9AB40045E309 /* XCRemoteSwiftPackageReference "Moya" */,
-				2EAD5E2B283BA10C0045E309 /* XCRemoteSwiftPackageReference "IGListKit" */,
-				2E3CF47C283BBC7300243139 /* XCRemoteSwiftPackageReference "ObjectMapper" */,
 			);
 			productRefGroup = 2E650F3D283B8563000E74CC /* Products */;
 			projectDirPath = "";
@@ -253,7 +275,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -307,7 +329,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -398,48 +420,12 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCRemoteSwiftPackageReference section */
-		2E3CF47C283BBC7300243139 /* XCRemoteSwiftPackageReference "ObjectMapper" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/tristanhimmelman/ObjectMapper.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
+/* Begin XCSwiftPackageProductDependency section */
+		2E1C7FBC283CB55600B9222E /* ObjectMapper */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ObjectMapper;
 		};
-		2EAD5E28283B93660045E309 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-protobuf.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		2EAD5E29283B94B30045E309 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.0.0;
-			};
-		};
-		2EAD5E2A283B9AB40045E309 /* XCRemoteSwiftPackageReference "Moya" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Moya/Moya.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 15.0.0;
-			};
-		};
-		2EAD5E2B283BA10C0045E309 /* XCRemoteSwiftPackageReference "IGListKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Instagram/IGListKit";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2E650F34283B8563000E74CC /* Project object */;
 }

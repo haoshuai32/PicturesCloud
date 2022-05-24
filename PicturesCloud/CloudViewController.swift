@@ -16,7 +16,8 @@ class CloudViewController: UIViewController {
         super.viewDidLoad()
         
         let local = LocalPhotoManager()
-        local.requestAlbum(index: 0)
+//        local.requestAssets()
+//        local.requestAlbum(index: 0)
         
         // Do any additional setup after loading the view.
     }

@@ -9,63 +9,112 @@ import Foundation
 import Photos
 import UIKit
 
+typealias ImageRequestID = PHImageRequestID
+
+// 废弃
+import AssetsLibrary
+
 protocol HPhotoManager {
     
-    func requestAssets()
+//    func requestAssets()
+//
+//    func requestThumbnail(index: Int, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID
+//
+//    func requestAsset(index: Int)
     
-    func requestThumbnail(index: Int)
-    
-    func requestAsset(index: Int)
-    
-}
-
-struct CloudPhotoManager: HPhotoManager {
-    
-    static let shared = CloudPhotoManager()
-    
-    // 获取所有的
-    func requestAssets() {
-        
-    }
-    
-    func requestAlbum(index: Int) ->UIImage? {
-        return nil
-    }
 }
 
 // 本地相册管理
 struct LocalPhotoManager: HPhotoManager {
-
     
     static let shared = LocalPhotoManager()
     
+    private let assets: PHFetchResult<PHAsset>
+    
+    private var localIdentifier:[String] = []
+    
     init() {
-        // 本地下载数据
+        self.assets = PHAsset.fetchAssets(with: nil)
     }
     
-    func fetchAssets() {
-        // 所有相册
-        let all = PHAsset.fetchAssets(with: nil)
-        print(all.count)
-
+    private
+    func requestThumbnail(index: Int, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
+        let asset = self.assets[index]
+        return PHImageManager.default().requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
     }
     
-    
-    func requestAlbum(index: Int)  {
-        let result = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .albumRegular, options: nil)
-        guard let first = result.firstObject else { return }
-        // 相册里面的文件夹
-        result.enumerateObjects { item, index, result in
-            print(item,index,result)
+    func requestThumbnail(index: Int, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
+        if index >= self.assets.count {
+            resultHandler(nil,nil)
+            return 0
         }
-        // 文件夹里面的内容
-        let assetResult = PHAsset.fetchAssets(in: first, options: nil)
-        
-        print(result.count,assetResult.count)
-        
-
-        
-        return nil
+        let size = CGSize()
+        return self.requestThumbnail(index: index, targetSize: size, resultHandler: resultHandler)
     }
+    
+    // 获取原始数据
+    func requestAsset(index: Int) -> Bool {
+        
+        if index >= self.assets.count {
+            return false
+        }
+        
+        let asset = self.assets[index]
+        
+        let resources = PHAssetResource.assetResources(for: asset)
+        
+        var datas = Array<Data>.init(repeating: Data(), count: resources.count)
+        
+        let queue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        
+        let group = DispatchGroup()
+        
+        for i in 0..<resources.count {
+            group.enter()
+            queue.async(group: group, execute: DispatchWorkItem.init(block: {
+                let index = i
+                let resource = resources[i]
+                var itemData = Data()
+                PHAssetResourceManager.default().requestData(for: resource, options: nil) { data in
+                    itemData.append(data)
+                } completionHandler: { error in
+                    if let error = error {
+                        debugPrint("PHAssetResourceManager requestData error:",error)
+                    } else {
+                        datas[index] = itemData
+                    }
+                    group.leave()
+                }
+            }))
+        }
+    
+        
+        return true
+
+    }
+    
+    func uploadAssets(indexs: [Int]) {
+        
+    }
+    
     
 }
+
+//struct CloudPhotoManager: HPhotoManager {
+//
+//    static let shared = CloudPhotoManager()
+//
+//    // 获取所有的
+//    func requestAssets() {
+//
+//    }
+//
+//    func requestThumbnail(index: Int, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
+//        return 0
+//    }
+//
+//    func requestAsset(index: Int) {
+//
+//    }
+//}
+

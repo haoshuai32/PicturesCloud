@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Photos
 
 enum Status: Int {
     case whole
@@ -17,7 +18,14 @@ enum Status: Int {
 
 struct PictureModel {
     
-    var localIdentifier: String = ""
+//    var cloudIdentifier: String?
+    
+    var cloudImageURL: URL?
+    
+    var cloudURL: URL?
+
+    // 可以查询本地数据 可以查询云端数据
+    var identifier: String = ""
     
     var mediaType: PHAssetMediaType = .unknown
 
@@ -34,5 +42,12 @@ struct PictureModel {
     var location: CLLocation?
     
     var duration: Double = 0
-
+    
+    var uti: String = ""
+    
+    var fileName: String = ""
+    
+    var fileURL: String = ""
+    
+    var fileSize: Int = 0
 }
