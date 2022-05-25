@@ -32,43 +32,61 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     
     private var assets: PHFetchResult<PHAsset>
     
+    private var dataSource: [PictureModel] = []
+    
+    
     weak var changeDelegate: PhotoManagerChangeDelegate?
     
-    override init() {
+    private func loadDataSource(_ assets: PHFetchResult<PHAsset>) {
+        guard let firstObject = assets.firstObject else {
+            self.dataSource = []
+            return
+        }
         
+        var list = Array<PictureModel>.init(repeating: PictureModel(asset: firstObject), count: assets.count)
+        assets.enumerateObjects(options: .concurrent) { asset, index, result in
+            list[index] = PictureModel(asset: asset)
+        }
+        self.dataSource = list
+    }
+    
+    override init() {
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         self.assets = PHAsset.fetchAssets(with: fetchOptions)
-        
         super.init()
-        
+        loadDataSource(self.assets)
         imageManager.allowsCachingHighQualityImages = true
-        
         PHPhotoLibrary.shared().register(self)
-        
     }
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
     
-    func requestDataSource()->[PictureSectionModel] {
+    func requestDataSource(_ type: Int = 0)->[PictureSectionModel] {
         
-        if self.assets.count <= 0 {
+        if self.dataSource.count <= 0 {
             return []
         }
-        
-        guard let firstObject = self.assets.firstObject else { return [] }
-        
-        var list = Array<PictureModel>.init(repeating: PictureModel(asset: firstObject), count: self.assets.count)
-        
-        assets.enumerateObjects(options: .concurrent) { asset, index, result in
-            list[index] = PictureModel(asset: asset)
-        }
-    
         var result = [PictureSectionModel]()
         let item = PictureSectionModel()
-        if let creationDate = firstObject.creationDate {
+        var list = [PictureModel]()
+        switch type {
+        case 0:
+            list = self.dataSource
+            break
+        case 1:
+            list = self.dataSource.filter{$0.mediaType == .video}
+            break
+        case 2:
+            list = self.dataSource.filter{$0.mediaType == .image}
+            break
+        default:
+            fatalError()
+        }
+        
+        if let creationDate = list.first?.creationDate {
             item.createData = creationDate
         } else {
             item.createData = Date()
@@ -154,6 +172,7 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         }
         let assets = changes.fetchResultAfterChanges
         self.assets = assets
+        self.loadDataSource(assets)
         
         // TODO: 后续实现增量更新数据
         
@@ -169,15 +188,15 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
                 print("removedIndexs assets",removed)
             }
 
+            
+            
             if let inserted = changes.insertedIndexes , inserted.count > 0 {
-//                                    collectionView.insertItems(at: inserted.map { IndexPath(item: $0, section:0) })
                 let insertedIndexs = inserted.map{$0 as Int}
                 print("insertedIndexs assets",insertedIndexs)
             }
 
             if let changed = changes.changedIndexes , changed.count > 0 {
                 let changedIndexs = changed.map{$0 as Int}
-//                                    collectionView.reloadItems(at: changed.map { IndexPath(item: $0, section:0) })
                 print("changedIndexs assets",changedIndexs)
             }
 

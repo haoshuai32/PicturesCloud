@@ -12,15 +12,20 @@ import IGListDiffKit
 // 本地照片
 class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerChangeDelegate {
     
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     lazy var adapter: ListAdapter = { [unowned self] in
         return ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 2)
     }()
 
+    /// 0 全部 1 视频 2 照片
+    private var selectIndex: Int = 0
+    
+    private var dataSource: [PictureSectionModel] = []
+    
     let photoManager = LocalPhotoManager()
     
-    var dataSource: [PictureSectionModel] = []
-    
-    @IBOutlet weak var collectionView: UICollectionView!
+    var selectedDataSource: Set<PictureModel> = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,11 +38,17 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
         
     }
 
+    @IBAction func onSegmentControl(_ sender: UISegmentedControl) {
+        self.selectIndex = sender.selectedSegmentIndex
+        self.adapter.performUpdates(animated: true, completion: nil)
+    }
+    
+    // MARK: - PhotoManagerChangeDelegate
     
     func photoDidChange() {
         DispatchQueue.main.async {
             self.adapter.performUpdates(animated: true, completion: nil)
-            self.dataSource = self.photoManager.requestDataSource()
+            self.dataSource = self.photoManager.requestDataSource(self.selectIndex)
             self.adapter.performUpdates(animated: true, completion: nil)
         }
     }
@@ -45,11 +56,11 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
     // MARK: - ListAdapterDataSource
     
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        return self.dataSource
+        return self.photoManager.requestDataSource(self.selectIndex)
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        return PictureSectionController()
+        return PictureSectionController(selected: self.selectedDataSource,manager: self.photoManager)
     }
     
     func emptyView(for listAdapter: ListAdapter) -> UIView? {

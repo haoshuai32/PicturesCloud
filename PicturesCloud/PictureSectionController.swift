@@ -9,10 +9,17 @@ import UIKit
 import IGListKit
 
 class PictureSectionController:
-    ListSectionController, ListWorkingRangeDelegate, ListDisplayDelegate
+    ListSectionController,
+        ListWorkingRangeDelegate,
+        ListDisplayDelegate
 {
     
-    var dataSource: [PictureModel] = []
+    
+    private let photoManager:LocalPhotoManager
+    
+    private var dataSource: [PictureModel] = []
+    
+    private var selectedDataSource: Set<PictureModel> = []
     
     private
     lazy var cacheImage: NSCache<NSString, UIImage> = {
@@ -35,7 +42,35 @@ class PictureSectionController:
         return CGSize(width: itemSize.width * UIScreen.main.scale, height: itemSize.height * UIScreen.main.scale)
     }()
     
-    override init() {
+    private func cacheKey(_ index: Int) -> NSString {
+        return self.dataSource[index].identifier as NSString
+    }
+    
+    @objc func selectButtonAction(_ sender: Any?) {
+        guard let button = sender as? UIButton else { return }
+        
+        let index = button.tag
+        let item = self.dataSource[index]
+        
+        button.isSelected = !button.isSelected
+        if button.isSelected {
+            self.selectedDataSource.insert(item)
+        } else {
+            self.selectedDataSource.remove(item)
+        }
+        
+        guard let vc = self.viewController as? LocalViewController else {
+            fatalError()
+            return
+        }
+        
+        vc.selectedDataSource = self.selectedDataSource
+        
+    }
+    
+    required init(selected: Set<PictureModel>,manager: LocalPhotoManager) {
+        self.selectedDataSource = selected
+        self.photoManager = manager
         super.init()
         workingRangeDelegate = self
         displayDelegate = self
@@ -51,33 +86,37 @@ class PictureSectionController:
         return itemSize
     }
     
-    private func cacheKey(_ index: Int) -> NSString {
-        return self.dataSource[index].identifier as NSString
-    }
-    
     override func cellForItem(at index: Int) -> UICollectionViewCell {
         
         guard let cell = collectionContext!.dequeueReusableCell(withNibName: "PictureCell", bundle: nil, for: self, at: index) as? PictureCell else {
             fatalError()
         }
         
+        let item = self.dataSource[index]
+        if self.selectedDataSource.contains(item) {
+            cell.selelctButton.isSelected = true
+        } else {
+            cell.selelctButton.isSelected = false
+        }
+
+        // add tag
+        cell.selelctButton.tag = index
+        cell.selelctButton.addTarget(self, action: #selector(selectButtonAction(_:)), for: .touchUpInside)
+        
+        // set image
         if let image = self.cacheImage.object(forKey: cacheKey(index)) {
             debugPrint("display in cache", index)
             cell.imageView.image = image
         } else {
             
-            guard let localViewController = self.viewController as? LocalViewController else {
-                fatalError()
-            }
-            
             let item = self.dataSource[index]
             
-            let _ = localViewController.photoManager.requestThumbnail(picture: item, targetSize: targetSize) { [weak self] image, info in
+            let _ = self.photoManager.requestThumbnail(picture: item, targetSize: targetSize) { [weak self] image, info in
                 
                 cell.imageView.image = image
                 
-                if let image = image {
-                    self?.cacheImage.setObject(image, forKey: cacheKey(index))
+                if let image = image,let key = self?.cacheKey(index) {
+                    self?.cacheImage.setObject(image, forKey: key)
                 }
                 
                 debugPrint("display in request image",index)
@@ -106,7 +145,11 @@ class PictureSectionController:
     }
     
     func listAdapter(_ listAdapter: ListAdapter, willDisplay sectionController: ListSectionController, cell: UICollectionViewCell, at index: Int) {
-        
+        guard let pictureCell = cell as? PictureCell else {
+            fatalError()
+            return
+        }
+        pictureCell.selelctButton.tag = index
     }
     
     func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying sectionController: ListSectionController, cell: UICollectionViewCell, at index: Int) {
@@ -117,18 +160,12 @@ class PictureSectionController:
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerWillEnterWorkingRange sectionController: ListSectionController) {
         
-        guard let localViewController = listAdapter.viewController as? LocalViewController else {
-            return
-        }
-        localViewController.photoManager.startCachingImages(pictures: self.dataSource, targetSize: targetSize)
+        self.photoManager.startCachingImages(pictures: self.dataSource, targetSize: targetSize)
     }
 
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerDidExitWorkingRange sectionController: ListSectionController) {
         
-        guard let localViewController = listAdapter.viewController as? LocalViewController else {
-            return
-        }
-        localViewController.photoManager.stopCachingImages(pictures: self.dataSource, targetSize: targetSize)
+        self.photoManager.stopCachingImages(pictures: self.dataSource, targetSize: targetSize)
     }
 
 }

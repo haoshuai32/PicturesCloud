@@ -22,6 +22,15 @@
                         <rect key="frame" x="0.0" y="0.0" width="127" height="132"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     </imageView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lcZ-QJ-meo">
+                        <rect key="frame" x="102" y="0.0" width="25" height="25"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="25" id="cZW-sP-bri"/>
+                            <constraint firstAttribute="width" constant="25" id="nce-cW-sfb"/>
+                        </constraints>
+                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                        <state key="normal" image="circle" catalog="system"/>
+                    </button>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
@@ -30,16 +39,20 @@
                 <constraint firstAttribute="bottom" secondItem="7WU-De-zst" secondAttribute="bottom" id="D9f-Zk-0wu"/>
                 <constraint firstItem="7WU-De-zst" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="Dn4-bJ-x3m"/>
                 <constraint firstAttribute="trailing" secondItem="7WU-De-zst" secondAttribute="trailing" id="cM5-pA-GZd"/>
+                <constraint firstItem="lcZ-QJ-meo" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="jcb-hM-IFg"/>
+                <constraint firstAttribute="trailing" secondItem="lcZ-QJ-meo" secondAttribute="trailing" id="tfw-fh-yDW"/>
                 <constraint firstItem="7WU-De-zst" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="yzy-PF-Yoz"/>
             </constraints>
             <size key="customSize" width="127" height="132"/>
             <connections>
                 <outlet property="imageView" destination="7WU-De-zst" id="13V-fH-bZ3"/>
+                <outlet property="selelctButton" destination="lcZ-QJ-meo" id="Rs2-kr-DuV"/>
             </connections>
             <point key="canvasLocation" x="32.608695652173914" y="119.86607142857142"/>
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="circle" catalog="system" width="32" height="32"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

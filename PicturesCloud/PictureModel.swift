@@ -69,6 +69,21 @@ class PictureModel {
     
 }
 
+extension PictureModel: Equatable {
+    static func == (lhs: PictureModel, rhs: PictureModel) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+}
+
+extension PictureModel: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
+        hasher.combine(mediaType)
+    }
+}
+
+
+
 //class Picture
 
 extension PictureModel: ListDiffable {

@@ -38,7 +38,21 @@
                             <constraint firstItem="QIu-Vo-8Mv" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="kzs-p3-v0c"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="bFc-oP-a68"/>
+                    <navigationItem key="navigationItem" id="bFc-oP-a68">
+                        <nil key="title"/>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="VlN-jh-iiC">
+                            <rect key="frame" x="138.5" y="5.5" width="137" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="全部"/>
+                                <segment title="视频"/>
+                                <segment title="照片"/>
+                            </segments>
+                            <connections>
+                                <action selector="onSegmentControl:" destination="BYZ-38-t0r" eventType="valueChanged" id="eSK-9g-GfE"/>
+                            </connections>
+                        </segmentedControl>
+                    </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="QIu-Vo-8Mv" id="qGo-gS-b0U"/>
                     </connections>
