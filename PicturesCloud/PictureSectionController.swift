@@ -17,13 +17,15 @@ class PictureSectionController:
     private
     lazy var cacheImage: NSCache<NSString, UIImage> = {
         let cache = NSCache<NSString, UIImage>()
+        cache.countLimit = 1000
+        cache.totalCostLimit = 1000
         return cache
     }()
     
     private
     lazy var itemSize: CGSize = {
         let width = UIScreen.main.bounds.width
-        let temp = width - 15.0
+        let temp = width - 6.0
         let itemWidth = temp / 3.0
         return CGSize(width: itemWidth, height: itemWidth)
     }()
@@ -37,8 +39,8 @@ class PictureSectionController:
         super.init()
         workingRangeDelegate = self
         displayDelegate = self
-        minimumLineSpacing = 2.5
-        minimumInteritemSpacing = 2.5
+        minimumLineSpacing = 3
+        minimumInteritemSpacing = 3
     }
     
     override func numberOfItems() -> Int {
@@ -49,24 +51,38 @@ class PictureSectionController:
         return itemSize
     }
     
+    private func cacheKey(_ index: Int) -> NSString {
+        return self.dataSource[index].identifier as NSString
+    }
+    
     override func cellForItem(at index: Int) -> UICollectionViewCell {
         
         guard let cell = collectionContext!.dequeueReusableCell(withNibName: "PictureCell", bundle: nil, for: self, at: index) as? PictureCell else {
             fatalError()
         }
-        if let image = self.cacheImage.object(forKey: "\(index)" as NSString) {
+        
+        if let image = self.cacheImage.object(forKey: cacheKey(index)) {
+            debugPrint("display in cache", index)
             cell.imageView.image = image
         } else {
             
             guard let localViewController = self.viewController as? LocalViewController else {
                 fatalError()
             }
-            let _ = localViewController.photoManager.requestThumbnail(index: index, targetSize: targetSize) { [weak self] image, info in
-                if let image = image {
-                    self?.cacheImage.setObject(image, forKey: "\(index)" as NSString)
-                }
+            
+            let item = self.dataSource[index]
+            
+            let _ = localViewController.photoManager.requestThumbnail(picture: item, targetSize: targetSize) { [weak self] image, info in
+                
                 cell.imageView.image = image
+                
+                if let image = image {
+                    self?.cacheImage.setObject(image, forKey: cacheKey(index))
+                }
+                
+                debugPrint("display in request image",index)
             }
+            
         }
         return cell
     }
@@ -90,39 +106,29 @@ class PictureSectionController:
     }
     
     func listAdapter(_ listAdapter: ListAdapter, willDisplay sectionController: ListSectionController, cell: UICollectionViewCell, at index: Int) {
-        guard let localViewController = listAdapter.viewController as? LocalViewController else {
-            return
-        }
-        debugPrint("willDisplay cell index",index)
         
-        let _ = localViewController.photoManager.requestThumbnail(index: index, targetSize: targetSize) { [weak self] image, info in
-            if let image = image {
-                self?.cacheImage.setObject(image, forKey: "\(index)" as NSString)
-            }
-        }
     }
     
     func listAdapter(_ listAdapter: ListAdapter, didEndDisplaying sectionController: ListSectionController, cell: UICollectionViewCell, at index: Int) {
         
     }
     
-    
     // MARK: - ListWorkingRangeDelegate
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerWillEnterWorkingRange sectionController: ListSectionController) {
+        
         guard let localViewController = listAdapter.viewController as? LocalViewController else {
             return
         }
-        let count = localViewController.dataSource[0].dataSource.count
-        
-        var indexs: [Int] = []
-        for i in 0..<count {
-            indexs.append(i)
-        }
-        
-        localViewController.photoManager.startCachingImages(indexs: indexs, targetSize: targetSize)
+        localViewController.photoManager.startCachingImages(pictures: self.dataSource, targetSize: targetSize)
     }
 
-    func listAdapter(_ listAdapter: ListAdapter, sectionControllerDidExitWorkingRange sectionController: ListSectionController) {}
+    func listAdapter(_ listAdapter: ListAdapter, sectionControllerDidExitWorkingRange sectionController: ListSectionController) {
+        
+        guard let localViewController = listAdapter.viewController as? LocalViewController else {
+            return
+        }
+        localViewController.photoManager.stopCachingImages(pictures: self.dataSource, targetSize: targetSize)
+    }
 
 }

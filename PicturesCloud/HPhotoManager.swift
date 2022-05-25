@@ -21,18 +21,35 @@ protocol HPhotoManager {
     
 }
 
+protocol PhotoManagerChangeDelegate:class {
+    func photoDidChange()
+}
+
 // 本地相册管理
-struct LocalPhotoManager: HPhotoManager {
-    
+class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
+
     private let imageManager = PHCachingImageManager()
     
-    private let assets: PHFetchResult<PHAsset>
+    private var assets: PHFetchResult<PHAsset>
     
-    private var localIdentifier:[String] = []
+    weak var changeDelegate: PhotoManagerChangeDelegate?
     
-    init() {
-        self.assets = PHAsset.fetchAssets(with: nil)
-        imageManager.allowsCachingHighQualityImages = false
+    override init() {
+        
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        self.assets = PHAsset.fetchAssets(with: fetchOptions)
+        
+        super.init()
+        
+        imageManager.allowsCachingHighQualityImages = true
+        
+        PHPhotoLibrary.shared().register(self)
+        
+    }
+    
+    deinit {
+        PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
     
     func requestDataSource()->[PictureSectionModel] {
@@ -62,29 +79,18 @@ struct LocalPhotoManager: HPhotoManager {
         
     }
     
-    func requestThumbnail(index: Int, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
-        let asset = self.assets[index]
+    func requestThumbnail(picture: PictureModel, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
+        let asset = picture.asset
         return imageManager.requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
     }
     
-//    func requestThumbnail(index: Int,targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
-//        if index >= self.assets.count {
-//            resultHandler(nil,nil)
-//            return 0
-//        }
-//        return self.requestThumbnail(index: index, targetSize: size, resultHandler: resultHandler)
-//    }
-    
     // 获取原始数据
-    func requestAsset(index: Int) -> Bool {
+    func requestAsset(picture: PictureModel) -> Bool {
         
-        if index >= self.assets.count {
-            return false
-        }
-        
-        let asset = self.assets[index]
+        let asset = picture.asset
         
         let resources = PHAssetResource.assetResources(for: asset)
+        picture.assetResource = resources
         
         var datas = Array<Data>.init(repeating: Data(), count: resources.count)
         
@@ -127,26 +133,61 @@ struct LocalPhotoManager: HPhotoManager {
         imageManager.cancelImageRequest(requestID)
     }
     
-    func startCachingImages(indexs:[Int],targetSize size: CGSize) {
-        var assets = [PHAsset]()
-        for i in indexs {
-            let item = self.assets[i]
-            assets.append(item)
-        }
+    func startCachingImages(pictures:[PictureModel],targetSize size: CGSize) {
+        let assets = pictures.map{$0.asset}
         imageManager.startCachingImages(for: assets, targetSize: size, contentMode: .default, options: nil)
     }
     
-    func stopCachingImages(indexs:[Int],targetSize size: CGSize) {
-        var assets = [PHAsset]()
-        for i in indexs {
-            let item = self.assets[i]
-            assets.append(item)
-        }
+    func stopCachingImages(pictures:[PictureModel],targetSize size: CGSize) {
+        let assets = pictures.map{$0.asset}
         imageManager.stopCachingImages(for: assets, targetSize: size, contentMode: .default, options: nil)
     }
     
     func stopCachingImagesForAllAssets() {
         imageManager.stopCachingImagesForAllAssets()
+    }
+    
+    // MARK: - PHPhotoLibraryChangeObserver
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        guard let changes = changeInstance.changeDetails(for: self.assets) else {
+            return
+        }
+        let assets = changes.fetchResultAfterChanges
+        self.assets = assets
+        
+        // TODO: 后续实现增量更新数据
+        
+        print("change photo",self.assets.count, assets.count)
+        if changes.hasIncrementalChanges {
+
+            self.changeDelegate?.photoDidChange()
+
+            if let removed = changes.removedIndexes, removed.count > 0 {
+
+                let removedIndexs = removed.map{$0 as Int}
+
+                print("removedIndexs assets",removed)
+            }
+
+            if let inserted = changes.insertedIndexes , inserted.count > 0 {
+//                                    collectionView.insertItems(at: inserted.map { IndexPath(item: $0, section:0) })
+                let insertedIndexs = inserted.map{$0 as Int}
+                print("insertedIndexs assets",insertedIndexs)
+            }
+
+            if let changed = changes.changedIndexes , changed.count > 0 {
+                let changedIndexs = changed.map{$0 as Int}
+//                                    collectionView.reloadItems(at: changed.map { IndexPath(item: $0, section:0) })
+                print("changedIndexs assets",changedIndexs)
+            }
+
+            changes.enumerateMoves { fromIndex, toIndex in
+//                                    collectionView.moveItem(at: IndexPath(item: fromIndex, section: 0),
+//                                                            to: IndexPath(item: toIndex, section: 0))
+
+            }
+
+        }
     }
     
 }

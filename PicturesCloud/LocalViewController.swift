@@ -10,7 +10,7 @@ import IGListKit
 import IGListDiffKit
 
 // 本地照片
-class LocalViewController: UIViewController, ListAdapterDataSource {
+class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerChangeDelegate {
     
     lazy var adapter: ListAdapter = { [unowned self] in
         return ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 2)
@@ -29,9 +29,19 @@ class LocalViewController: UIViewController, ListAdapterDataSource {
         self.collectionView.setCollectionViewLayout(UICollectionViewFlowLayout(), animated: false)
         self.adapter.collectionView = self.collectionView
         self.adapter.dataSource = self
+        self.photoManager.changeDelegate = self
         
     }
 
+    
+    func photoDidChange() {
+        DispatchQueue.main.async {
+            self.adapter.performUpdates(animated: true, completion: nil)
+            self.dataSource = self.photoManager.requestDataSource()
+            self.adapter.performUpdates(animated: true, completion: nil)
+        }
+    }
+    
     // MARK: - ListAdapterDataSource
     
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {

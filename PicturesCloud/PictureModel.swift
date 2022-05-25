@@ -52,6 +52,8 @@ class PictureModel {
     
     var fileSize: Int = 0
     
+    var assetResource:[PHAssetResource] = []
+    
     init(asset: PHAsset) {
         self.asset = asset
         identifier = asset.localIdentifier
