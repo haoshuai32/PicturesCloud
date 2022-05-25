@@ -1,5 +1,5 @@
 //
-//  PictureSectionController.swift
+//  LocalPictureSectionController.swift
 //  PicturesCloud
 //
 //  Created by haoshuai on 2022/5/24.
@@ -8,18 +8,17 @@
 import UIKit
 import IGListKit
 
-class PictureSectionController:
+class LocalPictureSectionController:
     ListSectionController,
         ListWorkingRangeDelegate,
         ListDisplayDelegate
 {
     
-    
     private let photoManager:LocalPhotoManager
     
-    private var dataSource: [PictureModel] = []
+    private var dataSource: [LocalPictureModel] = []
     
-    private var selectedDataSource: Set<PictureModel> = []
+    private var selectedDataSource: Set<LocalPictureModel> = []
     
     private
     lazy var cacheImage: NSCache<NSString, UIImage> = {
@@ -68,7 +67,7 @@ class PictureSectionController:
         
     }
     
-    required init(selected: Set<PictureModel>,manager: LocalPhotoManager) {
+    required init(selected: Set<LocalPictureModel>,manager: LocalPhotoManager) {
         self.selectedDataSource = selected
         self.photoManager = manager
         super.init()
@@ -103,6 +102,14 @@ class PictureSectionController:
         cell.selelctButton.tag = index
         cell.selelctButton.addTarget(self, action: #selector(selectButtonAction(_:)), for: .touchUpInside)
         
+        // set video dura
+        if item.mediaType == .video {
+            cell.durationLabel.isHidden = false
+            cell.duration = item.duration
+        } else {
+            cell.durationLabel.isHidden = true
+        }
+        
         // set image
         if let image = self.cacheImage.object(forKey: cacheKey(index)) {
             debugPrint("display in cache", index)
@@ -127,7 +134,7 @@ class PictureSectionController:
     }
     
     override func didUpdate(to object: Any) {
-        if let data = object as? PictureSectionModel {
+        if let data = object as? LocalPictureSectionModel {
             self.dataSource = data.dataSource
         } else {
             assert(false, "数据传输失败")

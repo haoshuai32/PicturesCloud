@@ -9,7 +9,8 @@ import UIKit
 import IGListKit
 import IGListDiffKit
 
-// 本地照片
+// TODO: 切换segment的时候没有记录滑动位置
+
 class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerChangeDelegate {
     
     @IBOutlet weak var collectionView: UICollectionView!
@@ -21,11 +22,11 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
     /// 0 全部 1 视频 2 照片
     private var selectIndex: Int = 0
     
-    private var dataSource: [PictureSectionModel] = []
+    private var dataSource: [LocalPictureSectionModel] = []
     
     let photoManager = LocalPhotoManager()
     
-    var selectedDataSource: Set<PictureModel> = []
+    var selectedDataSource: Set<LocalPictureModel> = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +40,7 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
     }
 
     @IBAction func onSegmentControl(_ sender: UISegmentedControl) {
+//        self.adapter.performUpdates(animated: true, completion: nil)
         self.selectIndex = sender.selectedSegmentIndex
         self.adapter.performUpdates(animated: true, completion: nil)
     }
@@ -47,7 +49,7 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
     
     func photoDidChange() {
         DispatchQueue.main.async {
-            self.adapter.performUpdates(animated: true, completion: nil)
+//            self.adapter.performUpdates(animated: true, completion: nil)
             self.dataSource = self.photoManager.requestDataSource(self.selectIndex)
             self.adapter.performUpdates(animated: true, completion: nil)
         }
@@ -60,7 +62,7 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        return PictureSectionController(selected: self.selectedDataSource,manager: self.photoManager)
+        return LocalPictureSectionController(selected: self.selectedDataSource,manager: self.photoManager)
     }
     
     func emptyView(for listAdapter: ListAdapter) -> UIView? {

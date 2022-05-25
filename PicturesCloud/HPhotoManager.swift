@@ -13,12 +13,6 @@ typealias ImageRequestID = PHImageRequestID
 
 protocol HPhotoManager {
     
-//    func requestAssets()
-//
-//    func requestThumbnail(index: Int, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID
-//
-//    func requestAsset(index: Int)
-    
 }
 
 protocol PhotoManagerChangeDelegate:class {
@@ -32,8 +26,7 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     
     private var assets: PHFetchResult<PHAsset>
     
-    private var dataSource: [PictureModel] = []
-    
+    private var dataSource: [LocalPictureModel] = []
     
     weak var changeDelegate: PhotoManagerChangeDelegate?
     
@@ -43,9 +36,9 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
             return
         }
         
-        var list = Array<PictureModel>.init(repeating: PictureModel(asset: firstObject), count: assets.count)
+        var list = Array<LocalPictureModel>.init(repeating: LocalPictureModel(asset: firstObject), count: assets.count)
         assets.enumerateObjects(options: .concurrent) { asset, index, result in
-            list[index] = PictureModel(asset: asset)
+            list[index] = LocalPictureModel(asset: asset)
         }
         self.dataSource = list
     }
@@ -64,14 +57,14 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
     
-    func requestDataSource(_ type: Int = 0)->[PictureSectionModel] {
+    func requestDataSource(_ type: Int = 0)->[LocalPictureSectionModel] {
         
         if self.dataSource.count <= 0 {
             return []
         }
-        var result = [PictureSectionModel]()
-        let item = PictureSectionModel()
-        var list = [PictureModel]()
+        var result = [LocalPictureSectionModel]()
+        let item = LocalPictureSectionModel()
+        var list = [LocalPictureModel]()
         switch type {
         case 0:
             list = self.dataSource
@@ -97,13 +90,13 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         
     }
     
-    func requestThumbnail(picture: PictureModel, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
+    func requestThumbnail(picture: LocalPictureModel, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
         let asset = picture.asset
         return imageManager.requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
     }
     
     // 获取原始数据
-    func requestAsset(picture: PictureModel) -> Bool {
+    func requestAsset(picture: LocalPictureModel) -> Bool {
         
         let asset = picture.asset
         
@@ -151,12 +144,12 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         imageManager.cancelImageRequest(requestID)
     }
     
-    func startCachingImages(pictures:[PictureModel],targetSize size: CGSize) {
+    func startCachingImages(pictures:[LocalPictureModel],targetSize size: CGSize) {
         let assets = pictures.map{$0.asset}
         imageManager.startCachingImages(for: assets, targetSize: size, contentMode: .default, options: nil)
     }
     
-    func stopCachingImages(pictures:[PictureModel],targetSize size: CGSize) {
+    func stopCachingImages(pictures:[LocalPictureModel],targetSize size: CGSize) {
         let assets = pictures.map{$0.asset}
         imageManager.stopCachingImages(for: assets, targetSize: size, contentMode: .default, options: nil)
     }

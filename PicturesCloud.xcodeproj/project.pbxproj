@@ -25,14 +25,16 @@
 		2E0F9B24283CC551000358FD /* Moya.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B22283CC551000358FD /* Moya.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2E0F9B26283CC559000358FD /* RxMoya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B25283CC559000358FD /* RxMoya.framework */; };
 		2E0F9B27283CC559000358FD /* RxMoya.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B25283CC559000358FD /* RxMoya.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2E0F9B29283D2428000358FD /* PictureSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F9B28283D2428000358FD /* PictureSectionController.swift */; };
+		2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */; };
+		2E3A99E2283E162A00F3D5D7 /* LocalDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A99E0283E162A00F3D5D7 /* LocalDisplayViewController.swift */; };
+		2E3A99E3283E162A00F3D5D7 /* LocalDisplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */; };
 		2E3CF47F283BC04100243139 /* PictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF47D283BC04100243139 /* PictureCell.swift */; };
 		2E3CF480283BC04100243139 /* PictureCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3CF47E283BC04100243139 /* PictureCell.xib */; };
 		2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF481283BC8E500243139 /* HFileManager.swift */; };
 		2E3CF484283BCA1600243139 /* LocalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF483283BCA1600243139 /* LocalViewController.swift */; };
 		2E3CF486283BCCB800243139 /* HUploadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF485283BCCB700243139 /* HUploadManager.swift */; };
 		2E3CF488283BCCC500243139 /* HDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF487283BCCC500243139 /* HDownloadManager.swift */; };
-		2E3CF48A283BCCF400243139 /* PictureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF489283BCCF400243139 /* PictureModel.swift */; };
+		2E3CF48A283BCCF400243139 /* LocalPictureModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF489283BCCF400243139 /* LocalPictureModel.swift */; };
 		2E3CF48C283BD40700243139 /* HPhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF48B283BD40700243139 /* HPhotoManager.swift */; };
 		2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E650F3F283B8563000E74CC /* AppDelegate.swift */; };
 		2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E650F43283B8563000E74CC /* CloudViewController.swift */; };
@@ -73,14 +75,16 @@
 		2E0F9B18283CC51F000358FD /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Frameworks/SQLite.framework; sourceTree = "<group>"; };
 		2E0F9B22283CC551000358FD /* Moya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Moya.framework; path = Frameworks/Moya.framework; sourceTree = "<group>"; };
 		2E0F9B25283CC559000358FD /* RxMoya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMoya.framework; path = Frameworks/RxMoya.framework; sourceTree = "<group>"; };
-		2E0F9B28283D2428000358FD /* PictureSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureSectionController.swift; sourceTree = "<group>"; };
+		2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPictureSectionController.swift; sourceTree = "<group>"; };
+		2E3A99E0283E162A00F3D5D7 /* LocalDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDisplayViewController.swift; sourceTree = "<group>"; };
+		2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalDisplayViewController.xib; sourceTree = "<group>"; };
 		2E3CF47D283BC04100243139 /* PictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCell.swift; sourceTree = "<group>"; };
 		2E3CF47E283BC04100243139 /* PictureCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PictureCell.xib; sourceTree = "<group>"; };
 		2E3CF481283BC8E500243139 /* HFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HFileManager.swift; sourceTree = "<group>"; };
 		2E3CF483283BCA1600243139 /* LocalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalViewController.swift; sourceTree = "<group>"; };
 		2E3CF485283BCCB700243139 /* HUploadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HUploadManager.swift; sourceTree = "<group>"; };
 		2E3CF487283BCCC500243139 /* HDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDownloadManager.swift; sourceTree = "<group>"; };
-		2E3CF489283BCCF400243139 /* PictureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureModel.swift; sourceTree = "<group>"; };
+		2E3CF489283BCCF400243139 /* LocalPictureModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPictureModel.swift; sourceTree = "<group>"; };
 		2E3CF48B283BD40700243139 /* HPhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPhotoManager.swift; sourceTree = "<group>"; };
 		2E650F3C283B8563000E74CC /* PicturesCloud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PicturesCloud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2E650F3F283B8563000E74CC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -150,13 +154,13 @@
 			isa = PBXGroup;
 			children = (
 				2E650F3F283B8563000E74CC /* AppDelegate.swift */,
-				2E0F9B28283D2428000358FD /* PictureSectionController.swift */,
 				2E650F43283B8563000E74CC /* CloudViewController.swift */,
+				2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */,
 				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
-				2E3CF485283BCCB700243139 /* HUploadManager.swift */,
-				2E3CF487283BCCC500243139 /* HDownloadManager.swift */,
-				2E3CF489283BCCF400243139 /* PictureModel.swift */,
+				2E3CF489283BCCF400243139 /* LocalPictureModel.swift */,
 				2E3CF48B283BD40700243139 /* HPhotoManager.swift */,
+				2E3CF487283BCCC500243139 /* HDownloadManager.swift */,
+				2E3CF485283BCCB700243139 /* HUploadManager.swift */,
 				2E650F45283B8563000E74CC /* Main.storyboard */,
 				2E650F48283B8568000E74CC /* Assets.xcassets */,
 				2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */,
@@ -164,6 +168,8 @@
 				2E3CF47D283BC04100243139 /* PictureCell.swift */,
 				2E3CF47E283BC04100243139 /* PictureCell.xib */,
 				2E3CF481283BC8E500243139 /* HFileManager.swift */,
+				2E3A99E0283E162A00F3D5D7 /* LocalDisplayViewController.swift */,
+				2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */,
 			);
 			path = PicturesCloud;
 			sourceTree = "<group>";
@@ -235,6 +241,7 @@
 				2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */,
 				2E650F49283B8568000E74CC /* Assets.xcassets in Resources */,
 				2E650F47283B8563000E74CC /* Main.storyboard in Resources */,
+				2E3A99E3283E162A00F3D5D7 /* LocalDisplayViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -247,13 +254,14 @@
 			files = (
 				2E3CF488283BCCC500243139 /* HDownloadManager.swift in Sources */,
 				2E3CF484283BCA1600243139 /* LocalViewController.swift in Sources */,
-				2E3CF48A283BCCF400243139 /* PictureModel.swift in Sources */,
+				2E3CF48A283BCCF400243139 /* LocalPictureModel.swift in Sources */,
 				2E3CF486283BCCB800243139 /* HUploadManager.swift in Sources */,
 				2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */,
+				2E3A99E2283E162A00F3D5D7 /* LocalDisplayViewController.swift in Sources */,
 				2E3CF48C283BD40700243139 /* HPhotoManager.swift in Sources */,
 				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
-				2E0F9B29283D2428000358FD /* PictureSectionController.swift in Sources */,
+				2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */,
 				2E3CF47F283BC04100243139 /* PictureCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
