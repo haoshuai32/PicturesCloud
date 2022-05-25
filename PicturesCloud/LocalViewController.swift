@@ -9,9 +9,19 @@ import UIKit
 import IGListKit
 import IGListDiffKit
 
+protocol LocalChangeSelectedDelegate:AnyObject {
+    func localChangeSelected(dataSource: Set<LocalPictureModel>)
+}
+
 // TODO: 切换segment的时候没有记录滑动位置
 
-class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerChangeDelegate {
+class LocalViewController: UIViewController,
+ListAdapterDataSource,
+PhotoManagerChangeDelegate,
+                           LocalChangeSelectedDelegate
+
+{
+  
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -22,16 +32,14 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
     /// 0 全部 1 视频 2 照片
     private var selectIndex: Int = 0
     
+    private let photoManager = LocalPhotoManager()
+    
     private var dataSource: [LocalPictureSectionModel] = []
     
-    let photoManager = LocalPhotoManager()
-    
-    var selectedDataSource: Set<LocalPictureModel> = []
+    private var selectedDataSource: Set<LocalPictureModel> = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.dataSource = photoManager.requestDataSource()
         self.collectionView.setCollectionViewLayout(UICollectionViewFlowLayout(), animated: false)
         self.adapter.collectionView = self.collectionView
         self.adapter.dataSource = self
@@ -43,6 +51,11 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
 //        self.adapter.performUpdates(animated: true, completion: nil)
         self.selectIndex = sender.selectedSegmentIndex
         self.adapter.performUpdates(animated: true, completion: nil)
+    }
+    
+    // MARK: - LocalChangeSelectedDelegate
+    func localChangeSelected(dataSource: Set<LocalPictureModel>) {
+        self.selectedDataSource = dataSource
     }
     
     // MARK: - PhotoManagerChangeDelegate
@@ -58,15 +71,19 @@ class LocalViewController: UIViewController, ListAdapterDataSource,PhotoManagerC
     // MARK: - ListAdapterDataSource
     
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        return self.photoManager.requestDataSource(self.selectIndex)
+        self.dataSource = self.photoManager.requestDataSource(self.selectIndex)
+        return self.dataSource
     }
     
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        return LocalPictureSectionController(selected: self.selectedDataSource,manager: self.photoManager)
+        let sectionController = LocalPictureSectionController(selected: self.selectedDataSource,manager: self.photoManager,delegate: self)
+        
+        return sectionController
     }
     
     func emptyView(for listAdapter: ListAdapter) -> UIView? {
         return nil
     }
+    
     
 }

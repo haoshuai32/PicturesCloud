@@ -95,8 +95,16 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         return imageManager.requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
     }
     
+    func requestImage(picture: LocalPictureModel, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
+        let asset = picture.asset
+        return imageManager.requestImage(for: asset, targetSize: CGSize.zero, contentMode: .default, options: nil, resultHandler: resultHandler)
+    }
+    
     // 获取原始数据
     func requestAsset(picture: LocalPictureModel) -> Bool {
+        
+        
+        
         
         let asset = picture.asset
         

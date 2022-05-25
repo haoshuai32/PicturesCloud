@@ -20,6 +20,8 @@ class LocalPictureSectionController:
     
     private var selectedDataSource: Set<LocalPictureModel> = []
     
+    private weak var delegate: LocalChangeSelectedDelegate?
+    
     private
     lazy var cacheImage: NSCache<NSString, UIImage> = {
         let cache = NSCache<NSString, UIImage>()
@@ -57,19 +59,15 @@ class LocalPictureSectionController:
         } else {
             self.selectedDataSource.remove(item)
         }
-        
-        guard let vc = self.viewController as? LocalViewController else {
-            fatalError()
-            return
-        }
-        
-        vc.selectedDataSource = self.selectedDataSource
+  
+        self.delegate?.localChangeSelected(dataSource: self.selectedDataSource)
         
     }
     
-    required init(selected: Set<LocalPictureModel>,manager: LocalPhotoManager) {
+    required init(selected: Set<LocalPictureModel>,manager: LocalPhotoManager,delegate: LocalChangeSelectedDelegate) {
         self.selectedDataSource = selected
         self.photoManager = manager
+        self.delegate = delegate
         super.init()
         workingRangeDelegate = self
         displayDelegate = self
@@ -87,7 +85,7 @@ class LocalPictureSectionController:
     
     override func cellForItem(at index: Int) -> UICollectionViewCell {
         
-        guard let cell = collectionContext!.dequeueReusableCell(withNibName: "PictureCell", bundle: nil, for: self, at: index) as? PictureCell else {
+        guard let cell = collectionContext!.dequeueReusableCell(withNibName: "LocalPictureCell", bundle: nil, for: self, at: index) as? LocalPictureCell else {
             fatalError()
         }
         
@@ -152,7 +150,7 @@ class LocalPictureSectionController:
     }
     
     func listAdapter(_ listAdapter: ListAdapter, willDisplay sectionController: ListSectionController, cell: UICollectionViewCell, at index: Int) {
-        guard let pictureCell = cell as? PictureCell else {
+        guard let pictureCell = cell as? LocalPictureCell else {
             fatalError()
             return
         }
@@ -173,6 +171,12 @@ class LocalPictureSectionController:
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerDidExitWorkingRange sectionController: ListSectionController) {
         
         self.photoManager.stopCachingImages(pictures: self.dataSource, targetSize: targetSize)
+    }
+    
+    override func didSelectItem(at index: Int) {
+        print("选中",self.section,index)
+        let vc = LocalDisplayViewController(index: index, manager: self.photoManager, dataSource: self.dataSource, selected: self.selectedDataSource, delegate: self.delegate!)
+        self.viewController?.navigationController?.pushViewController(vc, animated: true)
     }
 
 }
