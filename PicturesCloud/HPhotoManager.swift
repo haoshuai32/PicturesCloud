@@ -11,9 +11,6 @@ import UIKit
 
 typealias ImageRequestID = PHImageRequestID
 
-// 废弃
-import AssetsLibrary
-
 protocol HPhotoManager {
     
 //    func requestAssets()
@@ -27,7 +24,7 @@ protocol HPhotoManager {
 // 本地相册管理
 struct LocalPhotoManager: HPhotoManager {
     
-    static let shared = LocalPhotoManager()
+    private let imageManager = PHCachingImageManager()
     
     private let assets: PHFetchResult<PHAsset>
     
@@ -35,22 +32,48 @@ struct LocalPhotoManager: HPhotoManager {
     
     init() {
         self.assets = PHAsset.fetchAssets(with: nil)
+        imageManager.allowsCachingHighQualityImages = false
     }
     
-    private
+    func requestDataSource()->[PictureSectionModel] {
+        
+        if self.assets.count <= 0 {
+            return []
+        }
+        
+        guard let firstObject = self.assets.firstObject else { return [] }
+        
+        var list = Array<PictureModel>.init(repeating: PictureModel(asset: firstObject), count: self.assets.count)
+        
+        assets.enumerateObjects(options: .concurrent) { asset, index, result in
+            list[index] = PictureModel(asset: asset)
+        }
+    
+        var result = [PictureSectionModel]()
+        let item = PictureSectionModel()
+        if let creationDate = firstObject.creationDate {
+            item.createData = creationDate
+        } else {
+            item.createData = Date()
+        }
+        item.dataSource = list
+        result.append(item)
+        return result
+        
+    }
+    
     func requestThumbnail(index: Int, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
         let asset = self.assets[index]
-        return PHImageManager.default().requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
+        return imageManager.requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
     }
     
-    func requestThumbnail(index: Int, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
-        if index >= self.assets.count {
-            resultHandler(nil,nil)
-            return 0
-        }
-        let size = CGSize()
-        return self.requestThumbnail(index: index, targetSize: size, resultHandler: resultHandler)
-    }
+//    func requestThumbnail(index: Int,targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
+//        if index >= self.assets.count {
+//            resultHandler(nil,nil)
+//            return 0
+//        }
+//        return self.requestThumbnail(index: index, targetSize: size, resultHandler: resultHandler)
+//    }
     
     // 获取原始数据
     func requestAsset(index: Int) -> Bool {
@@ -88,6 +111,9 @@ struct LocalPhotoManager: HPhotoManager {
             }))
         }
     
+        group.notify(queue: queue, work: .init(block: {
+            // 返回数据
+        }))
         
         return true
 
@@ -97,6 +123,31 @@ struct LocalPhotoManager: HPhotoManager {
         
     }
     
+    func cancelImageRequest(requestID: ImageRequestID) {
+        imageManager.cancelImageRequest(requestID)
+    }
+    
+    func startCachingImages(indexs:[Int],targetSize size: CGSize) {
+        var assets = [PHAsset]()
+        for i in indexs {
+            let item = self.assets[i]
+            assets.append(item)
+        }
+        imageManager.startCachingImages(for: assets, targetSize: size, contentMode: .default, options: nil)
+    }
+    
+    func stopCachingImages(indexs:[Int],targetSize size: CGSize) {
+        var assets = [PHAsset]()
+        for i in indexs {
+            let item = self.assets[i]
+            assets.append(item)
+        }
+        imageManager.stopCachingImages(for: assets, targetSize: size, contentMode: .default, options: nil)
+    }
+    
+    func stopCachingImagesForAllAssets() {
+        imageManager.stopCachingImagesForAllAssets()
+    }
     
 }
 

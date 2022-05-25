@@ -7,6 +7,7 @@
 
 import Foundation
 import Photos
+import IGListDiffKit
 
 enum Status: Int {
     case whole
@@ -16,33 +17,33 @@ enum Status: Int {
     case uploading
 }
 
-struct PictureModel {
+class PictureModel {
     
-//    var cloudIdentifier: String?
+    let asset: PHAsset
     
+    let identifier: String
+    
+    let mediaType: PHAssetMediaType
+
+    let mediaSubtypes: PHAssetMediaSubtype
+
+    let pixelWidth: Int
+
+    let pixelHeight: Int
+
+    let creationDate: Date?
+
+    let modificationDate: Date?
+
+    let location: CLLocation?
+    
+    let duration: Double
+    
+    // Resource
     var cloudImageURL: URL?
     
     var cloudURL: URL?
 
-    // 可以查询本地数据 可以查询云端数据
-    var identifier: String = ""
-    
-    var mediaType: PHAssetMediaType = .unknown
-
-    var mediaSubtypes: PHAssetMediaSubtype = .photoHDR
-
-    var pixelWidth: Int = 0
-
-    var pixelHeight: Int = 0
-
-    var creationDate: Date?
-
-    var modificationDate: Date?
-
-    var location: CLLocation?
-    
-    var duration: Double = 0
-    
     var uti: String = ""
     
     var fileName: String = ""
@@ -50,4 +51,51 @@ struct PictureModel {
     var fileURL: String = ""
     
     var fileSize: Int = 0
+    
+    init(asset: PHAsset) {
+        self.asset = asset
+        identifier = asset.localIdentifier
+        creationDate = asset.creationDate
+        mediaSubtypes = asset.mediaSubtypes
+        mediaType = asset.mediaType
+        modificationDate = asset.modificationDate
+        pixelWidth = asset.pixelWidth
+        pixelHeight = asset.pixelHeight
+        duration = asset.duration
+        location = asset.location
+    }
+    
+}
+
+//class Picture
+
+extension PictureModel: ListDiffable {
+    func diffIdentifier() -> NSObjectProtocol {
+        return identifier as NSObjectProtocol
+    }
+    
+    func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
+        guard self !== object else { return true }
+        guard let object = object as? PictureModel else { return false }
+        return identifier == object.identifier && uti == object.uti
+    }
+    
+}
+
+class PictureSectionModel {
+    var createData: Date = Date()
+    var dataSource: [PictureModel] = []
+}
+
+extension PictureSectionModel: ListDiffable {
+    
+    func diffIdentifier() -> NSObjectProtocol {
+        return createData as NSObjectProtocol
+    }
+    
+    func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
+        guard self !== object else { return true }
+        guard let object = object as? PictureSectionModel else { return false }
+        return object.createData.timeIntervalSince1970 == createData.timeIntervalSince1970
+    }
 }

@@ -7,7 +7,25 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2E1C7FBD283CB55600B9222E /* ObjectMapper in Frameworks */ = {isa = PBXBuildFile; productRef = 2E1C7FBC283CB55600B9222E /* ObjectMapper */; };
+		2E0F9B06283CC4EB000358FD /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B05283CC4EB000358FD /* Alamofire.framework */; };
+		2E0F9B07283CC4EB000358FD /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B05283CC4EB000358FD /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B0A283CC4F6000358FD /* IGListDiffKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B09283CC4F6000358FD /* IGListDiffKit.framework */; };
+		2E0F9B0B283CC4F6000358FD /* IGListDiffKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B09283CC4F6000358FD /* IGListDiffKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B0D283CC4FE000358FD /* IGListKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B0C283CC4FE000358FD /* IGListKit.framework */; };
+		2E0F9B0E283CC4FE000358FD /* IGListKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B0C283CC4FE000358FD /* IGListKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B10283CC507000358FD /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B0F283CC507000358FD /* Kingfisher.framework */; };
+		2E0F9B11283CC507000358FD /* Kingfisher.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B0F283CC507000358FD /* Kingfisher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B13283CC50E000358FD /* ObjectMapper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B12283CC50E000358FD /* ObjectMapper.framework */; };
+		2E0F9B14283CC50E000358FD /* ObjectMapper.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B12283CC50E000358FD /* ObjectMapper.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B16283CC517000358FD /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B15283CC517000358FD /* RxSwift.framework */; };
+		2E0F9B17283CC517000358FD /* RxSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B15283CC517000358FD /* RxSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B19283CC520000358FD /* SQLite.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B18283CC51F000358FD /* SQLite.framework */; };
+		2E0F9B1A283CC520000358FD /* SQLite.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B18283CC51F000358FD /* SQLite.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B23283CC551000358FD /* Moya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B22283CC551000358FD /* Moya.framework */; };
+		2E0F9B24283CC551000358FD /* Moya.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B22283CC551000358FD /* Moya.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B26283CC559000358FD /* RxMoya.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B25283CC559000358FD /* RxMoya.framework */; };
+		2E0F9B27283CC559000358FD /* RxMoya.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2E0F9B25283CC559000358FD /* RxMoya.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2E0F9B29283D2428000358FD /* PictureSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F9B28283D2428000358FD /* PictureSectionController.swift */; };
 		2E3CF47F283BC04100243139 /* PictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF47D283BC04100243139 /* PictureCell.swift */; };
 		2E3CF480283BC04100243139 /* PictureCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3CF47E283BC04100243139 /* PictureCell.xib */; };
 		2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF481283BC8E500243139 /* HFileManager.swift */; };
@@ -23,10 +41,39 @@
 		2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		2E0F9B08283CC4EB000358FD /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2E0F9B24283CC551000358FD /* Moya.framework in Embed Frameworks */,
+				2E0F9B1A283CC520000358FD /* SQLite.framework in Embed Frameworks */,
+				2E0F9B0E283CC4FE000358FD /* IGListKit.framework in Embed Frameworks */,
+				2E0F9B0B283CC4F6000358FD /* IGListDiffKit.framework in Embed Frameworks */,
+				2E0F9B17283CC517000358FD /* RxSwift.framework in Embed Frameworks */,
+				2E0F9B27283CC559000358FD /* RxMoya.framework in Embed Frameworks */,
+				2E0F9B14283CC50E000358FD /* ObjectMapper.framework in Embed Frameworks */,
+				2E0F9B11283CC507000358FD /* Kingfisher.framework in Embed Frameworks */,
+				2E0F9B07283CC4EB000358FD /* Alamofire.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		2E1C7FBA283CB53E00B9222E /* ObjectMapper */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ObjectMapper; path = ../Depend/ObjectMapper; sourceTree = "<group>"; };
-		2E1C7FC7283CBAA000B9222E /* Moya */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Moya; path = ../Depend/Moya; sourceTree = "<group>"; };
-		2E1C7FC8283CBAB800B9222E /* SQLite.swift */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SQLite.swift; path = ../Depend/SQLite.swift; sourceTree = "<group>"; };
+		2E0F9B05283CC4EB000358FD /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Frameworks/Alamofire.framework; sourceTree = "<group>"; };
+		2E0F9B09283CC4F6000358FD /* IGListDiffKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IGListDiffKit.framework; path = Frameworks/IGListDiffKit.framework; sourceTree = "<group>"; };
+		2E0F9B0C283CC4FE000358FD /* IGListKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IGListKit.framework; path = Frameworks/IGListKit.framework; sourceTree = "<group>"; };
+		2E0F9B0F283CC507000358FD /* Kingfisher.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Kingfisher.framework; path = Frameworks/Kingfisher.framework; sourceTree = "<group>"; };
+		2E0F9B12283CC50E000358FD /* ObjectMapper.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ObjectMapper.framework; path = Frameworks/ObjectMapper.framework; sourceTree = "<group>"; };
+		2E0F9B15283CC517000358FD /* RxSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxSwift.framework; path = Frameworks/RxSwift.framework; sourceTree = "<group>"; };
+		2E0F9B18283CC51F000358FD /* SQLite.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SQLite.framework; path = Frameworks/SQLite.framework; sourceTree = "<group>"; };
+		2E0F9B22283CC551000358FD /* Moya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Moya.framework; path = Frameworks/Moya.framework; sourceTree = "<group>"; };
+		2E0F9B25283CC559000358FD /* RxMoya.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = RxMoya.framework; path = Frameworks/RxMoya.framework; sourceTree = "<group>"; };
+		2E0F9B28283D2428000358FD /* PictureSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureSectionController.swift; sourceTree = "<group>"; };
 		2E3CF47D283BC04100243139 /* PictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureCell.swift; sourceTree = "<group>"; };
 		2E3CF47E283BC04100243139 /* PictureCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PictureCell.xib; sourceTree = "<group>"; };
 		2E3CF481283BC8E500243139 /* HFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HFileManager.swift; sourceTree = "<group>"; };
@@ -50,26 +97,33 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2E1C7FBD283CB55600B9222E /* ObjectMapper in Frameworks */,
+				2E0F9B23283CC551000358FD /* Moya.framework in Frameworks */,
+				2E0F9B19283CC520000358FD /* SQLite.framework in Frameworks */,
+				2E0F9B0D283CC4FE000358FD /* IGListKit.framework in Frameworks */,
+				2E0F9B0A283CC4F6000358FD /* IGListDiffKit.framework in Frameworks */,
+				2E0F9B16283CC517000358FD /* RxSwift.framework in Frameworks */,
+				2E0F9B26283CC559000358FD /* RxMoya.framework in Frameworks */,
+				2E0F9B13283CC50E000358FD /* ObjectMapper.framework in Frameworks */,
+				2E0F9B10283CC507000358FD /* Kingfisher.framework in Frameworks */,
+				2E0F9B06283CC4EB000358FD /* Alamofire.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		2E1C7FB9283CB53E00B9222E /* Packages */ = {
-			isa = PBXGroup;
-			children = (
-				2E1C7FBA283CB53E00B9222E /* ObjectMapper */,
-				2E1C7FC7283CBAA000B9222E /* Moya */,
-				2E1C7FC8283CBAB800B9222E /* SQLite.swift */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
 		2E1C7FBB283CB55600B9222E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2E0F9B25283CC559000358FD /* RxMoya.framework */,
+				2E0F9B22283CC551000358FD /* Moya.framework */,
+				2E0F9B18283CC51F000358FD /* SQLite.framework */,
+				2E0F9B15283CC517000358FD /* RxSwift.framework */,
+				2E0F9B12283CC50E000358FD /* ObjectMapper.framework */,
+				2E0F9B0F283CC507000358FD /* Kingfisher.framework */,
+				2E0F9B0C283CC4FE000358FD /* IGListKit.framework */,
+				2E0F9B09283CC4F6000358FD /* IGListDiffKit.framework */,
+				2E0F9B05283CC4EB000358FD /* Alamofire.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -77,7 +131,6 @@
 		2E650F33283B8563000E74CC = {
 			isa = PBXGroup;
 			children = (
-				2E1C7FB9283CB53E00B9222E /* Packages */,
 				2E650F53283B8A24000E74CC /* README.md */,
 				2E650F3E283B8563000E74CC /* PicturesCloud */,
 				2E650F3D283B8563000E74CC /* Products */,
@@ -97,6 +150,7 @@
 			isa = PBXGroup;
 			children = (
 				2E650F3F283B8563000E74CC /* AppDelegate.swift */,
+				2E0F9B28283D2428000358FD /* PictureSectionController.swift */,
 				2E650F43283B8563000E74CC /* CloudViewController.swift */,
 				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
 				2E3CF481283BC8E500243139 /* HFileManager.swift */,
@@ -124,6 +178,7 @@
 				2E650F38283B8563000E74CC /* Sources */,
 				2E650F39283B8563000E74CC /* Frameworks */,
 				2E650F3A283B8563000E74CC /* Resources */,
+				2E0F9B08283CC4EB000358FD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -131,7 +186,6 @@
 			);
 			name = PicturesCloud;
 			packageProductDependencies = (
-				2E1C7FBC283CB55600B9222E /* ObjectMapper */,
 			);
 			productName = PicturesCloud;
 			productReference = 2E650F3C283B8563000E74CC /* PicturesCloud.app */;
@@ -199,6 +253,7 @@
 				2E3CF48C283BD40700243139 /* HPhotoManager.swift in Sources */,
 				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
+				2E0F9B29283D2428000358FD /* PictureSectionController.swift in Sources */,
 				2E3CF47F283BC04100243139 /* PictureCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -347,6 +402,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SRW54YFJJ3;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PicturesCloud/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -376,6 +435,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SRW54YFJJ3;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PicturesCloud/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -419,13 +482,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		2E1C7FBC283CB55600B9222E /* ObjectMapper */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ObjectMapper;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2E650F34283B8563000E74CC /* Project object */;
 }
