@@ -20,7 +20,7 @@ class LocalImageCell: UICollectionViewCell,
             let minScale = imageScale(size: image.size)
             self.scrollView.minimumZoomScale = 1
             scrollView.setZoomScale(minScale, animated: true)
-            self.imageView.image = image
+//            self.imageView.image = image
         }
         
     }

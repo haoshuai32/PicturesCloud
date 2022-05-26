@@ -34,6 +34,7 @@
             <viewLayoutGuide key="safeArea" id="A2q-e3-SVm"/>
             <size key="customSize" width="283" height="342"/>
             <connections>
+                <outlet property="imageView" destination="9e7-dX-qnI" id="hpH-N4-8Pi"/>
                 <outlet property="scrollView" destination="Ucp-0P-Q1s" id="aB3-0L-uZV"/>
             </connections>
             <point key="canvasLocation" x="-505.07246376811599" y="88.392857142857139"/>

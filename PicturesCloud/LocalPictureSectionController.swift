@@ -175,8 +175,12 @@ class LocalPictureSectionController:
     
     override func didSelectItem(at index: Int) {
         print("选中",self.section,index)
-        let vc = LocalDisplayViewController(index: index, manager: self.photoManager, dataSource: self.dataSource, selected: self.selectedDataSource, delegate: self.delegate!)
-        self.viewController?.navigationController?.pushViewController(vc, animated: true)
+        let item = self.dataSource[index]
+        HUploadManager.shared.uploadData(data: item) { result in
+            
+        }
+//        let vc = LocalDisplayViewController(index: index, manager: self.photoManager, dataSource: self.dataSource, selected: self.selectedDataSource, delegate: self.delegate!)
+//        self.viewController?.navigationController?.pushViewController(vc, animated: true)
     }
 
 }
