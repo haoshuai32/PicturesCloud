@@ -29,10 +29,11 @@
 		2E3A99E2283E162A00F3D5D7 /* LocalDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A99E0283E162A00F3D5D7 /* LocalDisplayViewController.swift */; };
 		2E3A99E3283E162A00F3D5D7 /* LocalDisplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */; };
 		2E3A99E6283E374D00F3D5D7 /* LocalImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A99E4283E374D00F3D5D7 /* LocalImageCell.swift */; };
-		2E3A99E7283E374D00F3D5D7 /* LocalImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3A99E5283E374D00F3D5D7 /* LocalImageCell.xib */; };
 		2E3A99EA283E376100F3D5D7 /* LocalVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A99E8283E376100F3D5D7 /* LocalVideoCell.swift */; };
 		2E3A99EB283E376100F3D5D7 /* LocalVideoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3A99E9283E376100F3D5D7 /* LocalVideoCell.xib */; };
 		2E3A99ED283E3C5F00F3D5D7 /* LocalImageSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A99EC283E3C5F00F3D5D7 /* LocalImageSectionController.swift */; };
+		2E3A99EF283E5B3500F3D5D7 /* HImageScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A99EE283E5B3500F3D5D7 /* HImageScrollView.swift */; };
+		2E3A99F1283E5D3600F3D5D7 /* LocalImageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3A99F0283E5D3600F3D5D7 /* LocalImageCell.xib */; };
 		2E3CF47F283BC04100243139 /* LocalPictureCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF47D283BC04100243139 /* LocalPictureCell.swift */; };
 		2E3CF480283BC04100243139 /* LocalPictureCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3CF47E283BC04100243139 /* LocalPictureCell.xib */; };
 		2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3CF481283BC8E500243139 /* HFileManager.swift */; };
@@ -84,10 +85,11 @@
 		2E3A99E0283E162A00F3D5D7 /* LocalDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalDisplayViewController.swift; sourceTree = "<group>"; };
 		2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalDisplayViewController.xib; sourceTree = "<group>"; };
 		2E3A99E4283E374D00F3D5D7 /* LocalImageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageCell.swift; sourceTree = "<group>"; };
-		2E3A99E5283E374D00F3D5D7 /* LocalImageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalImageCell.xib; sourceTree = "<group>"; };
 		2E3A99E8283E376100F3D5D7 /* LocalVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalVideoCell.swift; sourceTree = "<group>"; };
 		2E3A99E9283E376100F3D5D7 /* LocalVideoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalVideoCell.xib; sourceTree = "<group>"; };
 		2E3A99EC283E3C5F00F3D5D7 /* LocalImageSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalImageSectionController.swift; sourceTree = "<group>"; };
+		2E3A99EE283E5B3500F3D5D7 /* HImageScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HImageScrollView.swift; sourceTree = "<group>"; };
+		2E3A99F0283E5D3600F3D5D7 /* LocalImageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalImageCell.xib; sourceTree = "<group>"; };
 		2E3CF47D283BC04100243139 /* LocalPictureCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPictureCell.swift; sourceTree = "<group>"; };
 		2E3CF47E283BC04100243139 /* LocalPictureCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalPictureCell.xib; sourceTree = "<group>"; };
 		2E3CF481283BC8E500243139 /* HFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HFileManager.swift; sourceTree = "<group>"; };
@@ -142,6 +144,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2E3A99F3283F0CA900F3D5D7 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				2E3CF48B283BD40700243139 /* HPhotoManager.swift */,
+				2E3CF487283BCCC500243139 /* HDownloadManager.swift */,
+				2E3CF485283BCCB700243139 /* HUploadManager.swift */,
+				2E3CF481283BC8E500243139 /* HFileManager.swift */,
+			);
+			name = Manager;
+			sourceTree = "<group>";
+		};
 		2E650F33283B8563000E74CC = {
 			isa = PBXGroup;
 			children = (
@@ -163,28 +176,26 @@
 		2E650F3E283B8563000E74CC /* PicturesCloud */ = {
 			isa = PBXGroup;
 			children = (
+				2E3A99F3283F0CA900F3D5D7 /* Manager */,
 				2E650F3F283B8563000E74CC /* AppDelegate.swift */,
 				2E650F43283B8563000E74CC /* CloudViewController.swift */,
 				2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */,
 				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
 				2E3CF489283BCCF400243139 /* LocalPictureModel.swift */,
-				2E3CF48B283BD40700243139 /* HPhotoManager.swift */,
-				2E3CF487283BCCC500243139 /* HDownloadManager.swift */,
-				2E3CF485283BCCB700243139 /* HUploadManager.swift */,
-				2E650F45283B8563000E74CC /* Main.storyboard */,
-				2E650F48283B8568000E74CC /* Assets.xcassets */,
-				2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */,
-				2E650F4D283B8568000E74CC /* Info.plist */,
 				2E3CF47D283BC04100243139 /* LocalPictureCell.swift */,
 				2E3CF47E283BC04100243139 /* LocalPictureCell.xib */,
-				2E3CF481283BC8E500243139 /* HFileManager.swift */,
 				2E3A99E4283E374D00F3D5D7 /* LocalImageCell.swift */,
-				2E3A99E5283E374D00F3D5D7 /* LocalImageCell.xib */,
+				2E3A99F0283E5D3600F3D5D7 /* LocalImageCell.xib */,
 				2E3A99E8283E376100F3D5D7 /* LocalVideoCell.swift */,
 				2E3A99E9283E376100F3D5D7 /* LocalVideoCell.xib */,
 				2E3A99E0283E162A00F3D5D7 /* LocalDisplayViewController.swift */,
 				2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */,
 				2E3A99EC283E3C5F00F3D5D7 /* LocalImageSectionController.swift */,
+				2E3A99EE283E5B3500F3D5D7 /* HImageScrollView.swift */,
+				2E650F45283B8563000E74CC /* Main.storyboard */,
+				2E650F48283B8568000E74CC /* Assets.xcassets */,
+				2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */,
+				2E650F4D283B8568000E74CC /* Info.plist */,
 			);
 			path = PicturesCloud;
 			sourceTree = "<group>";
@@ -252,11 +263,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E3A99F1283E5D3600F3D5D7 /* LocalImageCell.xib in Resources */,
 				2E3CF480283BC04100243139 /* LocalPictureCell.xib in Resources */,
 				2E3A99EB283E376100F3D5D7 /* LocalVideoCell.xib in Resources */,
 				2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */,
 				2E650F49283B8568000E74CC /* Assets.xcassets in Resources */,
-				2E3A99E7283E374D00F3D5D7 /* LocalImageCell.xib in Resources */,
 				2E650F47283B8563000E74CC /* Main.storyboard in Resources */,
 				2E3A99E3283E162A00F3D5D7 /* LocalDisplayViewController.xib in Resources */,
 			);
@@ -278,6 +289,7 @@
 				2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */,
 				2E3A99E2283E162A00F3D5D7 /* LocalDisplayViewController.swift in Sources */,
 				2E3CF48C283BD40700243139 /* HPhotoManager.swift in Sources */,
+				2E3A99EF283E5B3500F3D5D7 /* HImageScrollView.swift in Sources */,
 				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
 				2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */,

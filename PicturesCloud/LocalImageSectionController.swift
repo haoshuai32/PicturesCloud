@@ -43,7 +43,7 @@ class LocalImageSectionController: ListSectionController,
         guard let cell = collectionContext!.dequeueReusableCell(withNibName: "LocalImageCell", bundle: nil, for: self, at: index) as? LocalImageCell else {
             fatalError()
         }
-        cell.imageView.image = self.requestImage
+        cell.image = self.requestImage
         return cell
     }
     
@@ -69,8 +69,9 @@ class LocalImageSectionController: ListSectionController,
             guard let image = image ,let self = self else {
                 fatalError()
             }
+            
             if let cell = self.collectionContext?.cellForItem(at: 0, sectionController: self) as? LocalImageCell {
-                cell.imageView.image = image
+                cell.image = image
             }
             self.requestImage = image
         }

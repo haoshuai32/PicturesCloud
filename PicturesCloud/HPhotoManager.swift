@@ -101,22 +101,19 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     }
     
     // 获取原始数据
-    func requestAsset(picture: LocalPictureModel) -> Bool {
-        
-        
-        
+    static func requestAssetData(picture: LocalPictureModel, resultHandler: @escaping (_ result:Result<[Data],Error>)->Void) -> Bool {
         
         let asset = picture.asset
         
         let resources = PHAssetResource.assetResources(for: asset)
         picture.assetResource = resources
         
-        var datas = Array<Data>.init(repeating: Data(), count: resources.count)
+        var resultData = Array<Data>.init(repeating: Data(), count: resources.count)
         
         let queue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
         
         let group = DispatchGroup()
-        
+        var resultError: Error?
         for i in 0..<resources.count {
             group.enter()
             queue.async(group: group, execute: DispatchWorkItem.init(block: {
@@ -127,9 +124,10 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
                     itemData.append(data)
                 } completionHandler: { error in
                     if let error = error {
+                        resultError = error
                         debugPrint("PHAssetResourceManager requestData error:",error)
                     } else {
-                        datas[index] = itemData
+                        resultData[index] = itemData
                     }
                     group.leave()
                 }
@@ -138,6 +136,12 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     
         group.notify(queue: queue, work: .init(block: {
             // 返回数据
+            if let error = resultError {
+                resultHandler(.failure(error))
+            } else {
+                resultHandler(.success(resultData))
+            }
+            
         }))
         
         return true
