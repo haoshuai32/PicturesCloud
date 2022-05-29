@@ -54,10 +54,9 @@ class LocalDisplayViewController: UIViewController,
         self.collectionView.setCollectionViewLayout(layout, animated: false)
         self.adapter.collectionView = self.collectionView
         self.adapter.dataSource = self
+        self.collectionView.selectItem(at: IndexPath(item: 0, section: displayIndex), animated: false, scrollPosition: .bottom)
         // Do any additional setup after loading the view.
     }
-
-    
     
     // MARK: - ListAdapterDataSource
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
