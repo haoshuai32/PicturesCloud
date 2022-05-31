@@ -9,12 +9,68 @@ import Foundation
 import Photos
 import IGListDiffKit
 
-enum Status: Int {
-    case whole
-    case local
-    case downloading
-    case cloud
-    case uploading
+class HPHAsset {
+    
+    let asset: PHAsset
+  
+    var identifier: String {
+        return asset.localIdentifier
+    }
+
+    var mediaType: PHAssetMediaType {
+        return asset.mediaType
+    }
+    
+    var mediaSubtypes: PHAssetMediaSubtype {
+        return asset.mediaSubtypes
+    }
+
+    var pixelWidth: Int {
+        return asset.pixelWidth
+    }
+
+    var pixelHeight: Int {
+        return asset.pixelHeight
+    }
+
+    var creationDate: Date? {
+        return asset.creationDate
+    }
+
+    var location: CLLocation? {
+        return asset.location
+    }
+
+    var duration: Double {
+        return asset.duration
+    }
+    
+    // Resource
+    var assetResource:[PHAssetResource] = []
+    
+    init(asset: PHAsset) {
+        self.asset = asset
+    }
+    
+    // 读取本地封面
+    
+    // 读取所有的资源数据
+    
+    // 上传数据
+    
+}
+
+extension HPHAsset: Equatable {
+    static func == (lhs: HPHAsset, rhs: HPHAsset) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
+}
+
+extension HPHAsset: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
+        hasher.combine(mediaType)
+    }
 }
 
 class LocalPictureModel {

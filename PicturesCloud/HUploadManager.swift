@@ -109,6 +109,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        self.uploadReceiveData = data
         debugPrint(#function,String.init(data: data, encoding: .utf8))
     }
     
@@ -117,6 +118,10 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        guard let completedHandler = self.uploadCompletedHandler else {
+            fatalError()
+        }
+        completedHandler()
         debugPrint(#function)
     }
     
@@ -147,6 +152,12 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     private var uploadTask: URLSessionUploadTask?
     
     private var uploadCompletedHandler: (() -> Void)?
+    
+    private var uploadReceiveData: Data?
+    
+    lazy var uploadOperationQueue: OperationQueue = {
+        return OperationQueue()
+    }()
     
     static func randomBoundary() -> String {
         let first = UInt32.random(in: UInt32.min...UInt32.max)
@@ -217,13 +228,14 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         
         var resultError: Error?
   
+        // read cover
         group.enter()
         requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
             PHImageManager.default().requestImage(for: asset, targetSize: CGSize.zero, contentMode: .default, options: nil) { image, info in
                 guard let image = image,let imageData = image.jpegData(compressionQuality: 1.0) else {
                     fatalError(info?.debugDescription ?? "读取封面失败")
                 }
-                
+                debugPrint("cover size", imageData.count)
                 let metaData = UploadMetaData(name: "cover", filename: resources[0].originalFilename, contentType: "public.jpeg", data: imageData)
                 uploadData[0] = metaData
                 group.leave()
@@ -232,7 +244,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         
         // read data
         for i in 0..<resources.count {
-            debugPrint("resouce \(i) \(resources[i])")
+            
             group.enter()
             requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
                 let index = i
@@ -246,6 +258,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                         assert(false,error.localizedDescription)
                     } else {
                         let metaData = UploadMetaData(name: "original", filename: resource.originalFilename, contentType: resource.uniformTypeIdentifier, data: itemData)
+                        debugPrint("original size", itemData.count)
                         uploadData[index + 1] = metaData
                     }
                     group.leave()
@@ -266,10 +279,34 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     
     // 实现消息队列
-        
-    func loading() {
-        let qperationQueue = OperationQueue.init()
-        qperationQueue.maxConcurrentOperationCount = 1
+  
+    func append(_ newElements: [LocalPictureModel]) {
+        for i in 0..<newElements.count {
+            let item = newElements[i]
+            self.dataSource[item.identifier] = item
+        }
     }
+    
+    func remove(identifiers: [String]) {
+        
+    }
+    
+    func start() {
+        
+        for item in self.dataSource {
+            let operation = HUploadOperation(data: item.value, delegate: self)
+            uploadOperationQueue.addOperation(operation)
+        }
+        
+    }
+    
+    func suspend() {
+        
+    }
+    
+    func stop() {
+        
+    }
+    
     
 }

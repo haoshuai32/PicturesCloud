@@ -22,6 +22,8 @@ protocol PhotoManagerChangeDelegate:class {
 // 本地相册管理
 class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
 
+    static let shared = LocalPhotoManager()
+    
     private let imageManager = PHCachingImageManager()
     
     private var assets: PHFetchResult<PHAsset>

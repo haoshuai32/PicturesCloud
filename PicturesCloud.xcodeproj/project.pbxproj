@@ -151,6 +151,7 @@
 				2E3CF487283BCCC500243139 /* HDownloadManager.swift */,
 				2E3CF485283BCCB700243139 /* HUploadManager.swift */,
 				2E3CF481283BC8E500243139 /* HFileManager.swift */,
+				2E3CF489283BCCF400243139 /* LocalPictureModel.swift */,
 			);
 			name = Manager;
 			sourceTree = "<group>";
@@ -181,7 +182,6 @@
 				2E650F43283B8563000E74CC /* CloudViewController.swift */,
 				2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */,
 				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
-				2E3CF489283BCCF400243139 /* LocalPictureModel.swift */,
 				2E3CF47D283BC04100243139 /* LocalPictureCell.swift */,
 				2E3CF47E283BC04100243139 /* LocalPictureCell.xib */,
 				2E3A99E4283E374D00F3D5D7 /* LocalImageCell.swift */,
