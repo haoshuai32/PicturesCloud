@@ -16,10 +16,35 @@
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                 <rect key="frame" x="0.0" y="0.0" width="398" height="781"/>
                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="OVo-lO-NSy">
+                        <rect key="frame" x="0.0" y="0.0" width="398" height="781"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="7C6-tM-hBi">
+                                <rect key="frame" x="0.0" y="0.0" width="398" height="781"/>
+                            </imageView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="7C6-tM-hBi" firstAttribute="leading" secondItem="a3k-bj-rxz" secondAttribute="leading" id="AK4-DY-zRn"/>
+                            <constraint firstItem="a3k-bj-rxz" firstAttribute="height" secondItem="7C6-tM-hBi" secondAttribute="height" id="Gux-9a-yHU"/>
+                            <constraint firstItem="7C6-tM-hBi" firstAttribute="centerY" secondItem="4We-pu-SeT" secondAttribute="centerY" id="RhS-ih-srE"/>
+                            <constraint firstItem="7C6-tM-hBi" firstAttribute="top" secondItem="a3k-bj-rxz" secondAttribute="top" id="bn7-fd-2Mk"/>
+                            <constraint firstItem="7C6-tM-hBi" firstAttribute="centerX" secondItem="4We-pu-SeT" secondAttribute="centerX" id="hor-PT-Hzb"/>
+                            <constraint firstItem="a3k-bj-rxz" firstAttribute="width" secondItem="7C6-tM-hBi" secondAttribute="width" id="pVl-Gb-Ror"/>
+                        </constraints>
+                        <viewLayoutGuide key="contentLayoutGuide" id="a3k-bj-rxz"/>
+                        <viewLayoutGuide key="frameLayoutGuide" id="4We-pu-SeT"/>
+                    </scrollView>
+                </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="A2q-e3-SVm"/>
             <size key="customSize" width="398" height="781"/>
-            <point key="canvasLocation" x="-776.81159420289862" y="219.97767857142856"/>
+            <connections>
+                <outlet property="imageView" destination="7C6-tM-hBi" id="D0N-jJ-uvp"/>
+                <outlet property="scrollView" destination="OVo-lO-NSy" id="8Dv-cs-Y38"/>
+            </connections>
+            <point key="canvasLocation" x="-1123.1884057971015" y="190.51339285714286"/>
         </collectionViewCell>
     </objects>
 </document>

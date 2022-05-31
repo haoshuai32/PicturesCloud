@@ -20,37 +20,51 @@ enum Status: Int {
 class LocalPictureModel {
     
     let asset: PHAsset
+  
+    var identifier: String {
+        return asset.localIdentifier
+    }
+
+    var mediaType: PHAssetMediaType {
+        return asset.mediaType
+    }
     
-    let identifier: String
-    
-    let mediaType: PHAssetMediaType
+    var mediaSubtypes: PHAssetMediaSubtype {
+        return asset.mediaSubtypes
+    }
 
-    let mediaSubtypes: PHAssetMediaSubtype
+    var pixelWidth: Int {
+        return asset.pixelWidth
+    }
 
-    let pixelWidth: Int
+    var pixelHeight: Int {
+        return asset.pixelHeight
+    }
 
-    let pixelHeight: Int
+    var creationDate: Date? {
+        return asset.creationDate
+    }
 
-    let creationDate: Date?
+    var location: CLLocation? {
+        return asset.location
+    }
 
-    let location: CLLocation?
-    
-    let duration: Double
+    var duration: Double {
+        return asset.duration
+    }
     
     // Resource
     var assetResource:[PHAssetResource] = []
     
     init(asset: PHAsset) {
         self.asset = asset
-        identifier = asset.localIdentifier
-        creationDate = asset.creationDate
-        mediaSubtypes = asset.mediaSubtypes
-        mediaType = asset.mediaType
-        pixelWidth = asset.pixelWidth
-        pixelHeight = asset.pixelHeight
-        duration = asset.duration
-        location = asset.location
     }
+    
+    // 读取本地封面
+    
+    // 读取所有的资源数据
+    
+    // 上传数据
     
 }
 

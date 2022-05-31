@@ -175,7 +175,7 @@ class LocalPictureSectionController:
     
     override func didSelectItem(at index: Int) {
         print("选中",self.section,index)
-//        let item = self.dataSource[index]
+        let item = self.dataSource[index]
 //        HUploadManager.shared.uploadData(data: item) { result in
 //
 //        }

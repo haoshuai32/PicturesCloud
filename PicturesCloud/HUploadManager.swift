@@ -7,9 +7,10 @@
 
 import Foundation
 import Photos
+import UIKit
 
 protocol HUploadOperationDelegate {
-    func uploadData(data: LocalPictureModel,resultHandler: @escaping (_ result: Result<[AnyHashable : Any],Error>) -> Void)
+    func uploadData(data: LocalPictureModel,completedHandler: @escaping () -> Void)
 }
 
 class HUploadOperation: Operation {
@@ -66,8 +67,8 @@ class HUploadOperation: Operation {
                self.done()
            })
        }
-        
-        self.delegate.uploadData(data: self.dataSource) { result in
+  
+        self.delegate.uploadData(data: self.dataSource) {
             completed()
         }
     } // override func start()
@@ -85,196 +86,190 @@ class HUploadOperation: Operation {
 
 // TODO: 后续实现 - 查看上传进度
 
-public class HUploadManager:HUploadOperationDelegate {
+public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataDelegate {
     
-    private let queue = DispatchQueue(label: "onelcat.github.io.upload.queue")
+    struct UploadMetaData {
+        let name: String
+        let filename: String
+        let contentType: String
+        let data: Data
+    }
     
-//    private let boundary = "----WebKitFormBoundaryT4baV8VlU7B1wMXq"
-    private
-    lazy var boundary: String = {
+    // MARK: - URLSession
+    private lazy var urlSession: URLSession = { [unowned self] in
+        let config = URLSessionConfiguration.background(withIdentifier: "onelcat.github.io.upload.session")
+        config.isDiscretionary = true
+        config.sessionSendsLaunchEvents = true
+        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
+    }()
+    
+    // MARK: - URLSessionDataDelegate
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+        debugPrint("sender",bytesSent,totalBytesSent,totalBytesExpectedToSend)
+    }
+    
+    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+        debugPrint(#function,String.init(data: data, encoding: .utf8))
+    }
+    
+    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+        debugPrint(#function)
+    }
+    
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        debugPrint(#function)
+    }
+    
+    public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+        
+        DispatchQueue.main.async {
+            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+                let backgroundCompletionHandler =
+                appDelegate.backgroundCompletionHandler else {
+                    return
+            }
+            backgroundCompletionHandler()
+        }
+    }
+    
+    private lazy var boundary: String = {
         return Self.randomBoundary()
     }()
     
     static let shared = HUploadManager()
     
-    private var dataSource: [LocalPictureModel] = []
+    private let tempPath = HFileManager.shared.uploadTemp
     
-    private var uploadingIndex: Int?
+    private var dataSource: [String:LocalPictureModel] = [:]
+    
+    private var uploadAsset: LocalPictureModel?
+    
+    private var uploadTask: URLSessionUploadTask?
+    
+    private var uploadCompletedHandler: (() -> Void)?
     
     static func randomBoundary() -> String {
         let first = UInt32.random(in: UInt32.min...UInt32.max)
         let second = UInt32.random(in: UInt32.min...UInt32.max)
-
         return String(format: "onelcat.github.io.boundary.%08x%08x", first, second)
     }
     
-    lazy var sessionConfigure: URLSessionConfiguration = {
-        let config = URLSessionConfiguration.default
-//        config.httpAdditionalHeaders = ["Content-Type": "multipart/form-data; boundary=\(boundary)"]
-        config.timeoutIntervalForRequest = 120
-        config.requestCachePolicy = .reloadIgnoringLocalCacheData
-        return config
-    }()
-    
-    lazy var session: URLSession = {
-        return URLSession(configuration: sessionConfigure, delegate: nil, delegateQueue: nil)
-    }()
-    
-    // 表单上传数据 // 多文件上传数据
-    private func uploadPicture(picture:LocalPictureModel) {
+    func uploadData(data: LocalPictureModel, completedHandler: @escaping () -> Void) {
         
-    }
-    
-    // 读取数据
-    private func readPicture(picture:LocalPictureModel) {
-        
-    }
-    
-    func uploadData(data: LocalPictureModel,resultHandler: @escaping (_ result: Result<[AnyHashable : Any],Error>) -> Void) {
+        self.uploadAsset = data
+        self.uploadCompletedHandler = completedHandler
         
         let uploadAsset = data
         
-        
-        func upload(fileData: Data,fileName: String,type: String,uti:String) {
-            
-            let crlf = "\r\n"
-            let initial = "\(boundary)\(crlf)"
-            let final = "\(crlf)\(boundary)--\(crlf)"
-            var bodyData = Data()
-            let contentDisposition: String
-            contentDisposition = "Content-Disposition: form-data; name=\"myFile\"; filename=\"\(fileName)\"\(crlf)Content-Type: image/gif\(crlf)\(crlf)"
-            
-            guard let initialData = initial.data(using: .utf8),
-                let finalData = final.data(using: .utf8),
-                let contentDispositionData = contentDisposition.data(using: .utf8) else {
-                fatalError()
-                return
-            }
-            
-            bodyData.append("--\(boundary)\r\n".data(using: .utf8)!)
-            bodyData.append("Content-Disposition: form-data; name=\"myFile\"; filename=\"\(fileName)\"; uti=\"com.compuserve.gif\"\r\n".data(using: .utf8)!)
-            bodyData.append("Content-Type: image/gif\r\n\r\n".data(using: .utf8)!)
-            bodyData.append(fileData)
-            
-            bodyData.append("\r\n".data(using: .utf8)!)
+        func upload(_ metaData: [UploadMetaData]) {
 
-            bodyData.append("--\(boundary)\r\n".data(using: .utf8)!)
-            bodyData.append("Content-Disposition: form-data; name=\"myFile\"; filename=\"IMG_3143.GIF\"\r\n".data(using: .utf8)!)
-            bodyData.append("Content-Type: image/gif\r\n\r\n".data(using: .utf8)!)
-            bodyData.append(fileData)
+            var bodyData = Data()
+
+            for i in 0..<metaData.count {
+                
+                let data = metaData[i]
+                bodyData.append("--\(boundary)\r\n".data(using: .utf8)!)
+                bodyData.append("Content-Disposition: form-data; name=\"\(data.name)\"; filename=\"\(data.filename)\"\r\n".data(using: .utf8)!)
+                bodyData.append("Content-Type: \(data.contentType)\r\n\r\n".data(using: .utf8)!)
+                bodyData.append(data.data)
+                
+                if i != metaData.count {
+                    bodyData.append("\r\n".data(using: .utf8)!)
+                }
+            }
             
             // end data
             bodyData.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
           
+            
+            do {
+                try HFileManager.shared.fileManager.removeItem(at: self.tempPath)
+            } catch let error {
+                assert(false,error.localizedDescription)
+            }
+            
+            do {
+                try bodyData.write(to: self.tempPath)
+            } catch let error {
+                assert(false,error.localizedDescription)
+            }
+            
             let url: URL = URL(string: "http://192.168.1.5:8888/upload")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
             
-            let task = session.uploadTask(with: urlRequest, from: bodyData) { (data, response, error) in
-                if let error = error {
-                    fatalError()
-                    return
-                }
-                guard let data = data else {
-                    fatalError()
-                    return
-                }
-                let responseString = String.init(data: data, encoding: .utf8)
-                print("上传完成", responseString)
-            }
-        
-            task.resume()
+            let uploadTask = urlSession.uploadTask(with: urlRequest, fromFile: tempPath)
+            uploadTask.resume()
+            self.uploadTask = uploadTask
         }
         
-        func readData() {
-            let asset = uploadAsset.asset
-            
-            let resources = PHAssetResource.assetResources(for: asset)
-            uploadAsset.assetResource = resources
-            
-            var resultData = Array<Data>.init(repeating: Data(), count: resources.count)
-            
-            let queue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-            
-            let group = DispatchGroup()
-            var resultError: Error?
-            for i in 0..<resources.count {
-                debugPrint("resouce \(i) \(resources[i])")
-                group.enter()
-                queue.async(group: group, execute: DispatchWorkItem.init(block: {
-                    let index = i
-                    let resource = resources[i]
-                    var itemData = Data()
-                    PHAssetResourceManager.default().requestData(for: resource, options: nil) { data in
-                        itemData.append(data)
-                    } completionHandler: { error in
-                        if let error = error {
-                            resultError = error
-                            debugPrint("PHAssetResourceManager requestData error:",error)
-                        } else {
-                            resultData[index] = itemData
-                        }
-                        group.leave()
-                    }
-                }))
-            }
+        let asset = uploadAsset.asset
+        // read resources
+        let resources = PHAssetResource.assetResources(for: asset)
+        uploadAsset.assetResource = resources
         
-            group.notify(queue: queue, work: .init(block: {
-                // 返回数据
-                if let error = resultError {
-//                    resultHandler(.failure(error))
-                    fatalError()
-                } else {
-                    var type = ""
-                    switch resources[0].type {
-                        
-                    case .photo:
-                        type = "photo"
-                    case .video:
-                        type = "video"
-                    case .audio:
-                        type = "audio"
-                    case .alternatePhoto:
-                        type = "alternatePhoto"
-                    case .fullSizePhoto:
-                        type = "fullSizePhoto"
-                    case .fullSizeVideo:
-                        type = "fullSizeVideo"
-                    case .adjustmentData:
-                        type = "adjustmentData"
-                    case .adjustmentBasePhoto:
-                        type = "adjustmentBasePhoto"
-                    case .pairedVideo:
-                        type = "pairedVideo"
-                    case .fullSizePairedVideo:
-                        type = "fullSizePairedVideo"
-                    case .adjustmentBasePairedVideo:
-                        type = "adjustmentBasePairedVideo"
-                    case .adjustmentBaseVideo:
-                        type = "adjustmentBaseVideo"
-                    @unknown default:
-                        type = "photo"
-                    }
-                    print(type,resources[0].uniformTypeIdentifier)
-                    upload(fileData: resultData[0], fileName: resources[0].originalFilename,type: type,uti: resources[0].uniformTypeIdentifier)
+        var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(name: "", filename: "", contentType: "", data: Data()), count: resources.count + 1)
+        
+        let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        
+        let group = DispatchGroup()
+        
+        var resultError: Error?
+  
+        group.enter()
+        requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+            PHImageManager.default().requestImage(for: asset, targetSize: CGSize.zero, contentMode: .default, options: nil) { image, info in
+                guard let image = image,let imageData = image.jpegData(compressionQuality: 1.0) else {
+                    fatalError(info?.debugDescription ?? "读取封面失败")
                 }
                 
+                let metaData = UploadMetaData(name: "cover", filename: resources[0].originalFilename, contentType: "public.jpeg", data: imageData)
+                uploadData[0] = metaData
+                group.leave()
+            }
+        }))
+        
+        // read data
+        for i in 0..<resources.count {
+            debugPrint("resouce \(i) \(resources[i])")
+            group.enter()
+            requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+                let index = i
+                let resource = resources[i]
+                var itemData = Data()
+                PHAssetResourceManager.default().requestData(for: resource, options: nil) { data in
+                    itemData.append(data)
+                } completionHandler: { error in
+                    resultError = error
+                    if let error = error {
+                        assert(false,error.localizedDescription)
+                    } else {
+                        let metaData = UploadMetaData(name: "original", filename: resource.originalFilename, contentType: resource.uniformTypeIdentifier, data: itemData)
+                        uploadData[index + 1] = metaData
+                    }
+                    group.leave()
+                }
             }))
-            
-//            return true
         }
-        readData()
+    
+        group.notify(queue: requestAssetQueue, work: .init(block: {
+            // 返回数据
+            if let error = resultError {
+                fatalError(error.localizedDescription)
+            } else {
+                upload(uploadData)
+            }
+        }))
         
-        
-        
-        // 读取数据
-        
-        // 表单上传数据
     }
     
     
     // 实现消息队列
         
+    func loading() {
+        let qperationQueue = OperationQueue.init()
+        qperationQueue.maxConcurrentOperationCount = 1
+    }
     
 }
