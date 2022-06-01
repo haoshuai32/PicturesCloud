@@ -38,19 +38,40 @@ extension GridListItem:ListDiffable {
 
 // 必须子类话
 class GridViewController: UIViewController,
-                          ListAdapterDataSource
+                          ListAdapterDataSource,
+                          AssetChangeSelectedDelegate
 {
     
-    private let photoManager:LocalPhotoManager = LocalPhotoManager.shared
-
-    private var dataSource: [GridListItem] = []
     
-    var collectionView: UICollectionView!
+    
+    var dataSource: [GridListItem] = []
+    
+    var selectedData: Set<GridItem> = []
+    
+    func collectionView() -> UICollectionView {
+        fatalError()
+        return UICollectionView()
+    }
+    
+    lazy var adapter: ListAdapter = { [unowned self] in
+        return ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 2)
+    }()
+    
+    func reloadDataSource() -> [GridListItem] {
+        fatalError()
+        return []
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
+        
+        self.dataSource = self.reloadDataSource()
+        self.collectionView().setCollectionViewLayout(UICollectionViewFlowLayout(), animated: false)
+        self.adapter.collectionView = self.collectionView()
+        self.adapter.dataSource = self
+        
     }
     
     func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
@@ -63,6 +84,10 @@ class GridViewController: UIViewController,
     
     func emptyView(for listAdapter: ListAdapter) -> UIView? {
         return nil
+    }
+    
+    func photoChangeSelected(dataSource: Set<DisplayAsset>) {
+        self.selectedData = dataSource
     }
     
 

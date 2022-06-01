@@ -26,18 +26,18 @@ class LocalDisplayViewController: UIViewController,
     
     private var selectedDataSource: Set<LocalPictureModel> = []
     
-    private weak var delegate: LocalChangeSelectedDelegate?
+    private weak var delegate: AssetChangeSelectedDelegate?
     
     required init(index: Int,
                   manager: LocalPhotoManager,
                   dataSource: [LocalPictureModel],
                   selected: Set<LocalPictureModel>,
-                  delegate: LocalChangeSelectedDelegate) {
+                  delegate: AssetChangeSelectedDelegate) {
         self.displayIndex = index
         self.dataSource = dataSource
         self.selectedDataSource = selected
         self.photoManager = manager
-        self.delegate = delegate
+//        self.delegate = delegate
         
         super.init(nibName: "LocalDisplayViewController", bundle: nil)
     }

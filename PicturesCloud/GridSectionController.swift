@@ -15,11 +15,11 @@ class GridSectionController: ListSectionController,
                              ListDisplayDelegate
 {
     
-//    let photoManager: LocalPhotoManager = LocalPhotoManager.shared
-    
     var dataSource:[GridItem] = []
     
     var selectedData:Set<GridItem> = []
+    
+    weak var delegate: AssetChangeSelectedDelegate?
     
     lazy var itemSize: CGSize = {
         let width = UIScreen.main.bounds.width
@@ -32,7 +32,10 @@ class GridSectionController: ListSectionController,
         return CGSize(width: itemSize.width * UIScreen.main.scale, height: itemSize.height * UIScreen.main.scale)
     }()
     
-    override init() {
+    required init(selected: Set<DisplayAsset>,delegate: AssetChangeSelectedDelegate) {
+        self.selectedData = selected
+        self.delegate = delegate
+        
         super.init()
         workingRangeDelegate = self
         displayDelegate = self
@@ -53,9 +56,7 @@ class GridSectionController: ListSectionController,
         } else {
             self.selectedData.remove(item)
         }
-  
-//        self.delegate?.localChangeSelected(dataSource: self.selectedDataSource)
-        
+        self.delegate?.photoChangeSelected(dataSource: self.selectedData)
     }
     
     override func numberOfItems() -> Int {
@@ -129,7 +130,7 @@ class GridSectionController: ListSectionController,
     }
     
     func listAdapter(_ listAdapter: ListAdapter, willDisplay sectionController: ListSectionController, cell: UICollectionViewCell, at index: Int) {
-        guard let pictureCell = cell as? LocalPictureCell else {
+        guard let pictureCell = cell as? GridCell else {
             fatalError()
             return
         }

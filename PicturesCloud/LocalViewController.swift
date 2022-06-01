@@ -9,136 +9,76 @@ import UIKit
 import IGListKit
 import IGListDiffKit
 
-protocol LocalChangeSelectedDelegate:AnyObject {
-    func localChangeSelected(dataSource: Set<LocalPictureModel>)
+protocol AssetChangeSelectedDelegate:AnyObject {
+    func photoChangeSelected(dataSource: Set<DisplayAsset>)
 }
 
 // TODO: 切换segment的时候没有记录滑动位置
 
-class LocalViewController: UIViewController,
-ListAdapterDataSource,
-PhotoManagerChangeDelegate,
-                           LocalChangeSelectedDelegate
-
-{
-  
-    @IBOutlet weak var collectionView: UICollectionView!
+class LocalViewController: GridViewController {
     
-    lazy var adapter: ListAdapter = { [unowned self] in
-        return ListAdapter(updater: ListAdapterUpdater(), viewController: self, workingRangeSize: 2)
-    }()
-
+    @IBOutlet weak var _collectionView: UICollectionView!
+    
+    override func collectionView() -> UICollectionView {
+        return _collectionView;
+    }
+    
+    private let photoManager:LocalPhotoManager = LocalPhotoManager.shared
+    
     /// 0 全部 1 视频 2 照片
-    private var selectIndex: Int = 0
-    
-    private let photoManager = LocalPhotoManager()
-    
-    private var dataSource: [LocalPictureSectionModel] = []
-    
-    private var selectedDataSource: Set<LocalPictureModel> = []
+    private var selectTypeIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.collectionView.setCollectionViewLayout(UICollectionViewFlowLayout(), animated: false)
-        self.adapter.collectionView = self.collectionView
-        self.adapter.dataSource = self
-        self.photoManager.changeDelegate = self
-     
+        addObserver()
     }
-
+    
+    deinit {
+        removeObserver()
+    }
+    
+    override func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
+        return LocalSectionController(selected: self.selectedData, delegate: self)
+    }
+    
+    override func reloadDataSource() -> [GridListItem] {
+        let list = photoManager.requestDataSource(selectTypeIndex)
+        guard let fr = list.first else {
+            return []
+        }
+        let item = GridListItem(identifier: fr.identifier, dataSouce: list)
+        return [item]
+    }
+    
     @IBAction func uploadButtonAction(_ sender: Any?) {
-        
-        guard self.selectedDataSource.count > 0 else { return }
-        
-        let data = Array<LocalPictureModel>.init(self.selectedDataSource)
-        let asset = data.first!.asset
-        switch asset.mediaType {
-            
-        case .unknown:
-            debugPrint("unknown")
-        case .image:
-            debugPrint("image")
-        case .video:
-            debugPrint("video")
-        case .audio:
-            debugPrint("audio")
-        @unknown default:
-            fatalError()
-        }
-        debugPrint(asset.mediaSubtypes.rawValue)
-        switch asset.mediaSubtypes {
-        case .photoPanorama:
-            debugPrint("photoPanorama")
-            break
-        case .photoHDR:
-            debugPrint("photoHDR")
-            break
-        case .photoScreenshot:
-            debugPrint("photoScreenshot")
-            break
-        case .photoLive:
-            debugPrint("photoLive")
-            break
-        case .videoStreamed:
-            debugPrint("videoStreamed")
-            break
-        case .videoHighFrameRate:
-            debugPrint("videoStreamed")
-            break
-        case .videoTimelapse:
-            debugPrint("videoHighFrameRate")
-            break
-        case .photoDepthEffect:
-            debugPrint("photoDepthEffect")
-            break
-        default:
-            debugPrint("资源现有类型解析不出来",asset.mediaSubtypes.rawValue)
-//            fatalError()
-        }
-//        debugPrint(data.first?.asset)
-//        print(data.first?.asset)
-//        debugPrint(data.first?.asset.mediaType,data.first?.asset.mediaSubtypes)
-        
-//        HUploadManager.shared.append(data)
-//        HUploadManager.shared.start()
+        debugPrint("开始上传",self.selectedData.count)
     }
     
     @IBAction func onSegmentControl(_ sender: UISegmentedControl) {
-        self.selectIndex = sender.selectedSegmentIndex
+        let index = sender.selectedSegmentIndex
+        self.selectTypeIndex = index
+        self.dataSource = self.reloadDataSource()
         self.adapter.performUpdates(animated: true, completion: nil)
     }
     
-    // MARK: - LocalChangeSelectedDelegate
-    func localChangeSelected(dataSource: Set<LocalPictureModel>) {
-        self.selectedDataSource = dataSource
+    // MARK: - Observer
+    func addObserver() {
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationAction(_:)), name: NSNotification.Name.PhotoLibraryChange.Inserted, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationAction(_:)), name: NSNotification.Name.PhotoLibraryChange.Removed, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationAction(_:)), name: NSNotification.Name.PhotoLibraryChange.Moves, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(notificationAction(_:)), name: NSNotification.Name.PhotoLibraryChange.Changed, object: nil)
     }
     
-    // MARK: - PhotoManagerChangeDelegate
+    func removeObserver() {
+        NotificationCenter.default.removeObserver(self)
+    }
     
-    func photoDidChange() {
+    @objc func notificationAction(_ sender: Notification) {
+        // 如果是移除 需要进行数据的移除
         DispatchQueue.main.async {
-//            self.adapter.performUpdates(animated: true, completion: nil)
-            self.dataSource = self.photoManager.requestDataSource(self.selectIndex)
+            self.dataSource = self.reloadDataSource()
             self.adapter.performUpdates(animated: true, completion: nil)
         }
     }
-    
-    // MARK: - ListAdapterDataSource
-    
-    func objects(for listAdapter: ListAdapter) -> [ListDiffable] {
-        self.dataSource = self.photoManager.requestDataSource(self.selectIndex)
-        return self.dataSource
-    }
-    
-    func listAdapter(_ listAdapter: ListAdapter, sectionControllerFor object: Any) -> ListSectionController {
-        let sectionController = LocalPictureSectionController(selected: self.selectedDataSource,manager: self.photoManager,delegate: self)
-        
-        return sectionController
-    }
-    
-    func emptyView(for listAdapter: ListAdapter) -> UIView? {
-        return nil
-    }
-    
     
 }
