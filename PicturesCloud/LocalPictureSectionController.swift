@@ -115,7 +115,7 @@ class LocalPictureSectionController:
         } else {
             
             let item = self.dataSource[index]
-            
+//            debugPrint("request in image", index)
             let _ = self.photoManager.requestThumbnail(picture: item, targetSize: targetSize) { [weak self] image, info in
                 
                 cell.imageView.image = image
@@ -123,8 +123,8 @@ class LocalPictureSectionController:
                 if let image = image,let key = self?.cacheKey(index) {
                     self?.cacheImage.setObject(image, forKey: key)
                 }
-                
-                debugPrint("display in request image",index)
+                // 回掉两次 第一次快速返回低质量数据 第二次 返回目标数据
+//                debugPrint("display in request image",index)
             }
             
         }
@@ -175,12 +175,11 @@ class LocalPictureSectionController:
     
     override func didSelectItem(at index: Int) {
         print("选中",self.section,index)
-        let item = self.dataSource[index]
-//        HUploadManager.shared.uploadData(data: item) { result in
-//
-//        }
-        let vc = LocalDisplayViewController(index: index, manager: self.photoManager, dataSource: self.dataSource, selected: self.selectedDataSource, delegate: self.delegate!)
-        self.viewController?.navigationController?.pushViewController(vc, animated: true)
+        
+
+        
+//        let vc = LocalDisplayViewController(index: index, manager: self.photoManager, dataSource: self.dataSource, selected: self.selectedDataSource, delegate: self.delegate!)
+//        self.viewController?.navigationController?.pushViewController(vc, animated: true)
     }
 
 }

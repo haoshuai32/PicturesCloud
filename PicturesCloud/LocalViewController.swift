@@ -22,7 +22,6 @@ PhotoManagerChangeDelegate,
 
 {
   
-    
     @IBOutlet weak var collectionView: UICollectionView!
     
     lazy var adapter: ListAdapter = { [unowned self] in
@@ -44,11 +43,67 @@ PhotoManagerChangeDelegate,
         self.adapter.collectionView = self.collectionView
         self.adapter.dataSource = self
         self.photoManager.changeDelegate = self
-        
+     
     }
 
+    @IBAction func uploadButtonAction(_ sender: Any?) {
+        
+        guard self.selectedDataSource.count > 0 else { return }
+        
+        let data = Array<LocalPictureModel>.init(self.selectedDataSource)
+        let asset = data.first!.asset
+        switch asset.mediaType {
+            
+        case .unknown:
+            debugPrint("unknown")
+        case .image:
+            debugPrint("image")
+        case .video:
+            debugPrint("video")
+        case .audio:
+            debugPrint("audio")
+        @unknown default:
+            fatalError()
+        }
+        debugPrint(asset.mediaSubtypes.rawValue)
+        switch asset.mediaSubtypes {
+        case .photoPanorama:
+            debugPrint("photoPanorama")
+            break
+        case .photoHDR:
+            debugPrint("photoHDR")
+            break
+        case .photoScreenshot:
+            debugPrint("photoScreenshot")
+            break
+        case .photoLive:
+            debugPrint("photoLive")
+            break
+        case .videoStreamed:
+            debugPrint("videoStreamed")
+            break
+        case .videoHighFrameRate:
+            debugPrint("videoStreamed")
+            break
+        case .videoTimelapse:
+            debugPrint("videoHighFrameRate")
+            break
+        case .photoDepthEffect:
+            debugPrint("photoDepthEffect")
+            break
+        default:
+            debugPrint("资源现有类型解析不出来",asset.mediaSubtypes.rawValue)
+//            fatalError()
+        }
+//        debugPrint(data.first?.asset)
+//        print(data.first?.asset)
+//        debugPrint(data.first?.asset.mediaType,data.first?.asset.mediaSubtypes)
+        
+//        HUploadManager.shared.append(data)
+//        HUploadManager.shared.start()
+    }
+    
     @IBAction func onSegmentControl(_ sender: UISegmentedControl) {
-//        self.adapter.performUpdates(animated: true, completion: nil)
         self.selectIndex = sender.selectedSegmentIndex
         self.adapter.performUpdates(animated: true, completion: nil)
     }

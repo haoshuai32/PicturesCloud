@@ -17,7 +17,7 @@ struct HFileManager {
         let temp = NSTemporaryDirectory()
         var url = URL(fileURLWithPath: temp)
         url.appendPathComponent("download.temp")
-        debugPrint("upload temp", url)
+//        debugPrint("upload temp", url)
         return url
     }()
     
@@ -25,7 +25,7 @@ struct HFileManager {
         let temp = NSTemporaryDirectory()
         var url = URL(fileURLWithPath: temp)
         url.appendPathComponent("upload.temp")
-        debugPrint("upload temp", url)
+//        debugPrint("upload temp", url)
         return url
     }()
     

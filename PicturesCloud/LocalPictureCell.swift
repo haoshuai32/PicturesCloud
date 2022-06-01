@@ -26,7 +26,7 @@ class LocalPictureCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        
+//        imageView.kf.setImage(with: <#T##Resource?#>)
         if #available(iOS 13.0, *) {
             selelctButton.setImage(UIImage(systemName: "circle")!, for: .normal)
             selelctButton.setImage(UIImage(systemName: "circle.fill")!, for: .selected)

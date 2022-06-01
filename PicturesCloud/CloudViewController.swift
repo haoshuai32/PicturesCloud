@@ -10,6 +10,8 @@ import UIKit
 // 云册照片
 class CloudViewController: UIViewController {
     
+    @IBOutlet weak var collectionView: UICollectionView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
