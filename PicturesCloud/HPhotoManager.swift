@@ -30,8 +30,6 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     
     private var dataSource: [DisplayAsset] = []
     
-//    weak var changeDelegate: PhotoChangeDelegate?
-    
     private static func loadDataSource(_ assets: PHFetchResult<PHAsset>) -> [DisplayAsset] {
         guard let firstObject = assets.firstObject else {
             return []
@@ -81,16 +79,6 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         
         return list
         
-    }
-    
-    func requestThumbnail(picture: LocalPictureModel, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
-        let asset = picture.asset
-        return imageManager.requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
-    }
-    
-    func requestImage(picture: LocalPictureModel, targetSize size: CGSize, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
-        let asset = picture.asset
-        return imageManager.requestImage(for: asset, targetSize: size, contentMode: .default, options: nil, resultHandler: resultHandler)
     }
     
     func requestImage(for asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {

@@ -25,9 +25,6 @@ class LocalViewController: GridViewController {
     
     private let photoManager:LocalPhotoManager = LocalPhotoManager.shared
     
-    /// 0 全部 1 视频 2 照片
-    private var selectTypeIndex: Int = 0
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         addObserver()

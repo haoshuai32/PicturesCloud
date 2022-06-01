@@ -42,7 +42,8 @@ class GridViewController: UIViewController,
                           AssetChangeSelectedDelegate
 {
     
-    
+    /// 0 全部 1 视频 2 照片
+    var selectTypeIndex: Int = 0
     
     var dataSource: [GridListItem] = []
     

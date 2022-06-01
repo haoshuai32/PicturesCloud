@@ -84,7 +84,7 @@ class GridSectionController: ListSectionController,
         cell.selelctButton.tag = index
         cell.selelctButton.addTarget(self, action: #selector(selectButtonAction(_:)), for: .touchUpInside)
         
-        item.readCoverImage(targetSize: targetSize) { [weak self] result in
+        item.readCoverImage(targetSize: targetSize) { result in
             switch result {
             case let .success(resultData):
                 cell.dataSource = resultData
