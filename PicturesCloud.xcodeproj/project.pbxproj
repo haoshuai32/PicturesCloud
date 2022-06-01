@@ -41,6 +41,10 @@
 		2EC0D07C284735BE00253196 /* Kingfisher.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D07A284735BE00253196 /* Kingfisher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2EC0D084284735EE00253196 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D083284735EE00253196 /* SwiftProtobuf.framework */; };
 		2EC0D085284735EE00253196 /* SwiftProtobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D083284735EE00253196 /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2EC0D0892847561D00253196 /* GridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0882847561D00253196 /* GridViewController.swift */; };
+		2EC0D08B2847564900253196 /* GridSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08A2847564900253196 /* GridSectionController.swift */; };
+		2EC0D08E284760D700253196 /* GridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08C284760D700253196 /* GridCell.swift */; };
+		2EC0D08F284760D700253196 /* GridCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC0D08D284760D700253196 /* GridCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -105,6 +109,10 @@
 		2EC0D07D284735D300253196 /* ObjectMapper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ObjectMapper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EC0D080284735E000253196 /* SQLite.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SQLite.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2EC0D083284735EE00253196 /* SwiftProtobuf.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwiftProtobuf.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2EC0D0882847561D00253196 /* GridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridViewController.swift; sourceTree = "<group>"; };
+		2EC0D08A2847564900253196 /* GridSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridSectionController.swift; sourceTree = "<group>"; };
+		2EC0D08C284760D700253196 /* GridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCell.swift; sourceTree = "<group>"; };
+		2EC0D08D284760D700253196 /* GridCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GridCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +208,10 @@
 				2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */,
 				2E650F4D283B8568000E74CC /* Info.plist */,
 				2EC0D067284715A900253196 /* HPlayerView.swift */,
+				2EC0D0882847561D00253196 /* GridViewController.swift */,
+				2EC0D08A2847564900253196 /* GridSectionController.swift */,
+				2EC0D08C284760D700253196 /* GridCell.swift */,
+				2EC0D08D284760D700253196 /* GridCell.xib */,
 			);
 			path = PicturesCloud;
 			sourceTree = "<group>";
@@ -270,6 +282,7 @@
 				2E3A99F1283E5D3600F3D5D7 /* LocalImageCell.xib in Resources */,
 				2E3CF480283BC04100243139 /* LocalPictureCell.xib in Resources */,
 				2E3A99EB283E376100F3D5D7 /* LocalVideoCell.xib in Resources */,
+				2EC0D08F284760D700253196 /* GridCell.xib in Resources */,
 				2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */,
 				2E650F49283B8568000E74CC /* Assets.xcassets in Resources */,
 				2E650F47283B8563000E74CC /* Main.storyboard in Resources */,
@@ -287,6 +300,7 @@
 				2E3CF488283BCCC500243139 /* HDownloadManager.swift in Sources */,
 				2E3A99E6283E374D00F3D5D7 /* LocalImageCell.swift in Sources */,
 				2E3CF484283BCA1600243139 /* LocalViewController.swift in Sources */,
+				2EC0D0892847561D00253196 /* GridViewController.swift in Sources */,
 				2E3A99ED283E3C5F00F3D5D7 /* LocalImageSectionController.swift in Sources */,
 				2E3CF48A283BCCF400243139 /* LocalPictureModel.swift in Sources */,
 				2E3CF486283BCCB800243139 /* HUploadManager.swift in Sources */,
@@ -298,9 +312,11 @@
 				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
 				2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */,
+				2EC0D08B2847564900253196 /* GridSectionController.swift in Sources */,
 				2E3A99EA283E376100F3D5D7 /* LocalVideoCell.swift in Sources */,
 				2EC0D0662846684200253196 /* Display.swift in Sources */,
 				2E3CF47F283BC04100243139 /* LocalPictureCell.swift in Sources */,
+				2EC0D08E284760D700253196 /* GridCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

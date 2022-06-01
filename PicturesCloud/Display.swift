@@ -393,7 +393,9 @@ extension DisplayAsset {
                     if let uniformType = asset.value(forKey: "uniformTypeIdentifier") as? NSString,
                         uniformType == "com.compuserve.gif" {
                         resultHandler(.success(.gif(image)))
-                    } else {
+                    }
+                    // image
+                    else {
                         resultHandler(.success(.image(image)))
                     }
                     break
@@ -427,7 +429,9 @@ extension DisplayAsset {
                         // GIF
                         if self.mediaSubtypes.rawValue == 64 {
                             resultHandler(.success(.gif(image)))
-                        } else {
+                        }
+                        // image
+                        else {
                             resultHandler(.success(.image(image)))
                         }
                         break
@@ -478,10 +482,8 @@ extension DisplayAsset {
                     PHAssetResourceManager.default().requestData(for: gifResource, options: nil) { data in
                         resultData.append(data)
                     } completionHandler: { error in
-                        // 存入一个cache中
                         if let error = error {
                             resultHandler(.failure(error))
-//                            assert(false)
                         } else {
                             
                             var nameEx:[String] = gifResource.originalFilename.split(separator: ".").map{String($0)}
@@ -528,15 +530,52 @@ extension DisplayAsset {
             case .image:
                 // photoLive
                 if self.mediaSubtypes == .photoLive {
+                    
+//                    let request = URLRequest(url: <#T##URL#>)
+//                    URLSession.shared.downloadTask(with: <#T##URLRequest#>) { <#URL?#>, <#URLResponse?#>, <#Error?#> in
+//                        <#code#>
+//                    }
+                    
                     // 存在两条数据
+                    // 需要先吧数据下载下来
+                    
+                    
                 } else
                 // GIF
                 if self.mediaSubtypes.rawValue == 64 {
                     // gif 存在一条数据
+                    guard let gifURL = resources.first?.fileURL else {
+                        fatalError()
+                        return
+                    }
+                    KingfisherManager.shared.downloader.downloadImage(with: gifURL, options: KingfisherParsedOptionsInfo.init(nil)) { result in
+                        switch result {
+                        case let .success(imageResult):
+                            resultHandler(.success(.gif((imageResult.originalData,gifURL.absoluteString))))
+                            break
+                        case let .failure(error):
+                            resultHandler(.failure(error))
+                            break
+                        }
+                    }
                 }
                 // image
                 else {
                     // 看是否存在多条数据
+                    guard let imageURL = resources.first?.fileURL else {
+                        fatalError()
+                        return
+                    }
+                    KingfisherManager.shared.downloader.downloadImage(with: imageURL, options: KingfisherParsedOptionsInfo.init(nil)) { result in
+                        switch result {
+                        case let .success(imageResult):
+                            resultHandler(.success(.image(imageResult.image)))
+                            break
+                        case let .failure(error):
+                            resultHandler(.failure(error))
+                            break
+                        }
+                    }
                 }
                 break
             case .video:
