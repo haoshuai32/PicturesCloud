@@ -10,6 +10,7 @@ import IGListKit
 
 typealias GridItem = DisplayAsset
 
+// noti: 必须子类化
 class GridSectionController: ListSectionController,
                              ListWorkingRangeDelegate,
                              ListDisplayDelegate

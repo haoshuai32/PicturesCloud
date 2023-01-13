@@ -10,7 +10,7 @@ import Photos
 import UIKit
 
 protocol HUploadOperationDelegate {
-    func uploadData(data: LocalPictureModel,completedHandler: @escaping () -> Void)
+    func uploadData(data: DisplayAsset,completedHandler: @escaping () -> Void)
 }
 
 class HUploadOperation: Operation {
@@ -45,11 +45,11 @@ class HUploadOperation: Operation {
         }
     }
     
-    private let dataSource: LocalPictureModel
+    private let dataSource: DisplayAsset
     
     private let delegate: HUploadOperationDelegate
     
-    init(data: LocalPictureModel,delegate: HUploadOperationDelegate) {
+    init(data: DisplayAsset,delegate: HUploadOperationDelegate) {
         self.dataSource = data
         self.delegate = delegate
         super.init()
@@ -109,7 +109,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        self.uploadReceiveData = data
+        self.uploadingReceiveData = data
         debugPrint(#function,String.init(data: data, encoding: .utf8))
     }
     
@@ -118,10 +118,10 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard let completedHandler = self.uploadCompletedHandler,let item = self.uploadAsset else {
+        guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingAsset else {
             fatalError()
         }
-        debugPrint("update data Complete",self.uploadAsset?.asset, self.uploadTask)
+        debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
         completedHandler()
         self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
         debugPrint(#function)
@@ -147,17 +147,18 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     private let tempPath = HFileManager.shared.uploadTemp
     
-    private var uploadDataSource: NSCache<NSString,LocalPictureModel> = NSCache<NSString,LocalPictureModel>()
+    private var uploadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
     
-    private var dataSource: [LocalPictureModel] = []
+    private var dataSource: [DisplayAsset] = []
     
-    private var uploadAsset: LocalPictureModel?
+    // 上传中的数据处理
+    private var uploadingAsset: DisplayAsset?
     
-    private var uploadTask: URLSessionUploadTask?
+    private var uploadingTask: URLSessionUploadTask?
     
-    private var uploadCompletedHandler: (() -> Void)?
+    private var uploadingCompletedHandler: (() -> Void)?
     
-    private var uploadReceiveData: Data?
+    private var uploadingReceiveData: Data?
     
     lazy var uploadOperationQueue: OperationQueue = {
         let queue = OperationQueue()
@@ -171,10 +172,10 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         return String(format: "onelcat.github.io.boundary.%08x%08x", first, second)
     }
     
-    func uploadData(data: LocalPictureModel, completedHandler: @escaping () -> Void) {
+    func uploadData(data: DisplayAsset, completedHandler: @escaping () -> Void) {
         
-        self.uploadAsset = data
-        self.uploadCompletedHandler = completedHandler
+        self.uploadingAsset = data
+        self.uploadingCompletedHandler = completedHandler
         
         let uploadAsset = data
         
@@ -219,13 +220,16 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             let uploadTask = urlSession.uploadTask(with: urlRequest, fromFile: tempPath)
             uploadTask.resume()
             debugPrint("update data",data.asset, uploadTask)
-            self.uploadTask = uploadTask
+            self.uploadingTask = uploadTask
         } //。func end
         
-        let asset = uploadAsset.asset
+        guard let asset = uploadAsset.asset else {
+            fatalError()
+            return
+        }
         // read resources
         let resources = PHAssetResource.assetResources(for: asset)
-        uploadAsset.assetResource = resources
+        uploadAsset.resources = resources.map{DisplayAssetResource.init(resource: $0)}
         
         var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(name: "", filename: "", contentType: "", data: Data()), count: resources.count)
         
@@ -234,6 +238,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         let group = DispatchGroup()
         
         let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        
+        // read cover data
         
         // read data
         for i in 0..<resources.count {
@@ -279,7 +285,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     // 实现消息队列
   
-    func append(_ newElements: [LocalPictureModel]) {
+    func append(_ newElements: [DisplayAsset]) {
         
         self.dataSource.append(contentsOf: newElements)
     }

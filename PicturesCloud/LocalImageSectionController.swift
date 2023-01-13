@@ -64,17 +64,17 @@ class LocalImageSectionController: ListSectionController,
             fatalError()
         }
         
-        self.photoManager.requestImage(picture: item, targetSize: CGSize.zero) { [weak self] image, info in
-            
-            guard let image = image ,let self = self else {
-                fatalError()
-            }
-            
-            if let cell = self.collectionContext?.cellForItem(at: 0, sectionController: self) as? LocalImageCell {
-                cell.image = image
-            }
-            self.requestImage = image
-        }
+//        self.photoManager.requestImage(picture: item, targetSize: CGSize.zero) { [weak self] image, info in
+//            
+//            guard let image = image ,let self = self else {
+//                fatalError()
+//            }
+//            
+//            if let cell = self.collectionContext?.cellForItem(at: 0, sectionController: self) as? LocalImageCell {
+//                cell.image = image
+//            }
+//            self.requestImage = image
+//        }
     }
 
     func listAdapter(_ listAdapter: ListAdapter, sectionControllerDidExitWorkingRange sectionController: ListSectionController) {

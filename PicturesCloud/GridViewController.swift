@@ -9,8 +9,6 @@ import UIKit
 import IGListKit
 import IGListDiffKit
 
-
-
 class GridListItem {
     let identifier: String
     let dataSouce: [GridItem]
@@ -36,7 +34,7 @@ extension GridListItem:ListDiffable {
 }
 
 
-// 必须子类话
+// noti: 必须子类化
 class GridViewController: UIViewController,
                           ListAdapterDataSource,
                           AssetChangeSelectedDelegate
