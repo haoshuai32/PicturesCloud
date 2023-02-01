@@ -29,7 +29,6 @@
 		2E650F47283B8563000E74CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F45283B8563000E74CC /* Main.storyboard */; };
 		2E650F49283B8568000E74CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F48283B8568000E74CC /* Assets.xcassets */; };
 		2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */; };
-		2EBE9C78298AA4A40085AECB /* IGListKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2EBE9C77298AA4A40085AECB /* IGListKit */; };
 		2EC0D0662846684200253196 /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0652846684200253196 /* Display.swift */; };
 		2EC0D068284715A900253196 /* HPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D067284715A900253196 /* HPlayerView.swift */; };
 		2EC0D0892847561D00253196 /* GridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0882847561D00253196 /* GridViewController.swift */; };
@@ -37,6 +36,7 @@
 		2EC0D08E284760D700253196 /* GridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08C284760D700253196 /* GridCell.swift */; };
 		2EC0D08F284760D700253196 /* GridCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC0D08D284760D700253196 /* GridCell.xib */; };
 		2ECE50D0298A9950005533C8 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE50CF298A9950005533C8 /* API.swift */; };
+		821953546EF4A3BB39CF901B /* Pods_PicturesCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88936EC631460B4C08C7C8E7 /* Pods_PicturesCloud.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +88,9 @@
 		2EC0D08C284760D700253196 /* GridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCell.swift; sourceTree = "<group>"; };
 		2EC0D08D284760D700253196 /* GridCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GridCell.xib; sourceTree = "<group>"; };
 		2ECE50CF298A9950005533C8 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		88936EC631460B4C08C7C8E7 /* Pods_PicturesCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PicturesCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B9C68C34E385FDA30A9F9C54 /* Pods-PicturesCloud.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PicturesCloud.release.xcconfig"; path = "Target Support Files/Pods-PicturesCloud/Pods-PicturesCloud.release.xcconfig"; sourceTree = "<group>"; };
+		C093A214FB1426D85E48A48A /* Pods-PicturesCloud.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PicturesCloud.debug.xcconfig"; path = "Target Support Files/Pods-PicturesCloud/Pods-PicturesCloud.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -95,7 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EBE9C78298AA4A40085AECB /* IGListKit in Frameworks */,
+				821953546EF4A3BB39CF901B /* Pods_PicturesCloud.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +124,7 @@
 				2E0F9B0C283CC4FE000358FD /* IGListKit.framework */,
 				2E0F9B09283CC4F6000358FD /* IGListDiffKit.framework */,
 				2E0F9B05283CC4EB000358FD /* Alamofire.framework */,
+				88936EC631460B4C08C7C8E7 /* Pods_PicturesCloud.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -145,6 +149,7 @@
 				2E650F3E283B8563000E74CC /* PicturesCloud */,
 				2E650F3D283B8563000E74CC /* Products */,
 				2E1C7FBB283CB55600B9222E /* Frameworks */,
+				BE3BB7A2C2DB0F8F77E58E74 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -188,6 +193,16 @@
 			path = PicturesCloud;
 			sourceTree = "<group>";
 		};
+		BE3BB7A2C2DB0F8F77E58E74 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C093A214FB1426D85E48A48A /* Pods-PicturesCloud.debug.xcconfig */,
+				B9C68C34E385FDA30A9F9C54 /* Pods-PicturesCloud.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -195,18 +210,17 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2E650F50283B8568000E74CC /* Build configuration list for PBXNativeTarget "PicturesCloud" */;
 			buildPhases = (
+				763447D76890DDEC9B2CA4F8 /* [CP] Check Pods Manifest.lock */,
 				2E650F38283B8563000E74CC /* Sources */,
 				2E650F39283B8563000E74CC /* Frameworks */,
 				2E650F3A283B8563000E74CC /* Resources */,
+				D898EFF342D9997800E53844 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = PicturesCloud;
-			packageProductDependencies = (
-				2EBE9C77298AA4A40085AECB /* IGListKit */,
-			);
 			productName = PicturesCloud;
 			productReference = 2E650F3C283B8563000E74CC /* PicturesCloud.app */;
 			productType = "com.apple.product-type.application";
@@ -235,9 +249,6 @@
 				Base,
 			);
 			mainGroup = 2E650F33283B8563000E74CC;
-			packageReferences = (
-				2EBE9C76298AA4A40085AECB /* XCRemoteSwiftPackageReference "IGListKit" */,
-			);
 			productRefGroup = 2E650F3D283B8563000E74CC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -264,6 +275,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		763447D76890DDEC9B2CA4F8 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-PicturesCloud-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		D898EFF342D9997800E53844 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PicturesCloud/Pods-PicturesCloud-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PicturesCloud/Pods-PicturesCloud-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PicturesCloud/Pods-PicturesCloud-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		2E650F38283B8563000E74CC /* Sources */ = {
@@ -432,6 +485,7 @@
 		};
 		2E650F51283B8568000E74CC /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = C093A214FB1426D85E48A48A /* Pods-PicturesCloud.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -466,6 +520,7 @@
 		};
 		2E650F52283B8568000E74CC /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B9C68C34E385FDA30A9F9C54 /* Pods-PicturesCloud.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -520,25 +575,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		2EBE9C76298AA4A40085AECB /* XCRemoteSwiftPackageReference "IGListKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Instagram/IGListKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		2EBE9C77298AA4A40085AECB /* IGListKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 2EBE9C76298AA4A40085AECB /* XCRemoteSwiftPackageReference "IGListKit" */;
-			productName = IGListKit;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2E650F34283B8563000E74CC /* Project object */;
 }
