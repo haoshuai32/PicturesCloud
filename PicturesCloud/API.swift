@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Moya
+import Photos
 
 class API {
     static let shared = API()
@@ -41,19 +43,19 @@ class API {
 // 数据管理协议
 
 protocol PhotoAsset {
-    var identifier: String {set get}
-    var mediaType: PHAssetMediaType {set get}
-    var mediaSubtypes: PHAssetMediaSubtype {set get}
-    var pixelWidth: Int {set get}
-    var pixelHeight: Int {set get}
-    var creationDate: Date? {set get}
-    var location: CLLocation?{set get}
-    var duration: Double {set get}
+    var identifier: String {get}
+    var mediaType: PHAssetMediaType {get}
+    var mediaSubtypes: PHAssetMediaSubtype {get}
+    var pixelWidth: Int {get}
+    var pixelHeight: Int {get}
+    var creationDate: Date? {get}
+    var location: CLLocation?{get}
+    var duration: Double {get}
 }
 
-class CPhotoAsset:PhotoAsset {
-    // 传入json 对象进行数据解析
-}
+//class CPhotoAsset:PhotoAsset {
+//    // 传入json 对象进行数据解析
+//}
 
 class LPhotoAsset:PhotoAsset {
     

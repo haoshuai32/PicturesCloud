@@ -9,4 +9,5 @@ target 'PicturesCloud' do
   pod 'Moya/RxSwift', '~> 15.0'
   pod 'IGListKit', '~> 4.0.0'
   pod 'ObjectMapper', '~> 4.2'
+  pod 'Kingfisher', '~> 7.0'
 end
