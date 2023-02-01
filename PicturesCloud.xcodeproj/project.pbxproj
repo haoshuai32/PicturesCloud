@@ -29,41 +29,15 @@
 		2E650F47283B8563000E74CC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F45283B8563000E74CC /* Main.storyboard */; };
 		2E650F49283B8568000E74CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F48283B8568000E74CC /* Assets.xcassets */; };
 		2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */; };
+		2EBE9C78298AA4A40085AECB /* IGListKit in Frameworks */ = {isa = PBXBuildFile; productRef = 2EBE9C77298AA4A40085AECB /* IGListKit */; };
 		2EC0D0662846684200253196 /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0652846684200253196 /* Display.swift */; };
 		2EC0D068284715A900253196 /* HPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D067284715A900253196 /* HPlayerView.swift */; };
-		2EC0D071284735A500253196 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D070284735A500253196 /* Alamofire.framework */; };
-		2EC0D072284735A500253196 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D070284735A500253196 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EC0D075284735B100253196 /* IGListDiffKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D074284735B100253196 /* IGListDiffKit.framework */; };
-		2EC0D076284735B100253196 /* IGListDiffKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D074284735B100253196 /* IGListDiffKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EC0D078284735BA00253196 /* IGListKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D077284735BA00253196 /* IGListKit.framework */; };
-		2EC0D079284735BA00253196 /* IGListKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D077284735BA00253196 /* IGListKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EC0D07B284735BE00253196 /* Kingfisher.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D07A284735BE00253196 /* Kingfisher.framework */; };
-		2EC0D07C284735BE00253196 /* Kingfisher.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D07A284735BE00253196 /* Kingfisher.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		2EC0D084284735EE00253196 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D083284735EE00253196 /* SwiftProtobuf.framework */; };
-		2EC0D085284735EE00253196 /* SwiftProtobuf.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2EC0D083284735EE00253196 /* SwiftProtobuf.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2EC0D0892847561D00253196 /* GridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0882847561D00253196 /* GridViewController.swift */; };
 		2EC0D08B2847564900253196 /* GridSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08A2847564900253196 /* GridSectionController.swift */; };
 		2EC0D08E284760D700253196 /* GridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08C284760D700253196 /* GridCell.swift */; };
 		2EC0D08F284760D700253196 /* GridCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC0D08D284760D700253196 /* GridCell.xib */; };
+		2ECE50D0298A9950005533C8 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE50CF298A9950005533C8 /* API.swift */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		2EC0D073284735A500253196 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				2EC0D079284735BA00253196 /* IGListKit.framework in Embed Frameworks */,
-				2EC0D076284735B100253196 /* IGListDiffKit.framework in Embed Frameworks */,
-				2EC0D07C284735BE00253196 /* Kingfisher.framework in Embed Frameworks */,
-				2EC0D072284735A500253196 /* Alamofire.framework in Embed Frameworks */,
-				2EC0D085284735EE00253196 /* SwiftProtobuf.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2E0F9B05283CC4EB000358FD /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Frameworks/Alamofire.framework; sourceTree = "<group>"; };
@@ -113,6 +87,7 @@
 		2EC0D08A2847564900253196 /* GridSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridSectionController.swift; sourceTree = "<group>"; };
 		2EC0D08C284760D700253196 /* GridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCell.swift; sourceTree = "<group>"; };
 		2EC0D08D284760D700253196 /* GridCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GridCell.xib; sourceTree = "<group>"; };
+		2ECE50CF298A9950005533C8 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,11 +95,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EC0D078284735BA00253196 /* IGListKit.framework in Frameworks */,
-				2EC0D075284735B100253196 /* IGListDiffKit.framework in Frameworks */,
-				2EC0D07B284735BE00253196 /* Kingfisher.framework in Frameworks */,
-				2EC0D071284735A500253196 /* Alamofire.framework in Frameworks */,
-				2EC0D084284735EE00253196 /* SwiftProtobuf.framework in Frameworks */,
+				2EBE9C78298AA4A40085AECB /* IGListKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,6 +183,7 @@
 				2EC0D08A2847564900253196 /* GridSectionController.swift */,
 				2EC0D08C284760D700253196 /* GridCell.swift */,
 				2EC0D08D284760D700253196 /* GridCell.xib */,
+				2ECE50CF298A9950005533C8 /* API.swift */,
 			);
 			path = PicturesCloud;
 			sourceTree = "<group>";
@@ -226,7 +198,6 @@
 				2E650F38283B8563000E74CC /* Sources */,
 				2E650F39283B8563000E74CC /* Frameworks */,
 				2E650F3A283B8563000E74CC /* Resources */,
-				2EC0D073284735A500253196 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -234,6 +205,7 @@
 			);
 			name = PicturesCloud;
 			packageProductDependencies = (
+				2EBE9C77298AA4A40085AECB /* IGListKit */,
 			);
 			productName = PicturesCloud;
 			productReference = 2E650F3C283B8563000E74CC /* PicturesCloud.app */;
@@ -264,6 +236,7 @@
 			);
 			mainGroup = 2E650F33283B8563000E74CC;
 			packageReferences = (
+				2EBE9C76298AA4A40085AECB /* XCRemoteSwiftPackageReference "IGListKit" */,
 			);
 			productRefGroup = 2E650F3D283B8563000E74CC /* Products */;
 			projectDirPath = "";
@@ -310,6 +283,7 @@
 				2E3A99EF283E5B3500F3D5D7 /* HImageScrollView.swift in Sources */,
 				2EC0D068284715A900253196 /* HPlayerView.swift in Sources */,
 				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
+				2ECE50D0298A9950005533C8 /* API.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
 				2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */,
 				2EC0D08B2847564900253196 /* GridSectionController.swift in Sources */,
@@ -546,6 +520,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2EBE9C76298AA4A40085AECB /* XCRemoteSwiftPackageReference "IGListKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Instagram/IGListKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2EBE9C77298AA4A40085AECB /* IGListKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2EBE9C76298AA4A40085AECB /* XCRemoteSwiftPackageReference "IGListKit" */;
+			productName = IGListKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2E650F34283B8563000E74CC /* Project object */;
 }
