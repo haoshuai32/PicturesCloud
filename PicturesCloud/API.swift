@@ -19,7 +19,7 @@ import Photos
 //    var nn: Float32
 //}
 
-struct AlbumOptions {
+public struct AlbumOptions {
     var paramType: String = "album"
     var q: String = ""
     var count: Int = 24
@@ -35,9 +35,9 @@ public enum PhotoPrism {
     case getAlbums(AlbumOptions)
     case getAlbum(String)
 
-    case photoList(Int)
-    case getPhotoDownload(String)
-    case getAlbum(String)
+//    case photoList(Int)
+//    case getPhotoDownload(String)
+//    case getAlbum(String)
     
 //    case upload(UploadData)
 

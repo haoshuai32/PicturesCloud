@@ -7,8 +7,8 @@
 
 import Foundation
 
-type Photos []Photo
-
+//type Photos []Photo
+typealias Photos = [Photo]
 // Photo represents a photo, all its properties, and link to all its images and sidecar files.
 struct Photo  {
     /// `gorm:"type:VARBINARY(42);index;" json:"DocumentID,omitempty" yaml:"DocumentID,omitempty"`
@@ -86,7 +86,7 @@ struct Photo  {
     /// `gorm:"type:SMALLINT" json:"Resolution" yaml:"-"`
     var PhotoResolution : Int?
     /// `json:"Color" yaml:"-"`
-    var var : Int8 PhotoColor? : U
+    var PhotoColor : UInt8?
     /// `gorm:"index:idx_photos_camera_lens;default:1" json:"CameraID" yaml:"-"`
     var CameraID : UInt?
     /// `gorm:"type:VARBINARY(255);" json:"CameraSerial" yaml:"CameraSerial,omitempty"`
@@ -96,23 +96,23 @@ struct Photo  {
     /// `gorm:"index:idx_photos_camera_lens;default:1" json:"LensID" yaml:"-"`
     var LensID : UInt?
     /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Details" yaml:"Details"`
-    Details          *Details
+    var Details:Details?
     /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Camera" yaml:"-"`
-    Camera           *Camera
+    var Camera:Camera?
     /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Lens" yaml:"-"`
-    Lens             *Lens
+    var Lens:Lens?
     /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Cell" yaml:"-"`
-    Cell             *Cell
+    var Cell:Cell?
     /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Place" yaml:"-"`
-    Place            *Place
+    var Place:Place?
     /// `json:"-" yaml:"-"`
-    Keywords         []Keyword
+    var Keywords:[Keyword] = []
     /// `json:"-" yaml:"-"`
-    Albums           []Album
+    var Albums:[Album] = []
     /// `yaml:"-"`
-    Files            []File
+    var Files    : [File] = []
     /// `yaml:"-"`
-    Labels           []PhotoLabel
+    var Labels        : [PhotoLabel] = []
     /// `yaml:"CreatedAt,omitempty"`
     var CreatedAt : Date?
     /// `yaml:"UpdatedAt,omitempty"`
@@ -222,7 +222,7 @@ struct Cell  {
     /// `gorm:"type:VARBINARY(42);default:'zz'" json:"-" yaml:"PlaceID"`
     var PlaceID : String?
     /// `gorm:"PRELOAD:true" json:"Place" yaml:"-"`
-    Place        *Place
+    var Place : Place?
     /// `json:"CreatedAt" yaml:"-"`
     var CreatedAt : Date?
     /// `json:"UpdatedAt" yaml:"-"`
@@ -315,11 +315,10 @@ struct Album  {
     /// `sql:"index" json:"DeletedAt" yaml:"DeletedAt,omitempty"`
     var DeletedAt : Date?
     /// `gorm:"foreignkey:AlbumUID;association_foreignkey:AlbumUID" json:"-" yaml:"Photos,omitempty"`
-    Photos           PhotoAlbums
+    var Photos   : [PhotoAlbums] = []
 }
 
-type PhotoAlbums []PhotoAlbum
-
+typealias PhotoAlbums = [PhotoAlbum]
 // PhotoAlbum represents the many_to_many relation between Photo and Album
 struct PhotoAlbum  {
     /// `gorm:"type:VARBINARY(42);primary_key;auto_increment:false" json:"PhotoUID" yaml:"UID"`
@@ -337,19 +336,19 @@ struct PhotoAlbum  {
     /// `json:"UpdatedAt" yaml:"-"`
     var UpdatedAt : Date?
     /// `gorm:"PRELOAD:false" yaml:"-"`
-    Photo     *Photo
+    var Photo     : Photo?
     /// `gorm:"PRELOAD:true" yaml:"-"`
-    Album     *Album
+    var Album     :Album?
 }
 
-type Files []File
+typealias Files = [File]
 
 // File represents an image or sidecar file that belongs to a photo.
 struct File  {
     /// `gorm:"primary_key" json:"-" yaml:"-"`
     var ID : UInt?
     /// `json:"-" yaml:"-"`
-    Photo           *Photo
+    var Photo           :Photo?
     /// `gorm:"index;" json:"-" yaml:"-"`
     var PhotoID : UInt?
     /// `gorm:"type:VARBINARY(42);index;" json:"PhotoUID" yaml:"PhotoUID"`
@@ -385,7 +384,7 @@ struct File  {
     /// `json:"Video" yaml:"Video,omitempty"`
     var FileVideo : Bool?
     /// `json:"Duration" yaml:"Duration,omitempty"`
-    FileDuration    time.Duration
+    var FileDuration    :Int?
     /// `json:"Width" yaml:"Width,omitempty"`
     var FileWidth : Int?
     /// `json:"Height" yaml:"Height,omitempty"`
@@ -403,9 +402,9 @@ struct File  {
     /// `gorm:"type:VARBINARY(9);" json:"Luminance" yaml:"Luminance,omitempty"`
     var FileLuminance : String?
     /// `json:"Diff" yaml:"Diff,omitempty"`
-    FileDiff        uint32
+    var FileDiff        :UInt32?
     /// `json:"Chroma" yaml:"Chroma,omitempty"`
-    var var : Int8 FileChroma? : U
+    var FileChroma:UInt8?
     /// `gorm:"type:VARBINARY(512)" json:"Error" yaml:"Error,omitempty"`
     var FileError : String?
     /// `json:"ModTime" yaml:"-"`
@@ -421,9 +420,9 @@ struct File  {
     /// `sql:"index" json:"DeletedAt,omitempty" yaml:"-"`
     var DeletedAt : Date?
     /// `json:"-" yaml:"-"`
-    Share           []FileShare
+    var Share           :[FileShare] = []
     /// `json:"-" yaml:"-"`
-    Sync            []FileSync
+    var Sync            :[FileSync] = []
 }
 
 // FileSync represents a one-to-many relation between File and Account for syncing with remote services.
@@ -434,17 +433,17 @@ struct FileSync  {
     var AccountID : UInt?
     /// `gorm:"index;"`
     var FileID : UInt?
-    RemoteDate time.Time
+    var RemoteDate : Date?
     var RemoteSize : Int64?
     /// `gorm:"type:VARBINARY(16);"`
     var Status : String?
     /// `gorm:"type:VARBINARY(512);"`
     var Error : String?
-    Errors     int
-    File       *File
-    Account    *Account
-    CreatedAt  time.Time
-    UpdatedAt  time.Time
+    var Errors     :Int?
+    var File       :File?
+    var Account    :Account?
+    var CreatedAt  :Date?
+    var UpdatedAt  :Date?
 }
 
 // FileShare represents a one-to-many relation between File and Account for pushing files to remote services.
@@ -459,11 +458,11 @@ struct FileShare  {
     var Status : String?
     /// `gorm:"type:VARBINARY(512);"`
     var Error : String?
-    Errors     int
-    File       *File
-    Account    *Account
-    CreatedAt  time.Time
-    UpdatedAt  time.Time
+    var Errors     :Int?
+    var File       :File?
+    var Account    :Account?
+    var CreatedAt  :Date?
+    var UpdatedAt  :Date?
 }
 
 // PhotoLabel represents the many-to-many relation between Photo and label.
@@ -478,9 +477,9 @@ struct PhotoLabel  {
     /// `gorm:"type:SMALLINT"`
     var Uncertainty : Int?
     /// `gorm:"PRELOAD:false"`
-    Photo       *Photo
+    var Photo       :Photo?
     /// `gorm:"PRELOAD:true"`
-    Label       *Label
+    var Label       :Label?
 }
 
 // Label is used for photo, album and location categorization
@@ -504,7 +503,7 @@ struct Label  {
     /// `gorm:"type:TEXT;" json:"Notes" yaml:"Notes,omitempty"`
     var LabelNotes : String?
     /// `gorm:"many2many:categories;association_jointable_foreignkey:category_id" json:"-" yaml:"-"`
-    LabelCategories  []*Label
+    var LabelCategories  :[Label] = []
     /// `gorm:"default:1" json:"PhotoCount" yaml:"-"`
     var PhotoCount : Int?
     /// `json:"CreatedAt" yaml:"-"`
@@ -550,15 +549,15 @@ struct Account  {
     var AccPass : String?
     /// `gorm:"type:VARBINARY(512);"`
     var AccError : String?
-    AccErrors     int
+    var AccErrors     :Int?
     var AccShare : Bool?
     var AccSync : Bool?
-    RetryLimit    int
+    var RetryLimit    :Int?
     /// `gorm:"type:VARBINARY(500);"`
     var SharePath : String?
     /// `gorm:"type:VARBINARY(16);"`
     var ShareSize : String?
-    ShareExpires  int
+    var ShareExpires  :Int?
     /// `gorm:"type:VARBINARY(500);"`
     var SyncPath : String?
     /// `gorm:"type:VARBINARY(16);"`

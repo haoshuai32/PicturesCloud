@@ -166,6 +166,7 @@
 		2E650F3E283B8563000E74CC /* PicturesCloud */ = {
 			isa = PBXGroup;
 			children = (
+				2EE7BE4B298AC4A2006BD2B0 /* API */,
 				2E3A99F3283F0CA900F3D5D7 /* Manager */,
 				2E650F3F283B8563000E74CC /* AppDelegate.swift */,
 				2E650F43283B8563000E74CC /* CloudViewController.swift */,
@@ -190,10 +191,17 @@
 				2EC0D08A2847564900253196 /* GridSectionController.swift */,
 				2EC0D08C284760D700253196 /* GridCell.swift */,
 				2EC0D08D284760D700253196 /* GridCell.xib */,
+			);
+			path = PicturesCloud;
+			sourceTree = "<group>";
+		};
+		2EE7BE4B298AC4A2006BD2B0 /* API */ = {
+			isa = PBXGroup;
+			children = (
 				2ECE50CF298A9950005533C8 /* API.swift */,
 				2EE7BE49298ABC48006BD2B0 /* types.swift */,
 			);
-			path = PicturesCloud;
+			name = API;
 			sourceTree = "<group>";
 		};
 		BE3BB7A2C2DB0F8F77E58E74 /* Pods */ = {
