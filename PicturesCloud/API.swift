@@ -9,6 +9,41 @@ import Foundation
 import Moya
 import Photos
 
+//class PhotoPrism {
+//
+//}
+
+//class UploadData {
+//
+//    var name: Bool = false
+//    var nn: Float32
+//}
+
+struct AlbumOptions {
+    var paramType: String = "album"
+    var q: String = ""
+    var count: Int = 24
+    var offset: Int = 0
+    var category: String = ""
+}
+
+typealias PhotoID = Int
+
+public enum PhotoPrism {
+    case login(String,String)
+
+    case getAlbums(AlbumOptions)
+    case getAlbum(String)
+
+    case photoList(Int)
+    case getPhotoDownload(String)
+    case getAlbum(String)
+    
+//    case upload(UploadData)
+
+}
+
+
 class API {
     static let shared = API()
     
