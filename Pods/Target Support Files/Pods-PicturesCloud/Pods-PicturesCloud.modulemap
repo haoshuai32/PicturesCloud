@@ -1,6 +1,0 @@
-framework module Pods_PicturesCloud {
-  umbrella header "Pods-PicturesCloud-umbrella.h"
-
-  export *
-  module * { export * }
-}
