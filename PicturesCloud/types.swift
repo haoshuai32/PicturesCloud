@@ -10,7 +10,7 @@ import Foundation
 //type Photos []Photo
 typealias Photos = [Photo]
 // Photo represents a photo, all its properties, and link to all its images and sidecar files.
-struct Photo  {
+public struct Photo  {
     /// `gorm:"type:VARBINARY(42);index;" json:"DocumentID,omitempty" yaml:"DocumentID,omitempty"`
     var UUID : String?
     /// `gorm:"type:datetime;index:idx_photos_taken_uid;" json:"TakenAt" yaml:"TakenAt"`
@@ -263,7 +263,7 @@ struct Keyword  {
 }
 
 // Album represents a photo album
-struct Album  {
+public struct Album  {
     /// `gorm:"primary_key" json:"ID" yaml:"-"`
     var ID : UInt?
     /// `gorm:"type:VARBINARY(42);unique_index;" json:"UID" yaml:"UID"`

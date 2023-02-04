@@ -8,16 +8,8 @@
 import Foundation
 import Moya
 import Photos
-
-//class PhotoPrism {
-//
-//}
-
-//class UploadData {
-//
-//    var name: Bool = false
-//    var nn: Float32
-//}
+import RxSwift
+import Alamofire
 
 public struct AlbumOptions {
     var paramType: String = "album"
@@ -27,30 +19,223 @@ public struct AlbumOptions {
     var category: String = ""
 }
 
+public struct PhotoOptions{
+    var count: Int = 60
+    var offset: Int = 0
+    var albumUID: String = ""
+    var filter: String = ""
+    var merged: Bool = true
+    var country: String = ""
+    var camera: Int = 0
+    var order: String = "oldest"
+    var q: String = ""
+}
+
 typealias PhotoID = Int
 
-public enum PhotoPrism {
-    case login(String,String)
+protocol V1Client {
+    var downloadToken: String { get }
+    var token: String { get }
+}
 
-    case getAlbums(AlbumOptions)
-    case getAlbum(String)
-
-//    case photoList(Int)
-//    case getPhotoDownload(String)
-//    case getAlbum(String)
-    
-//    case upload(UploadData)
-
+protocol Client {
+    var v1client: V1Client { get }
+    var contentType: String { get }
+    var connectionString: String { get }
+    func loginV1()
 }
 
 
-class API {
-    static let shared = API()
+
+
+public enum PhotoPrismAPI {
+//
+//    var v1: V1Client {
+//        return V1Client()
+//    }
+//
+    case login(String,String)
     
+    
+    
+    case getAlbums(AlbumOptions)
+    case getAlbum(String)
+    case createAlbum(Album)
+    case updateAlbum(Album)
+    case deleteAlbums([String])
+    case likeAlbum(String)
+    case dislikeAlbum(String)
+    case cloneAlbum(Album)
+    case addPhotosToAlbum(String,[String])
+    case deletePhotosFromAlbum(String,[String])
+    case getAlbumDownload(String)
+    
+    case _import
+    
+    case index
+    case cancelIndex
+    
+    case getPhoto(String)
+    case getPhotos(PhotoOptions)
+    case updatePhoto(Photo)
+    case getPhotoDownload(String)
+    case getPhotoYaml(String)
+    case approvePhoto(String)
+    case likePhoto(String)
+    case dislikePhoto(String)
+    case photoPrimary(String,String)
+}
+
+
+var down_token = ""
+
+extension PhotoPrismAPI: TargetType {
+    public var baseURL: URL {
+        guard let url = URL(string: "") else {
+            fatalError("root url error")
+            return URL(string: "")!
+        }
+        return url
+                
+    }
+    
+    public var path: String {
+        
+        switch self {
+        case .login(_, _):
+            
+            return ""
+        case let .getAlbums(options):
+            let path = String(format:"/api/v1/albums?count=%d&offset=%d&q=%s&category=%s&type=%s", options.count, options.offset, options.q, options.category, options.paramType)
+            return path
+        case let .getAlbum(uuid):
+            return "/api/v1/albums/\(uuid)"
+        case .createAlbum(_):
+            return "/api/v1/albums"
+        case let .updateAlbum(album):
+            return "/api/v1/albums/\(album.AlbumUID)"
+        case .deleteAlbums(_):
+            return "/api/v1/batch/albums/delete"
+        case .likeAlbum(let uuid):
+            return "/api/v1/albums/\(uuid)/like"
+        case .dislikeAlbum(let uuid):
+            return "/api/v1/albums/\(uuid)/like"
+        case .cloneAlbum(let album):
+            return "/api/v1/albums/\(album.AlbumUID)/clone"
+        case .addPhotosToAlbum(let albumUUID, _):
+            return "/api/v1/albums/\(albumUUID)/photos"
+        case .deletePhotosFromAlbum(let albumUUID, _):
+            return "/api/v1/albums/\(albumUUID)/photos"
+        case .getAlbumDownload(let uuid):
+            return "/api/v1/albums/\(uuid)/dl?t=/\(down_token)"
+        case ._import:
+            return "/api/v1/import"
+        case .index:
+            return "/api/v1/index"
+        case .cancelIndex:
+            return "/api/v1/index"
+        case .getPhoto(let uuid):
+            return "/api/v1/photos/\(uuid)"
+        case .getPhotos(let options):
+            return String(format: "/api/v1/photos?count=%d&offset=%d&album=%s&filter=%s&merged=%t&country=%s&camera=%d&order=%s&q=%s",
+                          options.count, options.offset, options.albumUID, options.filter, options.merged, options.country, options.camera, options.order, options.q)
+        case .updatePhoto(let photo):
+            return "/api/v1/photos/\(photo.PhotoUID)"
+        case .getPhotoDownload(let uuid):
+            return String(format: "/api/v1/photos/%s/dl?t=%s", uuid, down_token)
+        case .getPhotoYaml(let uuid):
+            return "/api/v1/photos/\(uuid)/yaml"
+        case .approvePhoto(let uuid):
+            return "/api/v1/photos/\(uuid)/approve"
+        case .likePhoto(let uuid):
+            return "/api/v1/photos/\(uuid)/like"
+        case .dislikePhoto(let uuid):
+            return "/api/v1/photos/\(uuid)/approve"
+        case let .photoPrimary(uuid, fileuuid):
+            return String(format: "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
+        }
+        return "root"
+    }
+    
+    public var method: Moya.Method {
+        switch self {
+        case .getAlbums(_):
+            return .get
+        case .getAlbum(_):
+            return .get
+        case .createAlbum(_):
+            return .post
+        case .updateAlbum(_):
+            return .put
+        case .deleteAlbums(_):
+            return .post
+        case .likeAlbum(_):
+            return .post
+        case .dislikeAlbum(_):
+            return .delete
+        case .cloneAlbum(_):
+            return .post
+        case .addPhotosToAlbum(_, _), .deletePhotosFromAlbum(_, _):
+            return .delete
+        case .getAlbumDownload(_):
+            return .get
+        
+        case ._import:
+            return .post
+        
+        case .index:
+            return .post
+        case .cancelIndex:
+            return .delete
+            
+        case .getPhoto(_):
+            return .get
+        case .getPhotos(_):
+            return .get
+        case .updatePhoto(_):
+            return .put
+        case .getPhotoDownload(_):
+            return .get
+        case .getPhotoYaml(_):
+            return .get
+        case .approvePhoto(_):
+            return .post
+        case .likePhoto(_):
+            return .post
+        case .dislikePhoto(_):
+            return .delete
+        case .photoPrimary(_, _):
+            return .post
+            
+        case .login(_, _):
+            return .get
+        }
+    }
+    
+    public var task: Moya.Task {
+        return .requestParameters(parameters: [:], encoding:JSONEncoding())
+    }
+    
+    public var headers: [String : String]? {
+        return [
+            "Content-Type":"application/json; charset=utf-8",
+            "X-Session-Id": ""
+        ]
+    }
+    
+    
+}
+
+
+
+class API {
+    static let shared = MoyaProvider<PhotoPrismAPI>()
+    private var token: String?
     init() {}
     
     func login(username: String, password: String) {
-        
+//        API.shared.rx.request(.getAlbum(""))
+            
     }
     
     func getPhotoList(type: Int) {
