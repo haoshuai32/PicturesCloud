@@ -94,7 +94,7 @@ var down_token = ""
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
         
-        guard let url = URL(string: "") else {
+        guard let url = URL(string: "https://demo-zh.photoprism.app") else {
             fatalError("root url error")
             return URL(string: "")!
         }
@@ -107,7 +107,7 @@ extension PhotoPrismAPI: TargetType {
         
         switch self {
         case .login(_, _):
-            return ""
+            return "/api/v1/session"
         
         case .getConfig:
             return "/api/v1/config"
@@ -143,7 +143,11 @@ extension PhotoPrismAPI: TargetType {
         case .getPhoto(let uuid):
             return "/api/v1/photos/\(uuid)"
         case .getPhotos(let options):
-            return String(format: "/api/v1/photos?count=%d&offset=%d&album=%s&filter=%s&merged=%t&country=%s&camera=%d&order=%s&q=%s",
+//            return ""
+       // https://demo-zh.photoprism.app/api/v1/albums?count=24&offset=0&q=&category=&order=favorites&year=&type=album
+            return  "/api/v1/albums?count=24&offset=0&q=&category=&order=favorites&year=&type=album"
+            return  "/api/v1/photos?count=60&offset=0"
+            return String(format: "api/v1/photos?count=%d&offset=%d&album=%s&filter=%s&merged=%t&country=%s&camera=%d&order=%s&q=%s",
                           options.count, options.offset, options.albumUID, options.filter, options.merged, options.country, options.camera, options.order, options.q)
         case .updatePhoto(let photo):
             return "/api/v1/photos/\(photo.PhotoUID)"
@@ -169,7 +173,7 @@ extension PhotoPrismAPI: TargetType {
     public var method: Moya.Method {
         switch self {
         case .login(_, _):
-            return .get
+            return .post
             
             
         case .getConfig:
@@ -192,7 +196,7 @@ extension PhotoPrismAPI: TargetType {
             return .post
         case .addPhotosToAlbum(_, _), .deletePhotosFromAlbum(_, _):
             return .delete
-        case .getAlbumDownload(_):
+        case .getAlbumDownload(_,_):
             return .get
         
         case ._import:
@@ -209,7 +213,7 @@ extension PhotoPrismAPI: TargetType {
             return .get
         case .updatePhoto(_):
             return .put
-        case .getPhotoDownload(_):
+        case .getPhotoDownload(_,_):
             return .get
         case .getPhotoYaml(_):
             return .get
@@ -229,14 +233,34 @@ extension PhotoPrismAPI: TargetType {
     }
     
     public var task: Moya.Task {
-        return .requestParameters(parameters: [:], encoding:JSONEncoding())
+        switch self {
+        case let .login(username, password):
+            let parameters = [
+                "username":username,
+                "password":password
+            ]
+            return .requestParameters(parameters: parameters, encoding:JSONEncoding())
+        default:
+            return .requestPlain
+        }
+        
     }
     
     public var headers: [String : String]? {
-        return [
-            "Content-Type":"application/json; charset=utf-8",
-            "X-Session-Id": ""
-        ]
+        switch self {
+        case .login(_, _):
+            return [
+                "accept": "application/json, text/plain, */*",
+                "content-type":"application/json; charset=utf-8"
+            ]
+        default:
+            return [
+                "accept": "application/json, text/plain, */*",
+                "content-type":"application/json; charset=utf-8",
+                "x-session-id": "234200000000000000000000000000000000000000000000"
+            ]
+        }
+        
     }
     
     

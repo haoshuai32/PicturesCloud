@@ -8,6 +8,7 @@
 import UIKit
 import IGListKit
 import IGListDiffKit
+import RxSwift
 
 protocol AssetChangeSelectedDelegate:AnyObject {
     func photoChangeSelected(dataSource: Set<DisplayAsset>)
@@ -49,6 +50,43 @@ class LocalViewController: GridViewController {
     
     @IBAction func uploadButtonAction(_ sender: Any?) {
         debugPrint("开始上传",self.selectedData.count)
+        guard let data = self.selectedData.first else {
+            return
+        }
+        API.shared.requestNormal(.getPhotos(PhotoOptions.init()), callbackQueue: nil, progress: nil) { result in
+            switch result {
+            case .success(let response):
+                print(response.request?.headers ?? "")
+                print(response.request?.httpMethod ?? "")
+                print(response.response ?? "")
+                
+                print(String.init(data: response.data, encoding: .utf8))
+            case .failure(let error):
+                print(error)
+            }
+//            print(result.get().request ?? "")
+//            print(result.get().response ?? "")
+//            print(String.init(data: result.get().data, encoding: .utf8))
+//            print(result.get().data)
+        }
+//        API.shared.rx.request(.getPhotos(PhotoOptions.init()))
+//            .subscribe { repose in
+//                print(repose)
+//            } onFailure: { error in
+//                print(error)
+//            } onDisposed: {
+//                print("dis")
+//            }
+//            .disposed(by: DisposeBag())
+
+//            .subscribe { repose in
+//                print(repose)
+//            }.disposed(by: DisposeBag())
+//        HUploadManager.shared.uploadData(data: data) {
+//
+//        }
+        
+        
     }
     
     @IBAction func onSegmentControl(_ sender: UISegmentedControl) {

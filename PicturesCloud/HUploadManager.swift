@@ -121,6 +121,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingAsset else {
             fatalError()
         }
+        
+        debugPrint(task.response)
         debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
         completedHandler()
         self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
@@ -207,17 +209,19 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             }
             
             do {
+                debugPrint("image data", bodyData.count)
                 try bodyData.write(to: self.tempPath)
             } catch let error {
                 assert(false,error.localizedDescription)
             }
             
-            let url: URL = URL(string: "http://192.168.1.5:8888/upload")!
+            let url: URL = URL(string: "https://demo-zh.photoprism.app/api/v1/users/urpi8tzdfqwlfsgf/upload/xli9k9")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-            
-            let uploadTask = urlSession.uploadTask(with: urlRequest, fromFile: tempPath)
+//            urlRequest.setValue(<#T##value: String?##String?#>, forHTTPHeaderField: <#T##String#>)
+            let updata = try! Data(contentsOf: tempPath)
+            let uploadTask = urlSession.uploadTask(with: urlRequest, from: updata)
             uploadTask.resume()
             debugPrint("update data",data.asset, uploadTask)
             self.uploadingTask = uploadTask
