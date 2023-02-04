@@ -57,7 +57,7 @@ public enum PhotoPrismAPI {
     case login(String,String)
     
     
-    
+    case getConfig
     case getAlbums(AlbumOptions)
     case getAlbum(String)
     case createAlbum(Album)
@@ -68,7 +68,7 @@ public enum PhotoPrismAPI {
     case cloneAlbum(Album)
     case addPhotosToAlbum(String,[String])
     case deletePhotosFromAlbum(String,[String])
-    case getAlbumDownload(String)
+    case getAlbumDownload(String,String)
     
     case _import
     
@@ -78,33 +78,39 @@ public enum PhotoPrismAPI {
     case getPhoto(String)
     case getPhotos(PhotoOptions)
     case updatePhoto(Photo)
-    case getPhotoDownload(String)
+    case getPhotoDownload(String,String)
     case getPhotoYaml(String)
     case approvePhoto(String)
     case likePhoto(String)
     case dislikePhoto(String)
     case photoPrimary(String,String)
+    //POST /users/:uid/upload/:token
+    case uploadUserFiles(Data,String,String)
 }
 
 
 var down_token = ""
-
+//https://demo-zh.photoprism.app/api/v1/users/urpi8tzdfqwlfsgf/upload/xli9k9
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
+        
         guard let url = URL(string: "") else {
             fatalError("root url error")
             return URL(string: "")!
         }
+        
+        
         return url
-                
     }
     
     public var path: String {
         
         switch self {
         case .login(_, _):
-            
             return ""
+        
+        case .getConfig:
+            return "/api/v1/config"
         case let .getAlbums(options):
             let path = String(format:"/api/v1/albums?count=%d&offset=%d&q=%s&category=%s&type=%s", options.count, options.offset, options.q, options.category, options.paramType)
             return path
@@ -126,8 +132,8 @@ extension PhotoPrismAPI: TargetType {
             return "/api/v1/albums/\(albumUUID)/photos"
         case .deletePhotosFromAlbum(let albumUUID, _):
             return "/api/v1/albums/\(albumUUID)/photos"
-        case .getAlbumDownload(let uuid):
-            return "/api/v1/albums/\(uuid)/dl?t=/\(down_token)"
+        case .getAlbumDownload(let uuid, let downloadToken):
+            return "/api/v1/albums/\(uuid)/dl?t=/\(downloadToken)"
         case ._import:
             return "/api/v1/import"
         case .index:
@@ -141,8 +147,8 @@ extension PhotoPrismAPI: TargetType {
                           options.count, options.offset, options.albumUID, options.filter, options.merged, options.country, options.camera, options.order, options.q)
         case .updatePhoto(let photo):
             return "/api/v1/photos/\(photo.PhotoUID)"
-        case .getPhotoDownload(let uuid):
-            return String(format: "/api/v1/photos/%s/dl?t=%s", uuid, down_token)
+        case .getPhotoDownload(let uuid,let downloadToken):
+            return String(format: "/api/v1/photos/%s/dl?t=%s", uuid, downloadToken)
         case .getPhotoYaml(let uuid):
             return "/api/v1/photos/\(uuid)/yaml"
         case .approvePhoto(let uuid):
@@ -153,12 +159,21 @@ extension PhotoPrismAPI: TargetType {
             return "/api/v1/photos/\(uuid)/approve"
         case let .photoPrimary(uuid, fileuuid):
             return String(format: "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
+            
+        case let .uploadUserFiles(_, uuid, token):
+            return "/api/v1/users/\(uuid)/upload/\(token)"
         }
         return "root"
     }
     
     public var method: Moya.Method {
         switch self {
+        case .login(_, _):
+            return .get
+            
+            
+        case .getConfig:
+            return .get
         case .getAlbums(_):
             return .get
         case .getAlbum(_):
@@ -207,8 +222,9 @@ extension PhotoPrismAPI: TargetType {
         case .photoPrimary(_, _):
             return .post
             
-        case .login(_, _):
-            return .get
+        
+        case .uploadUserFiles(_, _, _):
+            return .post
         }
     }
     
