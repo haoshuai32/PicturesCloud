@@ -86,6 +86,7 @@ public enum PhotoPrismAPI {
     case photoPrimary(String,String)
     //POST /users/:uid/upload/:token
     case uploadUserFiles(Data,String,String)
+    case uploadUserFilesP(String,String)
 }
 
 
@@ -93,20 +94,6 @@ var down_token = ""
 //https://demo-zh.photoprism.app/api/v1/users/urpi8tzdfqwlfsgf/upload/xli9k9
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
-        
-        switch self {
-        case .uploadUserFiles(_, _, _):
-            return URL(string: "http://127.0.0.1:8000")!
-        default:
-            guard let url = URL(string: "http://127.0.0.1:2342") else {
-                fatalError("root url error")
-                return URL(string: "")!
-            }
-            
-            
-            return url
-
-        }
         
         guard let url = URL(string: "http://127.0.0.1:2342") else {
             fatalError("root url error")
@@ -177,11 +164,13 @@ extension PhotoPrismAPI: TargetType {
             return "/api/v1/photos/\(uuid)/approve"
         case let .photoPrimary(uuid, fileuuid):
             return String(format: "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
-//        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
+
+            //        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
 //        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
         case let .uploadUserFiles(_, uuid, token):
-            return "/api/v1/upimg"
-//            return "/api/v1/users/urpl5sn1qmoiucq9/upload/ajskd"
+            return "/api/v1/users/\(uuid)/upload/\(token)"
+        case let .uploadUserFilesP(uuid, token):
+            return "/api/v1/users/\(uuid)/upload/\(token)"
         }
         return "root"
     }
@@ -190,7 +179,6 @@ extension PhotoPrismAPI: TargetType {
         switch self {
         case .login(_, _):
             return .post
-            
             
         case .getConfig:
             return .get
@@ -245,6 +233,9 @@ extension PhotoPrismAPI: TargetType {
         
         case .uploadUserFiles(_, _, _):
             return .post
+            
+        case .uploadUserFilesP(_, _):
+            return .put
         }
     }
     
@@ -265,6 +256,11 @@ extension PhotoPrismAPI: TargetType {
             return .uploadMultipart(item)
 //            let url = URL.init(fileURLWithPath: "/Users/haoshuai/Desktop/8C13A368-9FE6-4F3D-B379-CBAE5E662019_1_105_c.jpeg")
 //            return .uploadFile(url)
+        case .uploadUserFilesP(_, _):
+            let parameters = [
+                "albums": []
+            ]
+            return .requestParameters(parameters: parameters, encoding:JSONEncoding())
         case let .getPhotos(options):
             // 这里根据请求的方法 判断数据在哪里个位置
             return .requestParameters(parameters: ["count": 60], encoding: URLEncoding.default)
@@ -285,10 +281,7 @@ extension PhotoPrismAPI: TargetType {
             return [
                 "Accept": "application/json, text/plain, */*",
                 "X-Session-Id": Client.shared.v1!.token,
-                "token": "SheIsABeautifulGirl"
             ]
-
-            return nil
         default:
             return [
                 "Accept": "application/json, text/plain, */*",
