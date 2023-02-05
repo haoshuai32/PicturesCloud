@@ -144,12 +144,7 @@ extension PhotoPrismAPI: TargetType {
         case .getPhoto(let uuid):
             return "/api/v1/photos/\(uuid)"
         case .getPhotos(let options):
-//            return ""
-       // https://demo-zh.photoprism.app/api/v1/albums?count=24&offset=0&q=&category=&order=favorites&year=&type=album
-//            return  "/api/v1/albums?count=24&offset=0&q=&category=&order=favorites&year=&type=album"
             return  "/api/v1/photos"
-            return String(format: "api/v1/photos?count=%d&offset=%d&album=%s&filter=%s&merged=%t&country=%s&camera=%d&order=%s&q=%s",
-                          options.count, options.offset, options.albumUID, options.filter, options.merged, options.country, options.camera, options.order, options.q)
         case .updatePhoto(let photo):
             return "/api/v1/photos/\(photo.PhotoUID)"
         case .getPhotoDownload(let uuid,let downloadToken):
