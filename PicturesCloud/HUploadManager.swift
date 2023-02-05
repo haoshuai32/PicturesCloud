@@ -9,6 +9,9 @@ import Foundation
 import Photos
 import UIKit
 
+// 照片上传接口需要修改只能支持单张照片上传
+// 多张照片上传需要进行单张接口进行轮训然后
+// 最后照片上传完成后需要发送一个put方法进行处理照片
 protocol HUploadOperationDelegate {
     func uploadData(data: DisplayAsset,completedHandler: @escaping () -> Void)
 }
@@ -111,21 +114,21 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
         self.uploadingReceiveData = data
-        debugPrint(#function,String.init(data: data, encoding: .utf8))
+//        debugPrint(#function,String.init(data: data, encoding: .utf8))
     }
     
     public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-        debugPrint(#function)
+//        debugPrint(#function)
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        debugPrint(#function,error)
+//        debugPrint(#function,error)
         guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingAsset else {
             fatalError()
         }
         
-        debugPrint(task.response)
-        debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
+//        debugPrint(task.response)
+//        debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
         completedHandler()
         self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
 //        debugPrint(#function)
@@ -203,12 +206,14 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             // end data
             bodyData.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
           
-            
+#if false
+            // 不进行文件的保存 直接把数据上传
             do {
                 try HFileManager.shared.fileManager.removeItem(at: self.tempPath)
             } catch _ {
 //                assert(false,error.localizedDescription)
             }
+
             
             do {
                 debugPrint("image data", bodyData.count)
@@ -216,20 +221,19 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             } catch let error {
                 assert(false,error.localizedDescription)
             }
-            
-            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb1792")!
-//            let url = URL(string: "http://0.0.0.0:8000/api/v1/upimg")!
+#endif
+            let url: URL = URL(string: "http://192.168.8.101:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb1792")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
             urlRequest.addValue(Client.shared.v1!.token, forHTTPHeaderField: "X-Session-Id")
-            urlRequest.addValue("SheIsABeautifulGirl", forHTTPHeaderField: "token")
-            debugPrint(urlRequest.headers)
-            let updata = try! Data(contentsOf: tempPath)
+//            debugPrint(urlRequest.headers)
+            
+//            let updata = try! Data(contentsOf: tempPath)
             
             
-            debugPrint("body data", updata.count)
-            let uploadTask = urlSession.uploadTask(with: urlRequest, from: updata)
+            debugPrint("body data", bodyData.count)
+            let uploadTask = urlSession.uploadTask(with: urlRequest, from: bodyData)
             uploadTask.resume()
 
             self.uploadingTask = uploadTask
@@ -289,11 +293,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             if let error = resultError {
                 fatalError(error.localizedDescription)
             } else {
-                requestAssetQueue.async {
-                    debugPrint("上传数据")
-                    upload(uploadData)
-                }
-                
+                debugPrint("资源数据", uploadData)
+                upload(uploadData)
             }
         }))
     }
