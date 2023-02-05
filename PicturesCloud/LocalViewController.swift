@@ -85,6 +85,7 @@ class LocalViewController: GridViewController {
         HUploadManager.shared.uploadData(data: data) {
 
         }
+        
 //    http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb7x2
         
 //        Client.shared.api.requestNormal(.getPhotos(PhotoOptions.init()), callbackQueue: nil, progress: nil) { result in

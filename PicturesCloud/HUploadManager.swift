@@ -191,7 +191,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                 
                 let data = metaData[i]
                 bodyData.append("--\(boundary)\r\n".data(using: .utf8)!)
-                bodyData.append("Content-Disposition: form-data; name=\"\(data.name)\"; filename=\"\(data.filename)\"\r\n".data(using: .utf8)!)
+                bodyData.append("Content-Disposition: form-data; name=\"files\"; filename=\"\(data.filename)\"\r\n".data(using: .utf8)!)
                 bodyData.append("Content-Type: \(data.contentType)\r\n\r\n".data(using: .utf8)!)
                 bodyData.append(data.data)
                 
@@ -217,8 +217,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                 assert(false,error.localizedDescription)
             }
             
-//            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb792")!
-            let url = URL(string: "http://0.0.0.0:8000/api/v1/upimg")!
+            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb1792")!
+//            let url = URL(string: "http://0.0.0.0:8000/api/v1/upimg")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")

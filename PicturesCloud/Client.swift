@@ -259,7 +259,7 @@ extension PhotoPrismAPI: TargetType {
         case .uploadUserFiles(let data, _, _):
 //            let testData = "hello my body text".data(using: .utf8)!
                 
-            let i = MultipartFormData.init(provider: MultipartFormData.FormDataProvider.data(data), name: "testname",fileName: "pimage.jpeg", mimeType: "jpeg")
+            let i = MultipartFormData.init(provider: MultipartFormData.FormDataProvider.data(data), name: "files",fileName: "pimage.jpeg", mimeType: "jpeg")
             let item = [i]
             debugPrint("上传数据", item)
             return .uploadMultipart(item)
