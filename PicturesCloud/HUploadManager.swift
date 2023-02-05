@@ -13,7 +13,7 @@ import UIKit
 // 多张照片上传需要进行单张接口进行轮训然后
 // 最后照片上传完成后需要发送一个put方法进行处理照片
 protocol HUploadOperationDelegate {
-    func uploadData(data: DisplayAsset,completedHandler: @escaping () -> Void)
+    func uploadData(data: DisplayAsset,completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void)
 }
 
 class HUploadOperation: Operation {
@@ -71,7 +71,7 @@ class HUploadOperation: Operation {
            })
        }
   
-        self.delegate.uploadData(data: self.dataSource) {
+        self.delegate.uploadData(data: self.dataSource) {_,_,_ in
             completed()
         }
     } // override func start()
@@ -98,6 +98,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         let data: Data
     }
     
+    
+    
     // MARK: - URLSession
     private lazy var urlSession: URLSession = { [unowned self] in
         let config = URLSessionConfiguration.default
@@ -113,12 +115,13 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        self.uploadingReceiveData = data
+//        self.uploadingReceiveData = data
+        self.uploadingReceiveData?.append(data)
 //        debugPrint(#function,String.init(data: data, encoding: .utf8))
     }
     
     public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-//        debugPrint(#function)
+        debugPrint(#function)
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
@@ -126,11 +129,21 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingAsset else {
             fatalError()
         }
+        self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
+        completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
         
+        guard let response = task.response as? HTTPURLResponse else {
+            fatalError()
+            return
+        }
+//        let uptask = task as! URLSessionUploadTask
+//        debugPrint(uptask,uptask.response,uptask.currentRequest ,uptask.response as? NSHTTPURLResponse)
+//        debugPrint("task", )
+//        task.response?.url
 //        debugPrint(task.response)
 //        debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
-        completedHandler()
-        self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
+        debugPrint("一张照片上传完成", String(data: self.uploadingReceiveData!,encoding: .utf8))
+        
 //        debugPrint(#function)
     }
     
@@ -163,7 +176,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     private var uploadingTask: URLSessionUploadTask?
     
-    private var uploadingCompletedHandler: (() -> Void)?
+    private var uploadingCompletedHandler: ((HTTPURLResponse?,Data?,Error?) -> Void)?
     
     private var uploadingReceiveData: Data?
     
@@ -179,8 +192,9 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         return String(format: "onelcat.github.io.boundary.%08x%08x", first, second)
     }
     
-    func uploadData(data: DisplayAsset, completedHandler: @escaping () -> Void) {
-        
+    func uploadData(data: DisplayAsset, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
+        self.uploadingReceiveData = nil
+        self.uploadingReceiveData = Data()
         self.uploadingAsset = data
         self.uploadingCompletedHandler = completedHandler
         
@@ -230,7 +244,6 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
 //            debugPrint(urlRequest.headers)
             
 //            let updata = try! Data(contentsOf: tempPath)
-            
             
             debugPrint("body data", bodyData.count)
             let uploadTask = urlSession.uploadTask(with: urlRequest, from: bodyData)

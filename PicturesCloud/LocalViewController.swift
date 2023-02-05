@@ -101,7 +101,7 @@ class LocalViewController: GridViewController {
 //        HUploadManager.shared.append(self.selectedData.map{$0})
 //        HUploadManager.shared.start()
         
-        HUploadManager.shared.uploadData(data: data) {
+        HUploadManager.shared.uploadData(data: data) {reponse,data,error in
             debugPrint("文件上传成功")
             Client.shared.api.requestNormal(.uploadUserFilesP("urpl5sn1qmoiucq9", "jeb1792"), callbackQueue: nil, progress: nil) { result in
                 switch result {
