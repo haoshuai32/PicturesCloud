@@ -48,11 +48,17 @@ class LocalViewController: GridViewController {
         return [item]
     }
     
+    @IBAction func loginButtonAction(_ sender: Any?) {
+        Client.login(username: "haoshuai",password: "19920105")
+    }
+    
     @IBAction func uploadButtonAction(_ sender: Any?) {
         debugPrint("开始上传",self.selectedData.count)
+        
         guard let data = self.selectedData.first else {
             return
         }
+        
         API.shared.requestNormal(.getPhotos(PhotoOptions.init()), callbackQueue: nil, progress: nil) { result in
             switch result {
             case .success(let response):

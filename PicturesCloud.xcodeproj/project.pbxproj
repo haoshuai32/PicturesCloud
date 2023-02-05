@@ -35,7 +35,7 @@
 		2EC0D08B2847564900253196 /* GridSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08A2847564900253196 /* GridSectionController.swift */; };
 		2EC0D08E284760D700253196 /* GridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08C284760D700253196 /* GridCell.swift */; };
 		2EC0D08F284760D700253196 /* GridCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC0D08D284760D700253196 /* GridCell.xib */; };
-		2ECE50D0298A9950005533C8 /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE50CF298A9950005533C8 /* API.swift */; };
+		2ECE50D0298A9950005533C8 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE50CF298A9950005533C8 /* Client.swift */; };
 		2EE7BE4A298ABC48006BD2B0 /* types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE7BE49298ABC48006BD2B0 /* types.swift */; };
 		821953546EF4A3BB39CF901B /* Pods_PicturesCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88936EC631460B4C08C7C8E7 /* Pods_PicturesCloud.framework */; };
 /* End PBXBuildFile section */
@@ -88,7 +88,7 @@
 		2EC0D08A2847564900253196 /* GridSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridSectionController.swift; sourceTree = "<group>"; };
 		2EC0D08C284760D700253196 /* GridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCell.swift; sourceTree = "<group>"; };
 		2EC0D08D284760D700253196 /* GridCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GridCell.xib; sourceTree = "<group>"; };
-		2ECE50CF298A9950005533C8 /* API.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		2ECE50CF298A9950005533C8 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		2EE7BE49298ABC48006BD2B0 /* types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = types.swift; sourceTree = "<group>"; };
 		88936EC631460B4C08C7C8E7 /* Pods_PicturesCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PicturesCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B9C68C34E385FDA30A9F9C54 /* Pods-PicturesCloud.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PicturesCloud.release.xcconfig"; path = "Target Support Files/Pods-PicturesCloud/Pods-PicturesCloud.release.xcconfig"; sourceTree = "<group>"; };
@@ -198,7 +198,7 @@
 		2EE7BE4B298AC4A2006BD2B0 /* API */ = {
 			isa = PBXGroup;
 			children = (
-				2ECE50CF298A9950005533C8 /* API.swift */,
+				2ECE50CF298A9950005533C8 /* Client.swift */,
 				2EE7BE49298ABC48006BD2B0 /* types.swift */,
 			);
 			name = API;
@@ -347,7 +347,7 @@
 				2E3A99EF283E5B3500F3D5D7 /* HImageScrollView.swift in Sources */,
 				2EC0D068284715A900253196 /* HPlayerView.swift in Sources */,
 				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
-				2ECE50D0298A9950005533C8 /* API.swift in Sources */,
+				2ECE50D0298A9950005533C8 /* Client.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
 				2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */,
 				2EC0D08B2847564900253196 /* GridSectionController.swift in Sources */,

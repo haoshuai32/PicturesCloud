@@ -6,6 +6,36 @@
 //
 
 import Foundation
+import ObjectMapper
+
+struct Options: Mappable {
+    var name: String?
+    var version: String?
+    var copyright: String?
+    var downloadToken: String?
+    init?(map: Map) {
+
+    }
+
+    mutating func mapping(map: Map) {
+        name     <- map["name"]
+        version     <- map["version"]
+        copyright     <- map["copyright"]
+        downloadToken     <- map["downloadToken"]
+    }
+}
+
+struct Config: Mappable {
+    init?(map: ObjectMapper.Map) {
+        
+    }
+    
+    mutating func mapping(map: ObjectMapper.Map) {
+        config     <- map["config"]
+    }
+    
+    var config: Options?
+}
 
 //type Photos []Photo
 typealias Photos = [Photo]

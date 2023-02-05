@@ -10,7 +10,7 @@ import Moya
 import Photos
 import RxSwift
 import Alamofire
-
+import ObjectMapper
 public struct AlbumOptions {
     var paramType: String = "album"
     var q: String = ""
@@ -33,17 +33,17 @@ public struct PhotoOptions{
 
 typealias PhotoID = Int
 
-protocol V1Client {
-    var downloadToken: String { get }
-    var token: String { get }
-}
-
-protocol Client {
-    var v1client: V1Client { get }
-    var contentType: String { get }
-    var connectionString: String { get }
-    func loginV1()
-}
+//protocol V1Client {
+//    var downloadToken: String { get }
+//    var token: String { get }
+//}
+//
+//protocol Client {
+//    var v1client: V1Client { get }
+//    var contentType: String { get }
+//    var connectionString: String { get }
+//    func loginV1()
+//}
 
 
 
@@ -94,7 +94,7 @@ var down_token = ""
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
         
-        guard let url = URL(string: "https://demo-zh.photoprism.app") else {
+        guard let url = URL(string: "http://127.0.0.1:2342") else {
             fatalError("root url error")
             return URL(string: "")!
         }
@@ -268,27 +268,52 @@ extension PhotoPrismAPI: TargetType {
 
 
 
-class API {
-    static let shared = MoyaProvider<PhotoPrismAPI>()
-    private var token: String?
+class Client {
+    
+    struct V1Client {
+        let downloadToken: String
+        let token: String
+    }
+    
+    static let shared = Client()
+    
+    var api = MoyaProvider<PhotoPrismAPI>()
+    
+    var v1: V1Client?
+    
     init() {}
     
-    func login(username: String, password: String) {
-//        API.shared.rx.request(.getAlbum(""))
-            
+    static func login(username: String, password: String) {
+    
+        Client.shared.api.requestNormal(.login(username, password), callbackQueue: nil, progress: nil) { result in
+            switch result {
+            case .success(let reponse):
+
+                guard let jsonStr = String(data: reponse.data, encoding: String.Encoding.utf8),
+                      let headers = reponse.response?.headers,reponse.statusCode == 200
+                      
+                else {
+                    return
+                }
+
+//                let token = headers["X-Session-Id"]
+                let config = Mapper<Config>().map(JSONString: jsonStr)
+//                debugPrint("login result", config?.config?.downloadToken ?? "errror", token)
+                
+                guard let downloadToken = config?.config?.downloadToken,
+                      let token = headers["X-Session-Id"]
+                else {
+                    return
+                }
+                
+                Client.shared.v1 = V1Client(downloadToken: downloadToken, token: token)
+                
+            case .failure(let error):
+                debugPrint(error)
+            }
+        }
     }
     
-    func getPhotoList(type: Int) {
-        
-    }
-    
-    func uploadPhoto() {
-        
-    }
-    
-    func downloadPhoto() {
-        
-    }
 }
 
 // TODO: 登录
