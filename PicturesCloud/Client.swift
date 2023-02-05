@@ -145,8 +145,8 @@ extension PhotoPrismAPI: TargetType {
         case .getPhotos(let options):
 //            return ""
        // https://demo-zh.photoprism.app/api/v1/albums?count=24&offset=0&q=&category=&order=favorites&year=&type=album
-            return  "/api/v1/albums?count=24&offset=0&q=&category=&order=favorites&year=&type=album"
-            return  "/api/v1/photos?count=60&offset=0"
+//            return  "/api/v1/albums?count=24&offset=0&q=&category=&order=favorites&year=&type=album"
+            return  "/api/v1/photos"
             return String(format: "api/v1/photos?count=%d&offset=%d&album=%s&filter=%s&merged=%t&country=%s&camera=%d&order=%s&q=%s",
                           options.count, options.offset, options.albumUID, options.filter, options.merged, options.country, options.camera, options.order, options.q)
         case .updatePhoto(let photo):
@@ -236,16 +236,23 @@ extension PhotoPrismAPI: TargetType {
         switch self {
         case let .login(username, password):
             let parameters = [
-                "username":username,
-                "password":password
+                "username": username,
+                "password": password
             ]
             return .requestParameters(parameters: parameters, encoding:JSONEncoding())
+        case .uploadUserFiles(let data, _, _):
+            let i = MultipartFormData.init(provider: MultipartFormData.FormDataProvider.data(data), name: "testname")
+            let item = [i]
+            return .uploadMultipart(item)
+        case .getPhotos(_):
+            // 这里根据请求的方法 判断数据在哪里个位置
+            return .requestParameters(parameters: ["count": 60], encoding: URLEncoding.default)
         default:
             return .requestPlain
         }
         
     }
-    
+        
     public var headers: [String : String]? {
         switch self {
         case .login(_, _):
@@ -253,11 +260,13 @@ extension PhotoPrismAPI: TargetType {
                 "accept": "application/json, text/plain, */*",
                 "content-type":"application/json; charset=utf-8"
             ]
+        case .uploadUserFiles(_, _, _):
+            return nil
         default:
             return [
-                "accept": "application/json, text/plain, */*",
-                "content-type":"application/json; charset=utf-8",
-                "x-session-id": "234200000000000000000000000000000000000000000000"
+                "Accept": "application/json, text/plain, */*",
+                "Content-Type":"application/json; charset=utf-8",
+                "X-Session-Id": Client.shared.v1!.token
             ]
         }
         
@@ -307,7 +316,7 @@ class Client {
                 }
                 
                 Client.shared.v1 = V1Client(downloadToken: downloadToken, token: token)
-                
+                debugPrint("登录成功")
             case .failure(let error):
                 debugPrint(error)
             }

@@ -9,6 +9,7 @@ import UIKit
 import IGListKit
 import IGListDiffKit
 import RxSwift
+import Photos
 
 protocol AssetChangeSelectedDelegate:AnyObject {
     func photoChangeSelected(dataSource: Set<DisplayAsset>)
@@ -55,17 +56,43 @@ class LocalViewController: GridViewController {
     @IBAction func uploadButtonAction(_ sender: Any?) {
         debugPrint("开始上传",self.selectedData.count)
         
-        guard let data = self.selectedData.first else {
+        guard let data = self.selectedData.first,let asset = data.asset else {
             return
         }
         
-        API.shared.requestNormal(.getPhotos(PhotoOptions.init()), callbackQueue: nil, progress: nil) { result in
+//        let resources = PHAssetResource.assetResources(for: asset)
+//        var itemData = Data()
+//        PHAssetResourceManager.default().requestData(for: resources.first!, options: nil) { data in
+//            itemData.append(data)
+//
+//        } completionHandler: { error in
+//            debugPrint("original size", itemData.count)
+//            Client.shared.api.requestNormal(.uploadUserFiles(itemData, "urpl5sn1qmoiucq9", "jeb7x2"), callbackQueue: nil, progress: nil) { result in
+//                switch result {
+//                case .success(let resonse):
+//                    debugPrint(String.init(data: resonse.data, encoding: .utf8))
+//                    debugPrint("成功",resonse.statusCode,resonse.request?.headers)
+//                case .failure(let error):
+//                    debugPrint(error)
+//                }
+//            }
+//
+//        }
+        
+        
+        
+//        HUploadManager.shared.uploadData(data: data) {
+//
+//        }
+//    http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb7x2
+        
+        Client.shared.api.requestNormal(.getPhotos(PhotoOptions.init()), callbackQueue: nil, progress: nil) { result in
             switch result {
             case .success(let response):
-                print(response.request?.headers ?? "")
-                print(response.request?.httpMethod ?? "")
-                print(response.response ?? "")
-                
+                print(response.request)
+                print(response.response)
+//                print(response.response ?? "")
+
                 print(String.init(data: response.data, encoding: .utf8))
             case .failure(let error):
                 print(error)

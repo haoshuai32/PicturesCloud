@@ -215,10 +215,12 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                 assert(false,error.localizedDescription)
             }
             
-            let url: URL = URL(string: "https://demo-zh.photoprism.app/api/v1/users/urpi8tzdfqwlfsgf/upload/xli9k9")!
+            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb7x2")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+//            "x-session-id": Client.shared.v1!.token
+            urlRequest.addValue("x-session-id", forHTTPHeaderField: Client.shared.v1!.token)
 //            urlRequest.setValue(<#T##value: String?##String?#>, forHTTPHeaderField: <#T##String#>)
             let updata = try! Data(contentsOf: tempPath)
             let uploadTask = urlSession.uploadTask(with: urlRequest, from: updata)
