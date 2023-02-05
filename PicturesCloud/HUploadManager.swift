@@ -97,7 +97,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     // MARK: - URLSession
     private lazy var urlSession: URLSession = { [unowned self] in
-        let config = URLSessionConfiguration.background(withIdentifier: "onelcat.github.io.upload.session")
+        let config = URLSessionConfiguration.default
+//        config.identifier = "onelcat.github.io.upload.session"
         config.isDiscretionary = true
         config.sessionSendsLaunchEvents = true
         return URLSession(configuration: config, delegate: self, delegateQueue: nil)
@@ -118,6 +119,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+        debugPrint(#function,error)
         guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingAsset else {
             fatalError()
         }
@@ -126,7 +128,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
         completedHandler()
         self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
-        debugPrint(#function)
+//        debugPrint(#function)
     }
     
     public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
@@ -215,17 +217,21 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                 assert(false,error.localizedDescription)
             }
             
-            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb7x2")!
+//            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb792")!
+            let url = URL(string: "http://0.0.0.0:8000/api/v1/upimg")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-//            "x-session-id": Client.shared.v1!.token
-            urlRequest.addValue("x-session-id", forHTTPHeaderField: Client.shared.v1!.token)
-//            urlRequest.setValue(<#T##value: String?##String?#>, forHTTPHeaderField: <#T##String#>)
+            urlRequest.addValue(Client.shared.v1!.token, forHTTPHeaderField: "X-Session-Id")
+            urlRequest.addValue("SheIsABeautifulGirl", forHTTPHeaderField: "token")
+            debugPrint(urlRequest.headers)
             let updata = try! Data(contentsOf: tempPath)
+            
+            
+            debugPrint("body data", updata.count)
             let uploadTask = urlSession.uploadTask(with: urlRequest, from: updata)
             uploadTask.resume()
-            debugPrint("update data",data.asset, uploadTask)
+
             self.uploadingTask = uploadTask
         } //。func end
         
@@ -268,7 +274,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                         let filename = nameEx.joined(separator: ".")
                         
                         let metaData = UploadMetaData(name: "original", filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
-                        
+                        debugPrint("image data", metaData)
 //                        debugPrint("original size", itemData.count, resource)
                         
                         uploadData[index] = metaData
@@ -283,7 +289,11 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             if let error = resultError {
                 fatalError(error.localizedDescription)
             } else {
-                upload(uploadData)
+                requestAssetQueue.async {
+                    debugPrint("上传数据")
+                    upload(uploadData)
+                }
+                
             }
         }))
     }

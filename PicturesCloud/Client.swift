@@ -94,6 +94,20 @@ var down_token = ""
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
         
+        switch self {
+        case .uploadUserFiles(_, _, _):
+            return URL(string: "http://127.0.0.1:8000")!
+        default:
+            guard let url = URL(string: "http://127.0.0.1:2342") else {
+                fatalError("root url error")
+                return URL(string: "")!
+            }
+            
+            
+            return url
+
+        }
+        
         guard let url = URL(string: "http://127.0.0.1:2342") else {
             fatalError("root url error")
             return URL(string: "")!
@@ -163,9 +177,11 @@ extension PhotoPrismAPI: TargetType {
             return "/api/v1/photos/\(uuid)/approve"
         case let .photoPrimary(uuid, fileuuid):
             return String(format: "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
-            
+//        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
+//        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
         case let .uploadUserFiles(_, uuid, token):
-            return "/api/v1/users/\(uuid)/upload/\(token)"
+            return "/api/v1/upimg"
+//            return "/api/v1/users/urpl5sn1qmoiucq9/upload/ajskd"
         }
         return "root"
     }
@@ -241,10 +257,15 @@ extension PhotoPrismAPI: TargetType {
             ]
             return .requestParameters(parameters: parameters, encoding:JSONEncoding())
         case .uploadUserFiles(let data, _, _):
-            let i = MultipartFormData.init(provider: MultipartFormData.FormDataProvider.data(data), name: "testname")
+//            let testData = "hello my body text".data(using: .utf8)!
+                
+            let i = MultipartFormData.init(provider: MultipartFormData.FormDataProvider.data(data), name: "testname",fileName: "pimage.jpeg", mimeType: "jpeg")
             let item = [i]
+            debugPrint("上传数据", item)
             return .uploadMultipart(item)
-        case .getPhotos(_):
+//            let url = URL.init(fileURLWithPath: "/Users/haoshuai/Desktop/8C13A368-9FE6-4F3D-B379-CBAE5E662019_1_105_c.jpeg")
+//            return .uploadFile(url)
+        case let .getPhotos(options):
             // 这里根据请求的方法 判断数据在哪里个位置
             return .requestParameters(parameters: ["count": 60], encoding: URLEncoding.default)
         default:
@@ -261,6 +282,12 @@ extension PhotoPrismAPI: TargetType {
                 "content-type":"application/json; charset=utf-8"
             ]
         case .uploadUserFiles(_, _, _):
+            return [
+                "Accept": "application/json, text/plain, */*",
+                "X-Session-Id": Client.shared.v1!.token,
+                "token": "SheIsABeautifulGirl"
+            ]
+
             return nil
         default:
             return [

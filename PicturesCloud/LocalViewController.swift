@@ -70,6 +70,7 @@ class LocalViewController: GridViewController {
 //            Client.shared.api.requestNormal(.uploadUserFiles(itemData, "urpl5sn1qmoiucq9", "jeb7x2"), callbackQueue: nil, progress: nil) { result in
 //                switch result {
 //                case .success(let resonse):
+//                    debugPrint(resonse.request?.headers)
 //                    debugPrint(String.init(data: resonse.data, encoding: .utf8))
 //                    debugPrint("成功",resonse.statusCode,resonse.request?.headers)
 //                case .failure(let error):
@@ -81,27 +82,21 @@ class LocalViewController: GridViewController {
         
         
         
-//        HUploadManager.shared.uploadData(data: data) {
-//
-//        }
+        HUploadManager.shared.uploadData(data: data) {
+
+        }
 //    http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb7x2
         
-        Client.shared.api.requestNormal(.getPhotos(PhotoOptions.init()), callbackQueue: nil, progress: nil) { result in
-            switch result {
-            case .success(let response):
-                print(response.request)
-                print(response.response)
-//                print(response.response ?? "")
-
-                print(String.init(data: response.data, encoding: .utf8))
-            case .failure(let error):
-                print(error)
-            }
-//            print(result.get().request ?? "")
-//            print(result.get().response ?? "")
-//            print(String.init(data: result.get().data, encoding: .utf8))
-//            print(result.get().data)
-        }
+//        Client.shared.api.requestNormal(.getPhotos(PhotoOptions.init()), callbackQueue: nil, progress: nil) { result in
+//            switch result {
+//            case .success(let response):
+//                print(response.request)
+//                print(response.response)
+//            case .failure(let error):
+//                print(error)
+//            }
+//        }
+        
 //        API.shared.rx.request(.getPhotos(PhotoOptions.init()))
 //            .subscribe { repose in
 //                print(repose)
