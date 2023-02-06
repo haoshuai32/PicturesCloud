@@ -307,6 +307,59 @@ class Client {
     var userID: String?
     init() {}
     
+    static func rxLogin(username: String, password: String) ->Single<String> {
+        
+//        switch result {
+//        case let .success(response):
+//            single(.success(response))
+//        case let .failure(error):
+//            single(.failure(error))
+//        }
+        
+        return Single.create { single in
+            
+            Client.shared.api.requestNormal(.login(username, password), callbackQueue: nil, progress: nil) { result in
+                switch result {
+                case .success(let reponse):
+
+                    guard let jsonStr = String(data: reponse.data, encoding: String.Encoding.utf8),
+                          let headers = reponse.response?.headers,reponse.statusCode == 200
+                    else {
+                        let msg = String(data: reponse.data, encoding: String.Encoding.utf8)
+                        let error = NSError(domain: msg ?? "未知错误", code: reponse.statusCode)
+                        single(.failure(error))
+                        return
+                    }
+
+                    let config = Mapper<Config>().map(JSONString: jsonStr)
+                    
+                    guard let downloadToken = config?.config?.downloadToken,
+                          let token = headers["X-Session-Id"]
+                    else {
+                        let error = NSError(domain: "获取token失败", code: 10001)
+                        single(.failure(error))
+                        return
+                    }
+                    Client.shared.userID = config?.userID
+                    Client.shared.v1 = V1Client(downloadToken: downloadToken, token: token)
+                    single(.success("登录成功"))
+//                    debugPrint("登录成功", Client.shared.userID,downloadToken,token)
+                case .failure(let error):
+                    single(.failure(error))
+                    assert(false,String())
+    //                assert(false,error)
+                    
+                    debugPrint(error)
+                }
+                
+            }
+            return Disposables.create { }
+
+            
+        }
+        
+    }
+    
     static func login(username: String, password: String) {
     
         Client.shared.api.requestNormal(.login(username, password), callbackQueue: nil, progress: nil) { result in
@@ -315,14 +368,12 @@ class Client {
 
                 guard let jsonStr = String(data: reponse.data, encoding: String.Encoding.utf8),
                       let headers = reponse.response?.headers,reponse.statusCode == 200
-                      
                 else {
+                    
                     return
                 }
 
-//                let token = headers["X-Session-Id"]
                 let config = Mapper<Config>().map(JSONString: jsonStr)
-//                debugPrint("login result", config?.config?.downloadToken ?? "errror", token)
                 
                 guard let downloadToken = config?.config?.downloadToken,
                       let token = headers["X-Session-Id"]

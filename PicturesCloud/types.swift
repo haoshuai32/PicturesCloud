@@ -8,6 +8,16 @@
 import Foundation
 import ObjectMapper
 
+struct User:Mappable {
+    init?(map: ObjectMapper.Map) {
+        
+    }
+    mutating func mapping(map: ObjectMapper.Map) {
+        userID <- map["UID"]
+    }
+    var userID: String?
+}
+
 struct Options: Mappable {
     var name: String?
     var version: String?

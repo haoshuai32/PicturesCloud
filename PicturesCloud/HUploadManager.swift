@@ -93,7 +93,7 @@ class HUploadOperation: Operation {
 protocol HUploadManagerDelegate {
     
     // 上传进度 当前上传到多少了
-    func uploadItemDidComplete(index:(Int,Int), info: (HTTPURLResponse,Data?,Error?))
+    func uploadItemDidComplete(index:(Int,Int),data: DisplayAsset ,info: (HTTPURLResponse,Data?,Error?))
     // 单条上传进度错误
     
     // 上传完成 （上传成功多少 上传失败多少）
@@ -144,13 +144,13 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         }
         guard let response = task.response as? HTTPURLResponse else {
             fatalError()
-            return
         }
         // 移除已经上传成功的数据
+//        let updata = self.uploadDataSource.object(forKey: item.identifier as NSString)
         self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
         completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
         self.uploadIndex += 1
-        uploadDelegate?.uploadItemDidComplete(index: (self.uploadIndex, self.allCount), info: (response, self.uploadingReceiveData, error))
+        uploadDelegate?.uploadItemDidComplete(index: (self.uploadIndex, self.uploadCount),data:item, info: (response, self.uploadingReceiveData, error))
         debugPrint("一张照片上传完成",task.response as! HTTPURLResponse)
 //        debugPrint("一张照片上传完成",task.response, String(data: self.uploadingReceiveData!,encoding: .utf8),error)
 //        guard let response = task.response as? HTTPURLResponse else {
@@ -190,14 +190,32 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     private var uploadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
     
+    private var uploadSuccess: [DisplayAsset] = []
+    private var uploadFailure: [DisplayAsset] = []
     private var uploadToken: String = ""
-    private var allCount = 0
+    private var uploadCount = 0
     private var uploadIndex = 0
     
-    func uploadDoneIndex() {
-        allCount = 0
+    func beginConfig() {
+        uploadSuccess.removeAll()
+        uploadFailure.removeAll()
+        uploadToken = String.randomString(length: 7)
         uploadIndex = 0
+        uploadCount = 0
+        
     }
+    
+    func doneConfig() {
+        uploadSuccess.removeAll()
+        uploadFailure.removeAll()
+        uploadSuccess.removeAll()
+        uploadFailure.removeAll()
+        uploadToken = ""
+        uploadIndex = 0
+        uploadCount = 0
+        
+    }
+    
 //    private var dataSource: [DisplayAsset] = []
     
     // 上传中的数据处理
@@ -271,11 +289,11 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
             urlRequest.addValue(Client.shared.v1!.token, forHTTPHeaderField: "X-Session-Id")
+
 //            debugPrint(urlRequest.headers)
-            
 //            let updata = try! Data(contentsOf: tempPath)
             
-            debugPrint("body data", bodyData.count)
+//            debugPrint("body data", bodyData.count)
             let uploadTask = urlSession.uploadTask(with: urlRequest, from: bodyData)
             uploadTask.resume()
 
@@ -284,7 +302,6 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         
         guard let asset = uploadAsset.asset else {
             fatalError()
-            return
         }
         // read resources
         let resources = PHAssetResource.assetResources(for: asset)
@@ -356,9 +373,15 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     // 开始
     func start(data: [DisplayAsset]) {
-        uploadDoneIndex()
-        self.allCount = data.count
-        uploadToken = String.randomString(length: 7)
+        // Wi-Fi模式
+        // 流量模式
+        // 最多上传100张
+        // 总共最多不能超过 一万张
+        
+        
+        self.beginConfig()
+        self.uploadCount = data.count
+        
         
 //        self.dataSource.append(contentsOf: newElements)
 //        let data = self.dataSource
@@ -371,19 +394,19 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         }
         let uploadToken = self.uploadToken
         uploadOperationQueue.addBarrierBlock { [weak self] in
-            
+            debugPrint("照片上传完成")
             Client.shared.api.requestNormal(.uploadUserFilesP(Client.shared.userID!, uploadToken), callbackQueue: nil, progress: nil) { result in
                 switch result {
                 case .success(let reponse):
 
                     debugPrint("reponse", String.init(data: reponse.data, encoding: String.Encoding.utf8))
-
+                    debugPrint("照片处理完成")
+                    self?.doneConfig()
                 case let .failure(error):
                     debugPrint("错误 error",error)
                 }
             }
-            self?.uploadDoneIndex()
-            debugPrint("执行完成")
+            
             // 执行到最后
         }
     }
@@ -396,7 +419,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     // 取消
     func cancel() {
         uploadOperationQueue.cancelAllOperations()
-        uploadDoneIndex()
+        self.doneConfig()
     }
     
     
