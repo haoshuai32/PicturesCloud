@@ -95,7 +95,7 @@ var down_token = ""
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
         
-        guard let url = URL(string: "http://192.168.8.101:2342") else {
+        guard let url = URL(string: "http://127.0.0.1:2342") else {
             fatalError("root url error")
             return URL(string: "")!
         }
@@ -304,7 +304,7 @@ class Client {
     var api = MoyaProvider<PhotoPrismAPI>()
     
     var v1: V1Client?
-    
+    var userID: String?
     init() {}
     
     static func login(username: String, password: String) {
@@ -329,10 +329,12 @@ class Client {
                 else {
                     return
                 }
-                
+                Client.shared.userID = config?.userID
                 Client.shared.v1 = V1Client(downloadToken: downloadToken, token: token)
-                debugPrint("登录成功")
+                debugPrint("登录成功", Client.shared.userID,downloadToken,token)
             case .failure(let error):
+                assert(false,String())
+//                assert(false,error)
                 debugPrint(error)
             }
         }

@@ -13,6 +13,7 @@ struct Options: Mappable {
     var version: String?
     var copyright: String?
     var downloadToken: String?
+    
     init?(map: Map) {
 
     }
@@ -22,6 +23,7 @@ struct Options: Mappable {
         version     <- map["version"]
         copyright     <- map["copyright"]
         downloadToken     <- map["downloadToken"]
+        
     }
 }
 
@@ -32,9 +34,11 @@ struct Config: Mappable {
     
     mutating func mapping(map: ObjectMapper.Map) {
         config     <- map["config"]
+        userID <- map["user.UID"]
     }
     
     var config: Options?
+    var userID: String?
 }
 
 //type Photos []Photo

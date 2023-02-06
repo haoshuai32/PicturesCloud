@@ -12,6 +12,8 @@ import UIKit
 // 照片上传接口需要修改只能支持单张照片上传
 // 多张照片上传需要进行单张接口进行轮训然后
 // 最后照片上传完成后需要发送一个put方法进行处理照片
+// 上传队列 需要在最后进行数据汇总进行UI显示
+// 上传需要显示进度条
 protocol HUploadOperationDelegate {
     func uploadData(data: DisplayAsset,completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void)
 }
@@ -74,6 +76,7 @@ class HUploadOperation: Operation {
         self.delegate.uploadData(data: self.dataSource) {_,_,_ in
             completed()
         }
+        
     } // override func start()
     
     open func done() {
@@ -87,18 +90,28 @@ class HUploadOperation: Operation {
     }
 }
 
+protocol HUploadManagerDelegate {
+    
+    // 上传进度 当前上传到多少了
+    func uploadItemDidComplete(index:(Int,Int), info: (HTTPURLResponse,Data?,Error?))
+    // 单条上传进度错误
+    
+    // 上传完成 （上传成功多少 上传失败多少）
+    func uploadDidComplete(success:[DisplayAsset], failure: [DisplayAsset])
+}
+
 // TODO: 后续实现 - 查看上传进度
 
 public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataDelegate {
+    var uploadDelegate: HUploadManagerDelegate?
     
     struct UploadMetaData {
-        let name: String
+        // 只能是固定制
+        let name: String = "files"
         let filename: String
         let contentType: String
         let data: Data
     }
-    
-    
     
     // MARK: - URLSession
     private lazy var urlSession: URLSession = { [unowned self] in
@@ -111,7 +124,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     // MARK: - URLSessionDataDelegate
     public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-//        debugPrint("sender",bytesSent,totalBytesSent,totalBytesExpectedToSend)
+//        debugPrint("sender",bytesSent,tota\0lBytesSent,totalBytesExpectedToSend)
     }
     
     public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
@@ -129,20 +142,28 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingAsset else {
             fatalError()
         }
-        self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
-        completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
-        
         guard let response = task.response as? HTTPURLResponse else {
             fatalError()
             return
         }
+        // 移除已经上传成功的数据
+        self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
+        completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
+        self.uploadIndex += 1
+        uploadDelegate?.uploadItemDidComplete(index: (self.uploadIndex, self.allCount), info: (response, self.uploadingReceiveData, error))
+        debugPrint("一张照片上传完成",task.response as! HTTPURLResponse)
+//        debugPrint("一张照片上传完成",task.response, String(data: self.uploadingReceiveData!,encoding: .utf8),error)
+//        guard let response = task.response as? HTTPURLResponse else {
+//            fatalError()
+//            return
+//        }
 //        let uptask = task as! URLSessionUploadTask
 //        debugPrint(uptask,uptask.response,uptask.currentRequest ,uptask.response as? NSHTTPURLResponse)
 //        debugPrint("task", )
 //        task.response?.url
 //        debugPrint(task.response)
 //        debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
-        debugPrint("一张照片上传完成", String(data: self.uploadingReceiveData!,encoding: .utf8))
+//        debugPrint("一张照片上传完成", String(data: self.uploadingReceiveData!,encoding: .utf8))
         
 //        debugPrint(#function)
     }
@@ -169,7 +190,15 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     private var uploadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
     
-    private var dataSource: [DisplayAsset] = []
+    private var uploadToken: String = ""
+    private var allCount = 0
+    private var uploadIndex = 0
+    
+    func uploadDoneIndex() {
+        allCount = 0
+        uploadIndex = 0
+    }
+//    private var dataSource: [DisplayAsset] = []
     
     // 上传中的数据处理
     private var uploadingAsset: DisplayAsset?
@@ -200,6 +229,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         
         let uploadAsset = data
         
+        // 比如livephoto 存在2个资源
         func upload(_ metaData: [UploadMetaData]) {
 
             var bodyData = Data()
@@ -236,7 +266,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                 assert(false,error.localizedDescription)
             }
 #endif
-            let url: URL = URL(string: "http://192.168.8.101:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb1792")!
+            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/\(Client.shared.userID!)/upload/\(self.uploadToken)")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
@@ -260,7 +290,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         let resources = PHAssetResource.assetResources(for: asset)
         uploadAsset.resources = resources.map{DisplayAssetResource.init(resource: $0)}
         
-        var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(name: "", filename: "", contentType: "", data: Data()), count: resources.count)
+        var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(filename: "", contentType: "", data: Data()), count: resources.count)
         
         var resultError: Error?
         
@@ -290,8 +320,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                         nameEx[0] = resource.assetLocalIdentifier.replacingOccurrences(of: "/", with: "_")
                         let filename = nameEx.joined(separator: ".")
                         
-                        let metaData = UploadMetaData(name: "original", filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
-                        debugPrint("image data", metaData)
+                        let metaData = UploadMetaData(filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
+//                        debugPrint("image data", metaData)
 //                        debugPrint("original size", itemData.count, resource)
                         
                         uploadData[index] = metaData
@@ -306,7 +336,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             if let error = resultError {
                 fatalError(error.localizedDescription)
             } else {
-                debugPrint("资源数据", uploadData)
+//                debugPrint("资源数据", uploadData)
                 upload(uploadData)
             }
         }))
@@ -315,32 +345,58 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     // 实现消息队列
   
-    func append(_ newElements: [DisplayAsset]) {
-        
-        self.dataSource.append(contentsOf: newElements)
-    }
+//    func append(_ newElements: [DisplayAsset]) {
+//
+//        self.dataSource.append(contentsOf: newElements)
+//    }
     
     func remove(identifiers: [String]) {
         
     }
     
-    func start() {
-        let data = self.dataSource
-        self.dataSource.removeAll()
+    // 开始
+    func start(data: [DisplayAsset]) {
+        uploadDoneIndex()
+        self.allCount = data.count
+        uploadToken = String.randomString(length: 7)
+        
+//        self.dataSource.append(contentsOf: newElements)
+//        let data = self.dataSource
+//        self.dataSource.removeAll()
         for item in data {
             let operation = HUploadOperation(data: item, delegate: self)
             
             self.uploadDataSource.setObject(item, forKey: item.identifier as NSString)
             uploadOperationQueue.addOperation(operation)
         }
+        let uploadToken = self.uploadToken
+        uploadOperationQueue.addBarrierBlock { [weak self] in
+            
+            Client.shared.api.requestNormal(.uploadUserFilesP(Client.shared.userID!, uploadToken), callbackQueue: nil, progress: nil) { result in
+                switch result {
+                case .success(let reponse):
+
+                    debugPrint("reponse", String.init(data: reponse.data, encoding: String.Encoding.utf8))
+
+                case let .failure(error):
+                    debugPrint("错误 error",error)
+                }
+            }
+            self?.uploadDoneIndex()
+            debugPrint("执行完成")
+            // 执行到最后
+        }
     }
     
+    // 暂停
     func suspend() {
         
     }
     
-    func stop() {
-        
+    // 取消
+    func cancel() {
+        uploadOperationQueue.cancelAllOperations()
+        uploadDoneIndex()
     }
     
     

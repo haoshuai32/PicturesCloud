@@ -99,21 +99,21 @@ class LocalViewController: GridViewController {
         
         
 //        HUploadManager.shared.append(self.selectedData.map{$0})
-//        HUploadManager.shared.start()
+        HUploadManager.shared.start(data: self.selectedData.map{$0})
         
-        HUploadManager.shared.uploadData(data: data) {reponse,data,error in
-            debugPrint("文件上传成功")
-            Client.shared.api.requestNormal(.uploadUserFilesP("urpl5sn1qmoiucq9", "jeb1792"), callbackQueue: nil, progress: nil) { result in
-                switch result {
-                case .success(let reponse):
-
-                    debugPrint("reponse", String.init(data: reponse.data, encoding: String.Encoding.utf8))
-
-                case let .failure(error):
-                    debugPrint("错误 error",error)
-                }
-            }
-        }
+//        HUploadManager.shared.uploadData(data: data) {reponse,data,error in
+//            debugPrint("文件上传成功")
+//            Client.shared.api.requestNormal(.uploadUserFilesP(Client.shared.userID!, "jeb1792"), callbackQueue: nil, progress: nil) { result in
+//                switch result {
+//                case .success(let reponse):
+//
+//                    debugPrint("reponse", String.init(data: reponse.data, encoding: String.Encoding.utf8))
+//
+//                case let .failure(error):
+//                    debugPrint("错误 error",error)
+//                }
+//            }
+//        }
         
 //    http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/jeb7x2
         
