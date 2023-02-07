@@ -420,10 +420,11 @@ class Client {
                         return
                     }
                     Client.shared.previewToken = config?.config?.previewToken
+                    
                     Client.shared.userID = config?.userID
                     Client.shared.v1 = V1Client(downloadToken: downloadToken, token: token)
                     single(.success("登录成功"))
-//                    debugPrint("登录成功", Client.shared.userID,downloadToken,token)
+                    debugPrint("登录成功", Client.shared.userID,downloadToken,token,Client.shared.previewToken)
                 case .failure(let error):
                     single(.failure(error))
                     assert(false,String())
@@ -461,6 +462,7 @@ class Client {
                     return
                 }
                 Client.shared.userID = config?.userID
+                Client.shared.previewToken = config?.config?.previewToken
                 Client.shared.v1 = V1Client(downloadToken: downloadToken, token: token)
                 debugPrint("登录成功", Client.shared.userID,downloadToken,token)
             case .failure(let error):

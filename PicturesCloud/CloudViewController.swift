@@ -9,6 +9,7 @@ import UIKit
 import IGListKit
 import IGListDiffKit
 import RxSwift
+import ObjectMapper
 // 云册照片
 class CloudViewController: GridViewController {
     
@@ -36,6 +37,39 @@ class CloudViewController: GridViewController {
 //        }
 //        let item = GridListItem(identifier: fr.identifier, dataSouce: list)
 //        return [item]
+//        let list = photoManager.requestDataSource(selectTypeIndex)
+//        guard let fr = list.first else {
+//            return []
+//        }
+//        let item = GridListItem(identifier: fr.identifier, dataSouce: list)
+        
+        Client.shared.api.requestNormal(.getPhotos(PhotoOptions()), callbackQueue: nil, progress: nil) { result in
+            switch result {
+            case let .success(reponse):
+                guard reponse.statusCode == 200, let jsonStr = String.init(data: reponse.data, encoding: .utf8) else {
+                    return
+                }
+                debugPrint(jsonStr)
+                guard let photos = Mapper<Photo>().mapArray(JSONString: jsonStr) else {
+                    return
+                }
+                let uid = photos.first!.UID!
+                let list = photos.map { item in
+                    return GridItem.init(identifier: item.UID!, mediaType: .image, mediaSubtypes: .photoDepthEffect, pixelWidth: item.Width, pixelHeight: item.Height, creationDate: nil, location: nil, duration: 0, isFavorite: false, isHidden: false, isInCloud: true, imageURL: item.previewURL, asset: nil)
+                }
+                let data = GridListItem(identifier: uid, dataSouce: list)
+                self.dataSource = [data]
+//                self.dataSource = self.reloadDataSource()
+                DispatchQueue.main.async {
+                    self.adapter.performUpdates(animated: true, completion: nil)
+                }
+                
+            case let .failure(error):
+                break
+                
+            }
+        }
+
         return []
     }
     

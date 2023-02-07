@@ -149,6 +149,9 @@
                                 <segment title="视频"/>
                                 <segment title="照片"/>
                             </segments>
+                            <connections>
+                                <action selector="onSegmentControl:" destination="HVB-uc-gc7" eventType="valueChanged" id="SoX-Y5-Re0"/>
+                            </connections>
                         </segmentedControl>
                         <barButtonItem key="rightBarButtonItem" style="plain" id="kQM-Mt-pW1">
                             <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="YlP-21-aDf">
@@ -160,7 +163,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="collectionView" destination="raa-Es-w9x" id="gV5-X3-EPE"/>
+                        <outlet property="_collectionView" destination="raa-Es-w9x" id="S5P-Jt-nDf"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iQC-i6-YM8" sceneMemberID="firstResponder"/>
