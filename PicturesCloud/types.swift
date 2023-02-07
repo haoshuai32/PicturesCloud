@@ -76,119 +76,247 @@ struct Config: Mappable {
 //type Photos []Photo
 typealias Photos = [Photo]
 // Photo represents a photo, all its properties, and link to all its images and sidecar files.
-public struct Photo  {
-    /// `gorm:"type:VARBINARY(42);index;" json:"DocumentID,omitempty" yaml:"DocumentID,omitempty"`
-    var UUID : String?
-    /// `gorm:"type:datetime;index:idx_photos_taken_uid;" json:"TakenAt" yaml:"TakenAt"`
-    var TakenAt : Date?
-    /// `gorm:"type:datetime;" yaml:"-"`
-    var TakenAtLocal : Date?
-    /// `gorm:"type:VARBINARY(8);" json:"TakenSrc" yaml:"TakenSrc,omitempty"`
-    var TakenSrc : String?
-    /// `gorm:"type:VARBINARY(42);unique_index;index:idx_photos_taken_uid;" json:"UID" yaml:"UID"`
-    var PhotoUID : String?
-    /// `gorm:"type:VARBINARY(8);default:'image';" json:"Type" yaml:"Type"`
-    var PhotoType : String?
-    /// `gorm:"type:VARBINARY(8);" json:"TypeSrc" yaml:"TypeSrc,omitempty"`
-    var TypeSrc : String?
-    /// `gorm:"type:VARCHAR(255);" json:"Title" yaml:"Title"`
-    var PhotoTitle : String?
-    /// `gorm:"type:VARBINARY(8);" json:"TitleSrc" yaml:"TitleSrc,omitempty"`
-    var TitleSrc : String?
-    /// `gorm:"type:TEXT;" json:"Description" yaml:"Description,omitempty"`
-    var PhotoDescription : String?
-    /// `gorm:"type:VARBINARY(8);" json:"DescriptionSrc" yaml:"DescriptionSrc,omitempty"`
-    var DescriptionSrc : String?
-    /// `gorm:"type:VARBINARY(500);index:idx_photos_path_name;" json:"Path" yaml:"-"`
-    var PhotoPath : String?
-    /// `gorm:"type:VARBINARY(255);index:idx_photos_path_name;" json:"Name" yaml:"-"`
-    var PhotoName : String?
-    /// `gorm:"type:VARBINARY(755);" json:"OriginalName" yaml:"OriginalName,omitempty"`
-    var OriginalName : String?
-    /// `json:"Stack" yaml:"Stack,omitempty"`
-    var PhotoStack : Int8?
-    /// `json:"Favorite" yaml:"Favorite,omitempty"`
-    var PhotoFavorite : Bool?
-    /// `json:"Private" yaml:"Private,omitempty"`
-    var PhotoPrivate : Bool?
-    /// `json:"Scan" yaml:"Scan,omitempty"`
-    var PhotoScan : Bool?
-    /// `json:"Panorama" yaml:"Panorama,omitempty"`
-    var PhotoPanorama : Bool?
-    /// `gorm:"type:VARBINARY(64);" json:"TimeZone" yaml:"-"`
-    var TimeZone : String?
-    /// `gorm:"type:VARBINARY(42);index;default:'zz'" json:"PlaceID" yaml:"-"`
-    var PlaceID : String?
-    /// `gorm:"type:VARBINARY(8);" json:"PlaceSrc" yaml:"PlaceSrc,omitempty"`
-    var PlaceSrc : String?
-    /// `gorm:"type:VARBINARY(42);index;default:'zz'" json:"CellID" yaml:"-"`
-    var CellID : String?
-    /// `json:"CellAccuracy" yaml:"CellAccuracy,omitempty"`
-    var CellAccuracy : Int?
-    /// `json:"Altitude" yaml:"Altitude,omitempty"`
-    var PhotoAltitude : Int?
-    /// `gorm:"type:FLOAT;index;" json:"Lat" yaml:"Lat,omitempty"`
-    var PhotoLat : Float32?
-    /// `gorm:"type:FLOAT;index;" json:"Lng" yaml:"Lng,omitempty"`
-    var PhotoLng : Float32?
-    /// `gorm:"type:VARBINARY(2);index:idx_photos_country_year_month;default:'zz'" json:"Country" yaml:"-"`
-    var PhotoCountry : String?
-    /// `gorm:"index:idx_photos_country_year_month;" json:"Year" yaml:"Year"`
-    var PhotoYear : Int?
-    /// `gorm:"index:idx_photos_country_year_month;" json:"Month" yaml:"Month"`
-    var PhotoMonth : Int?
-    /// `json:"Day" yaml:"Day"`
-    var PhotoDay : Int?
-    /// `json:"Iso" yaml:"ISO,omitempty"`
-    var PhotoIso : Int?
-    /// `gorm:"type:VARBINARY(64);" json:"Exposure" yaml:"Exposure,omitempty"`
-    var PhotoExposure : String?
-    /// `gorm:"type:FLOAT;" json:"FNumber" yaml:"FNumber,omitempty"`
-    var PhotoFNumber : Float32?
-    /// `json:"FocalLength" yaml:"FocalLength,omitempty"`
-    var PhotoFocalLength : Int?
-    /// `gorm:"type:SMALLINT" json:"Quality" yaml:"-"`
-    var PhotoQuality : Int?
-    /// `gorm:"type:SMALLINT" json:"Resolution" yaml:"-"`
-    var PhotoResolution : Int?
-    /// `json:"Color" yaml:"-"`
-    var PhotoColor : UInt8?
-    /// `gorm:"index:idx_photos_camera_lens;default:1" json:"CameraID" yaml:"-"`
-    var CameraID : UInt?
-    /// `gorm:"type:VARBINARY(255);" json:"CameraSerial" yaml:"CameraSerial,omitempty"`
-    var CameraSerial : String?
-    /// `gorm:"type:VARBINARY(8);" json:"CameraSrc" yaml:"-"`
-    var CameraSrc : String?
-    /// `gorm:"index:idx_photos_camera_lens;default:1" json:"LensID" yaml:"-"`
-    var LensID : UInt?
-    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Details" yaml:"Details"`
-    var Details:Details?
-    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Camera" yaml:"-"`
-    var Camera:Camera?
-    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Lens" yaml:"-"`
-    var Lens:Lens?
-    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Cell" yaml:"-"`
-    var Cell:Cell?
-    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Place" yaml:"-"`
-    var Place:Place?
-    /// `json:"-" yaml:"-"`
-    var Keywords:[Keyword] = []
-    /// `json:"-" yaml:"-"`
-    var Albums:[Album] = []
-    /// `yaml:"-"`
-    var Files    : [File] = []
-    /// `yaml:"-"`
-    var Labels        : [PhotoLabel] = []
-    /// `yaml:"CreatedAt,omitempty"`
-    var CreatedAt : Date?
-    /// `yaml:"UpdatedAt,omitempty"`
-    var UpdatedAt : Date?
-    /// `yaml:"EditedAt,omitempty"`
-    var EditedAt : Date?
-    /// `sql:"index" yaml:"-"`
-    var CheckedAt : Date?
-    /// `sql:"index" yaml:"DeletedAt,omitempty"`
-    var DeletedAt : Date?
+public struct Photo: Mappable  {
+    public init?(map: ObjectMapper.Map) {
+        
+    }
+    
+    public mutating func mapping(map: ObjectMapper.Map) {
+        ID <- map["ID"]
+        UID <- map["UID"]
+        PhotoType <- map["Type"]
+        TypeSrc <- map["TypeSrc"]
+        TakenAt <- map["TakenAt"]
+        TakenAtLocal <- map["TakenAtLocal"]
+        TakenSrc <- map["TakenSrc"]
+        TimeZone <- map["TimeZone"]
+        Path <- map["Path"]
+        Name <- map["Name"]
+        OriginalName <- map["OriginalName"]
+        Title <- map["Title"]
+        Description <- map["Description"]
+        Year <- map["Year"]
+        Month <- map["Month"]
+        Day <- map["Day"]
+        Country <- map["Country"]
+        Stack <- map["Stack"]
+        Favorite <- map["Favorite"]
+        Private <- map["Private"]
+        Iso <- map["Iso"]
+        FocalLength <- map["FocalLength"]
+        FNumber <- map["FNumber"]
+        Exposure <- map["Exposure"]
+        Quality <- map["Quality"]
+        Resolution <- map["Resolution"]
+        Color <- map["Color"]
+        Scan <- map["Scan"]
+        Panorama <- map["Panorama"]
+        CameraID <- map["CameraID"]
+        CameraSrc <- map["CameraSrc"]
+        CameraModel <- map["CameraModel"]
+        CameraMake <- map["CameraMake"]
+        LensID <- map["LensID"]
+        LensModel <- map["LensModel"]
+        Lat <- map["Lat"]
+        Lng <- map["Lng"]
+        CellID <- map["CellID"]
+        PlaceID <- map["PlaceID"]
+        PlaceSrc <- map["PlaceSrc"]
+        PlaceLabel <- map["PlaceLabel"]
+        PlaceCity <- map["PlaceCity"]
+        PlaceState <- map["PlaceState"]
+        PlaceCountry <- map["PlaceCountry"]
+        InstanceID <- map["InstanceID"]
+        FileUID <- map["FileUID"]
+        FileRoot <- map["FileRoot"]
+        FileName <- map["FileName"]
+        Hash <- map["Hash"]
+        Width <- map["Width"]
+        Height <- map["Height"]
+        Portrait <- map["Portrait"]
+        Merged <- map["Merged"]
+        CreatedAt <- map["CreatedAt"]
+        UpdatedAt <- map["UpdatedAt"]
+        EditedAt <- map["EditedAt"]
+        CheckedAt <- map["CheckedAt"]
+        DeletedAt <- map["DeletedAt"]
+        Files <- map["Files"]
+    }
+    var ID: String?
+    var UID: String?
+    var PhotoType: String?
+    var TypeSrc: String?
+    var TakenAt: String?
+    var TakenAtLocal: String?
+    var TakenSrc: String?
+    var TimeZone: String?
+    var Path: String?
+    var Name: String?
+    var OriginalName: String?
+    var Title: String?
+    var Description: String?
+    var Year: Int = 0
+    var Month: Int = 0
+    var Day: Int = 0
+    var Country: String?
+    var Stack: Int = 0
+    var Favorite: Bool = false
+    var Private: Bool = false
+    var Iso: Int = 0
+    var FocalLength: Int = 0
+    var FNumber: Int = 0
+    var Exposure: String?
+    var Quality: Int = 0
+    var Resolution: Int = 0
+    var Color: Int = 0
+    var Scan: Bool = false
+    var Panorama: Bool = false
+    var CameraID: Int = 0
+    var CameraSrc: String?
+    var CameraModel: String?
+    var CameraMake: String?
+    var LensID: Int = 0
+    var LensModel: String?
+    var Lat: Int = 0
+    var Lng: Int = 0
+    var CellID: String?
+    var PlaceID: String?
+    var PlaceSrc: String?
+    var PlaceLabel: String?
+    var PlaceCity: String?
+    var PlaceState: String?
+    var PlaceCountry: String?
+    var InstanceID: String?
+    var FileUID: String?
+    var FileRoot: String?
+    var FileName: String?
+    var Hash: String?
+    var Width: Int = 0
+    var Height: Int = 0
+    var Portrait: Bool = false
+    var Merged: Bool = false
+    var CreatedAt: String?
+    var UpdatedAt: String?
+    var EditedAt: String?
+    var CheckedAt: String?
+    var DeletedAt: String?
+    var Files: String?
+    
+    
+    
+//
+//    /// `gorm:"type:VARBINARY(42);index;" json:"DocumentID,omitempty" yaml:"DocumentID,omitempty"`
+//    var UUID : String?
+//    /// `gorm:"type:datetime;index:idx_photos_taken_uid;" json:"TakenAt" yaml:"TakenAt"`
+//    var TakenAt : Date?
+//    /// `gorm:"type:datetime;" yaml:"-"`
+//    var TakenAtLocal : Date?
+//    /// `gorm:"type:VARBINARY(8);" json:"TakenSrc" yaml:"TakenSrc,omitempty"`
+//    var TakenSrc : String?
+//    /// `gorm:"type:VARBINARY(42);unique_index;index:idx_photos_taken_uid;" json:"UID" yaml:"UID"`
+//    var PhotoUID : String?
+//    /// `gorm:"type:VARBINARY(8);default:'image';" json:"Type" yaml:"Type"`
+//    var PhotoType : String?
+//    /// `gorm:"type:VARBINARY(8);" json:"TypeSrc" yaml:"TypeSrc,omitempty"`
+//    var TypeSrc : String?
+//    /// `gorm:"type:VARCHAR(255);" json:"Title" yaml:"Title"`
+//    var PhotoTitle : String?
+//    /// `gorm:"type:VARBINARY(8);" json:"TitleSrc" yaml:"TitleSrc,omitempty"`
+//    var TitleSrc : String?
+//    /// `gorm:"type:TEXT;" json:"Description" yaml:"Description,omitempty"`
+//    var PhotoDescription : String?
+//    /// `gorm:"type:VARBINARY(8);" json:"DescriptionSrc" yaml:"DescriptionSrc,omitempty"`
+//    var DescriptionSrc : String?
+//    /// `gorm:"type:VARBINARY(500);index:idx_photos_path_name;" json:"Path" yaml:"-"`
+//    var PhotoPath : String?
+//    /// `gorm:"type:VARBINARY(255);index:idx_photos_path_name;" json:"Name" yaml:"-"`
+//    var PhotoName : String?
+//    /// `gorm:"type:VARBINARY(755);" json:"OriginalName" yaml:"OriginalName,omitempty"`
+//    var OriginalName : String?
+//    /// `json:"Stack" yaml:"Stack,omitempty"`
+//    var PhotoStack : Int8?
+//    /// `json:"Favorite" yaml:"Favorite,omitempty"`
+//    var PhotoFavorite : Bool?
+//    /// `json:"Private" yaml:"Private,omitempty"`
+//    var PhotoPrivate : Bool?
+//    /// `json:"Scan" yaml:"Scan,omitempty"`
+//    var PhotoScan : Bool?
+//    /// `json:"Panorama" yaml:"Panorama,omitempty"`
+//    var PhotoPanorama : Bool?
+//    /// `gorm:"type:VARBINARY(64);" json:"TimeZone" yaml:"-"`
+//    var TimeZone : String?
+//    /// `gorm:"type:VARBINARY(42);index;default:'zz'" json:"PlaceID" yaml:"-"`
+//    var PlaceID : String?
+//    /// `gorm:"type:VARBINARY(8);" json:"PlaceSrc" yaml:"PlaceSrc,omitempty"`
+//    var PlaceSrc : String?
+//    /// `gorm:"type:VARBINARY(42);index;default:'zz'" json:"CellID" yaml:"-"`
+//    var CellID : String?
+//    /// `json:"CellAccuracy" yaml:"CellAccuracy,omitempty"`
+//    var CellAccuracy : Int?
+//    /// `json:"Altitude" yaml:"Altitude,omitempty"`
+//    var PhotoAltitude : Int?
+//    /// `gorm:"type:FLOAT;index;" json:"Lat" yaml:"Lat,omitempty"`
+//    var PhotoLat : Float32?
+//    /// `gorm:"type:FLOAT;index;" json:"Lng" yaml:"Lng,omitempty"`
+//    var PhotoLng : Float32?
+//    /// `gorm:"type:VARBINARY(2);index:idx_photos_country_year_month;default:'zz'" json:"Country" yaml:"-"`
+//    var PhotoCountry : String?
+//    /// `gorm:"index:idx_photos_country_year_month;" json:"Year" yaml:"Year"`
+//    var PhotoYear : Int?
+//    /// `gorm:"index:idx_photos_country_year_month;" json:"Month" yaml:"Month"`
+//    var PhotoMonth : Int?
+//    /// `json:"Day" yaml:"Day"`
+//    var PhotoDay : Int?
+//    /// `json:"Iso" yaml:"ISO,omitempty"`
+//    var PhotoIso : Int?
+//    /// `gorm:"type:VARBINARY(64);" json:"Exposure" yaml:"Exposure,omitempty"`
+//    var PhotoExposure : String?
+//    /// `gorm:"type:FLOAT;" json:"FNumber" yaml:"FNumber,omitempty"`
+//    var PhotoFNumber : Float32?
+//    /// `json:"FocalLength" yaml:"FocalLength,omitempty"`
+//    var PhotoFocalLength : Int?
+//    /// `gorm:"type:SMALLINT" json:"Quality" yaml:"-"`
+//    var PhotoQuality : Int?
+//    /// `gorm:"type:SMALLINT" json:"Resolution" yaml:"-"`
+//    var PhotoResolution : Int?
+//    /// `json:"Color" yaml:"-"`
+//    var PhotoColor : UInt8?
+//    /// `gorm:"index:idx_photos_camera_lens;default:1" json:"CameraID" yaml:"-"`
+//    var CameraID : UInt?
+//    /// `gorm:"type:VARBINARY(255);" json:"CameraSerial" yaml:"CameraSerial,omitempty"`
+//    var CameraSerial : String?
+//    /// `gorm:"type:VARBINARY(8);" json:"CameraSrc" yaml:"-"`
+//    var CameraSrc : String?
+//    /// `gorm:"index:idx_photos_camera_lens;default:1" json:"LensID" yaml:"-"`
+//    var LensID : UInt?
+//    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Details" yaml:"Details"`
+//    var Details:Details?
+//    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Camera" yaml:"-"`
+//    var Camera:Camera?
+//    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Lens" yaml:"-"`
+//    var Lens:Lens?
+//    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Cell" yaml:"-"`
+//    var Cell:Cell?
+//    /// `gorm:"association_autoupdate:false;association_autocreate:false;association_save_reference:false" json:"Place" yaml:"-"`
+//    var Place:Place?
+//    /// `json:"-" yaml:"-"`
+//    var Keywords:[Keyword] = []
+//    /// `json:"-" yaml:"-"`
+//    var Albums:[Album] = []
+//    /// `yaml:"-"`
+//    var Files    : [File] = []
+//    /// `yaml:"-"`
+//    var Labels        : [PhotoLabel] = []
+//    /// `yaml:"CreatedAt,omitempty"`
+//    var CreatedAt : Date?
+//    /// `yaml:"UpdatedAt,omitempty"`
+//    var UpdatedAt : Date?
+//    /// `yaml:"EditedAt,omitempty"`
+//    var EditedAt : Date?
+//    /// `sql:"index" yaml:"-"`
+//    var CheckedAt : Date?
+//    /// `sql:"index" yaml:"DeletedAt,omitempty"`
+//    var DeletedAt : Date?
     
 //    var privewURL: String? {
 //        let has = self.

@@ -140,58 +140,82 @@ extension PhotoPrismAPI: TargetType {
     public var path: String {
         
         switch self {
+        
         case .login(_, _):
             return "/api/v1/session"
         
         case .getConfig:
             return "/api/v1/config"
+        
         case let .getAlbums(options):
 //            let path = String(format:"/api/v1/albums?count=%d&offset=%d&q=%s&category=%s&type=%s", options.count, options.offset, options.q, options.category, options.paramType)
             return "/api/v1/albums"
+        
         case let .getAlbum(uuid):
             return "/api/v1/albums/\(uuid)"
+        
         case .createAlbum(_):
             return "/api/v1/albums"
+        
         case let .updateAlbum(album):
             return "/api/v1/albums/\(album.AlbumUID)"
+        
         case .deleteAlbums(_):
             return "/api/v1/batch/albums/delete"
+        
         case .likeAlbum(let uuid):
             return "/api/v1/albums/\(uuid)/like"
+        
         case .dislikeAlbum(let uuid):
             return "/api/v1/albums/\(uuid)/like"
+        
         case .cloneAlbum(let album):
             return "/api/v1/albums/\(album.AlbumUID)/clone"
+        
         case .addPhotosToAlbum(let albumUUID, _):
             return "/api/v1/albums/\(albumUUID)/photos"
+        
         case .deletePhotosFromAlbum(let albumUUID, _):
             return "/api/v1/albums/\(albumUUID)/photos"
+        
         case .getAlbumDownload(let uuid, _):
 //            return "/api/v1/albums/\(uuid)/dl?t=/\(downloadToken)"
             return "/api/v1/albums/\(uuid)/dl"
+        
         case ._import:
             return "/api/v1/import"
+        
         case .index:
             return "/api/v1/index"
+        
         case .cancelIndex:
             return "/api/v1/index"
+        
         case .getPhoto(let uuid):
             return "/api/v1/photos/\(uuid)"
+        
         case .getPhotos(let options):
             return  "/api/v1/photos"
+        
         case .updatePhoto(let photo):
-            return "/api/v1/photos/\(photo.PhotoUID)"
+            return "/api/v1/photos/\(photo.UID)"
+        
         case .getPhotoDownload(let uuid,let downloadToken):
 //            return String(format: "/api/v1/photos/%s/dl?t=%s", uuid, downloadToken)
             return "/api/v1/photos/\(uuid)/dl"
+        
         case .getPhotoYaml(let uuid):
             return "/api/v1/photos/\(uuid)/yaml"
+        
         case .approvePhoto(let uuid):
             return "/api/v1/photos/\(uuid)/approve"
+        
         case .likePhoto(let uuid):
             return "/api/v1/photos/\(uuid)/like"
+        
         case .dislikePhoto(let uuid):
             return "/api/v1/photos/\(uuid)/approve"
+            
         case let .photoPrimary(uuid, fileuuid):
             return "/api/v1/photos/\(uuid)/files/\(fileuuid)/primary"
 //            return String(format: "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
@@ -200,8 +224,10 @@ extension PhotoPrismAPI: TargetType {
 //        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
         case let .uploadUserFiles(_, uuid, token):
             return "/api/v1/users/\(uuid)/upload/\(token)"
+            
         case let .uploadUserFilesP(uuid, token):
             return "/api/v1/users/\(uuid)/upload/\(token)"
+            
         }
         return "root"
     }
