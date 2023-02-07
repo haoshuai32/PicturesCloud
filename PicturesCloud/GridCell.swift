@@ -18,7 +18,7 @@ class GridCell: UICollectionViewCell {
     @IBOutlet weak var selelctButton: UIButton!
         
     @IBOutlet weak var durationLabel: UILabel!
-    
+    // var cloudDataSource:
     var dataSource: DisplayAsset.AssetCoverImage? = nil {
         didSet {
             guard let dataSource = dataSource else {

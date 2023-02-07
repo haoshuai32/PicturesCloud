@@ -27,8 +27,10 @@ class CloudSectionController: GridSectionController {
         cell.selelctButton.addTarget(self, action: #selector(selectButtonAction(_:)), for: .touchUpInside)
         
         cell.imageView.kf.setImage(with: item.imageURL)
+        cell.liveTypeView.isHidden = true
+        cell.gifTypeView.isHidden = true
+        cell.durationLabel.isHidden = true
         
-//        cell.dataSource = DisplayAsset.AssetCoverImage.image(<#T##UIImage#>)
 //        item.readCoverImage(targetSize: targetSize) { result in
 //            switch result {
 //            case let .success(resultData):
