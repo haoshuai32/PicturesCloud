@@ -124,11 +124,12 @@ public enum PhotoPrismAPI {
 
 
 var down_token = ""
+let API_ROOT = "http://127.0.0.1:2342"
 //https://demo-zh.photoprism.app/api/v1/users/urpi8tzdfqwlfsgf/upload/xli9k9
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
         
-        guard let url = URL(string: "http://127.0.0.1:2342") else {
+        guard let url = URL(string: API_ROOT) else {
             fatalError("root url error")
             return URL(string: "")!
         }
@@ -380,6 +381,7 @@ class Client {
     
     var v1: V1Client?
     var userID: String?
+    var previewToken : String?
     init() {}
     
     static func rxLogin(username: String, password: String) ->Single<String> {
@@ -415,6 +417,7 @@ class Client {
                         single(.failure(error))
                         return
                     }
+                    Client.shared.previewToken = config?.config?.previewToken
                     Client.shared.userID = config?.userID
                     Client.shared.v1 = V1Client(downloadToken: downloadToken, token: token)
                     single(.success("登录成功"))

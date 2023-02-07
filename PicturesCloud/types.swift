@@ -40,7 +40,7 @@ struct Options: Mappable {
     var copyright: String?
     var downloadToken: String?
     var previewToken: String?
-    var thumbSize = "fit_720"
+    static var thumbSize = "fit_720"
     var thumbs: [ThumbSize] = []
     
     init?(map: Map) {
@@ -77,6 +77,7 @@ struct Config: Mappable {
 typealias Photos = [Photo]
 // Photo represents a photo, all its properties, and link to all its images and sidecar files.
 public struct Photo: Mappable  {
+    
     public init?(map: ObjectMapper.Map) {
         
     }
@@ -142,6 +143,7 @@ public struct Photo: Mappable  {
         DeletedAt <- map["DeletedAt"]
         Files <- map["Files"]
     }
+    
     var ID: String?
     var UID: String?
     var PhotoType: String?
@@ -202,7 +204,21 @@ public struct Photo: Mappable  {
     var DeletedAt: String?
     var Files: String?
     
-    
+    var previewURL: URL {
+        let root = API_ROOT + "/api/v1/t/"
+        guard let hash = Hash, let toekn = Client.shared.previewToken
+        else {
+            fatalError()
+            return URL.init(fileURLWithPath: "")
+        }
+        let urlStr = root + hash + "/" + toekn + "/" + Options.thumbSize
+        
+        guard let url = URL(string: urlStr) else {
+            fatalError()
+            return URL.init(fileURLWithPath: "")
+        }
+        return url
+    }
     
 //
 //    /// `gorm:"type:VARBINARY(42);index;" json:"DocumentID,omitempty" yaml:"DocumentID,omitempty"`
