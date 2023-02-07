@@ -11,15 +11,48 @@ import Photos
 import RxSwift
 import Alamofire
 import ObjectMapper
-public struct AlbumOptions {
+
+public struct AlbumOptions:Mappable {
+    
     var paramType: String = "album"
     var q: String = ""
     var count: Int = 24
     var offset: Int = 0
     var category: String = ""
+    
+    public init?(map: ObjectMapper.Map) {
+        
+    }
+    
+    public mutating func mapping(map: ObjectMapper.Map) {
+        paramType <- map["paramType"]
+        q <- map["q"]
+        count <- map["count"]
+        offset <- map["offset"]
+        category <- map["category"]
+    }
+    
+  
 }
 
-public struct PhotoOptions{
+public struct PhotoOptions:Mappable {
+    
+    public init?(map: ObjectMapper.Map) {
+        
+    }
+    
+    public mutating func mapping(map: ObjectMapper.Map) {
+        count <- map["count"]
+        offset <- map["offset"]
+        albumUID <- map["albumUID"]
+        filter <- map["filter"]
+        merged <- map["merged"]
+        country <- map["country"]
+        camera <- map["camera"]
+        order <- map["order"]
+        q <- map["q"]
+    }
+    
     var count: Int = 60
     var offset: Int = 0
     var albumUID: String = ""
@@ -113,8 +146,8 @@ extension PhotoPrismAPI: TargetType {
         case .getConfig:
             return "/api/v1/config"
         case let .getAlbums(options):
-            let path = String(format:"/api/v1/albums?count=%d&offset=%d&q=%s&category=%s&type=%s", options.count, options.offset, options.q, options.category, options.paramType)
-            return path
+//            let path = String(format:"/api/v1/albums?count=%d&offset=%d&q=%s&category=%s&type=%s", options.count, options.offset, options.q, options.category, options.paramType)
+            return "/api/v1/albums"
         case let .getAlbum(uuid):
             return "/api/v1/albums/\(uuid)"
         case .createAlbum(_):
@@ -133,8 +166,9 @@ extension PhotoPrismAPI: TargetType {
             return "/api/v1/albums/\(albumUUID)/photos"
         case .deletePhotosFromAlbum(let albumUUID, _):
             return "/api/v1/albums/\(albumUUID)/photos"
-        case .getAlbumDownload(let uuid, let downloadToken):
-            return "/api/v1/albums/\(uuid)/dl?t=/\(downloadToken)"
+        case .getAlbumDownload(let uuid, _):
+//            return "/api/v1/albums/\(uuid)/dl?t=/\(downloadToken)"
+            return "/api/v1/albums/\(uuid)/dl"
         case ._import:
             return "/api/v1/import"
         case .index:
@@ -148,7 +182,8 @@ extension PhotoPrismAPI: TargetType {
         case .updatePhoto(let photo):
             return "/api/v1/photos/\(photo.PhotoUID)"
         case .getPhotoDownload(let uuid,let downloadToken):
-            return String(format: "/api/v1/photos/%s/dl?t=%s", uuid, downloadToken)
+//            return String(format: "/api/v1/photos/%s/dl?t=%s", uuid, downloadToken)
+            return "/api/v1/photos/\(uuid)/dl"
         case .getPhotoYaml(let uuid):
             return "/api/v1/photos/\(uuid)/yaml"
         case .approvePhoto(let uuid):
@@ -158,7 +193,8 @@ extension PhotoPrismAPI: TargetType {
         case .dislikePhoto(let uuid):
             return "/api/v1/photos/\(uuid)/approve"
         case let .photoPrimary(uuid, fileuuid):
-            return String(format: "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
+            return "/api/v1/photos/\(uuid)/files/\(fileuuid)/primary"
+//            return String(format: "/api/v1/photos/%s/files/%s/primary", uuid, fileuuid)
 
             //        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
 //        http://127.0.0.1:2342/api/v1/users/urpl5sn1qmoiucq9/upload/u4lcl
@@ -242,7 +278,19 @@ extension PhotoPrismAPI: TargetType {
                 "password": password
             ]
             return .requestParameters(parameters: parameters, encoding:JSONEncoding())
+            
+        case let .getAlbums(options):
+            let dis = options.toJSON()
+            return .requestParameters(parameters: dis, encoding: URLEncoding.default)
+        
+        case .getAlbumDownload(_, let downloadToken):
+            return .requestParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default)
+            
+        case .getPhotoDownload(_,let downloadToken):
+            return .requestParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default)
+            
         case .uploadUserFiles(let data, _, _):
+            debugPrint("测试接口")
 //            let testData = "hello my body text".data(using: .utf8)!
                 
             let i = MultipartFormData.init(provider: MultipartFormData.FormDataProvider.data(data), name: "files",fileName: "pimage.jpeg", mimeType: "jpeg")
@@ -258,7 +306,8 @@ extension PhotoPrismAPI: TargetType {
             return .requestParameters(parameters: parameters, encoding:JSONEncoding())
         case let .getPhotos(options):
             // 这里根据请求的方法 判断数据在哪里个位置
-            return .requestParameters(parameters: ["count": 60], encoding: URLEncoding.default)
+            let dis = options.toJSON()
+            return .requestParameters(parameters: dis, encoding: URLEncoding.default)
         default:
             return .requestPlain
         }

@@ -18,11 +18,30 @@ struct User:Mappable {
     var userID: String?
 }
 
+struct ThumbSize: Mappable {
+    var size: String?
+    var use: String?
+    var w: Int = 0
+    var h: Int = 0
+    init?(map: Map) {
+
+    }
+    mutating func mapping(map: Map) {
+        size <- map["size"]
+        use <- map["use"]
+        w <- map["w"]
+        h <- map["h"]
+    }
+}
+
 struct Options: Mappable {
     var name: String?
     var version: String?
     var copyright: String?
     var downloadToken: String?
+    var previewToken: String?
+    var thumbSize = "fit_720"
+    var thumbs: [ThumbSize] = []
     
     init?(map: Map) {
 
@@ -34,6 +53,9 @@ struct Options: Mappable {
         copyright     <- map["copyright"]
         downloadToken     <- map["downloadToken"]
         
+        previewToken <- map["previewToken"]
+    
+        thumbs <- map["thumbs"]
     }
 }
 
@@ -167,6 +189,11 @@ public struct Photo  {
     var CheckedAt : Date?
     /// `sql:"index" yaml:"DeletedAt,omitempty"`
     var DeletedAt : Date?
+    
+//    var privewURL: String? {
+//        let has = self.
+//        return
+//    }
 }
 
 // Details stores additional metadata fields for each photo to improve search performance.
