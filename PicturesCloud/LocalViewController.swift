@@ -56,7 +56,7 @@ class LocalViewController: GridViewController {
     @IBAction func uploadButtonAction(_ sender: Any?) {
         debugPrint("开始上传",self.selectedData.count)
         
-        guard let data = self.selectedData.first,let asset = data.asset else {
+        guard self.selectedData.count > 0 else {
             return
         }
         

@@ -37,6 +37,8 @@ public struct AlbumOptions:Mappable {
 
 public struct PhotoOptions:Mappable {
     
+    public init() {}
+    
     public init?(map: ObjectMapper.Map) {
         
     }

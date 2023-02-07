@@ -30,6 +30,7 @@
 		2E650F49283B8568000E74CC /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F48283B8568000E74CC /* Assets.xcassets */; };
 		2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */; };
 		2E6BC60A29914A57003BE70D /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6BC60929914A57003BE70D /* String+Extension.swift */; };
+		2E6BC60C2992AB30003BE70D /* CloudSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6BC60B2992AB30003BE70D /* CloudSectionController.swift */; };
 		2EC0D0662846684200253196 /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0652846684200253196 /* Display.swift */; };
 		2EC0D068284715A900253196 /* HPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D067284715A900253196 /* HPlayerView.swift */; };
 		2EC0D0892847561D00253196 /* GridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0882847561D00253196 /* GridViewController.swift */; };
@@ -77,6 +78,7 @@
 		2E650F4D283B8568000E74CC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2E650F53283B8A24000E74CC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2E6BC60929914A57003BE70D /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
+		2E6BC60B2992AB30003BE70D /* CloudSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSectionController.swift; sourceTree = "<group>"; };
 		2EC0D0652846684200253196 /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.swift; sourceTree = "<group>"; };
 		2EC0D067284715A900253196 /* HPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPlayerView.swift; sourceTree = "<group>"; };
 		2EC0D070284735A500253196 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -168,13 +170,11 @@
 		2E650F3E283B8563000E74CC /* PicturesCloud */ = {
 			isa = PBXGroup;
 			children = (
+				2E6BC60D2992AB71003BE70D /* VC */,
 				2E6BC60829914A45003BE70D /* Extension */,
 				2EE7BE4B298AC4A2006BD2B0 /* API */,
 				2E3A99F3283F0CA900F3D5D7 /* Manager */,
 				2E650F3F283B8563000E74CC /* AppDelegate.swift */,
-				2E650F43283B8563000E74CC /* CloudViewController.swift */,
-				2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */,
-				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
 				2E3CF47D283BC04100243139 /* LocalPictureCell.swift */,
 				2E3CF47E283BC04100243139 /* LocalPictureCell.xib */,
 				2E3A99E4283E374D00F3D5D7 /* LocalImageCell.swift */,
@@ -190,8 +190,6 @@
 				2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */,
 				2E650F4D283B8568000E74CC /* Info.plist */,
 				2EC0D067284715A900253196 /* HPlayerView.swift */,
-				2EC0D0882847561D00253196 /* GridViewController.swift */,
-				2EC0D08A2847564900253196 /* GridSectionController.swift */,
 				2EC0D08C284760D700253196 /* GridCell.swift */,
 				2EC0D08D284760D700253196 /* GridCell.xib */,
 			);
@@ -204,6 +202,19 @@
 				2E6BC60929914A57003BE70D /* String+Extension.swift */,
 			);
 			name = Extension;
+			sourceTree = "<group>";
+		};
+		2E6BC60D2992AB71003BE70D /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				2E6BC60B2992AB30003BE70D /* CloudSectionController.swift */,
+				2E650F43283B8563000E74CC /* CloudViewController.swift */,
+				2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */,
+				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
+				2EC0D08A2847564900253196 /* GridSectionController.swift */,
+				2EC0D0882847561D00253196 /* GridViewController.swift */,
+			);
+			name = VC;
 			sourceTree = "<group>";
 		};
 		2EE7BE4B298AC4A2006BD2B0 /* API */ = {
@@ -351,6 +362,7 @@
 				2E3A99ED283E3C5F00F3D5D7 /* LocalImageSectionController.swift in Sources */,
 				2E3CF48A283BCCF400243139 /* LocalPictureModel.swift in Sources */,
 				2E3CF486283BCCB800243139 /* HUploadManager.swift in Sources */,
+				2E6BC60C2992AB30003BE70D /* CloudSectionController.swift in Sources */,
 				2E3CF482283BC8E500243139 /* HFileManager.swift in Sources */,
 				2E3A99E2283E162A00F3D5D7 /* LocalDisplayViewController.swift in Sources */,
 				2EE7BE4A298ABC48006BD2B0 /* types.swift in Sources */,
