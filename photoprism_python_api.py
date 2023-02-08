@@ -63,7 +63,7 @@ def login():
         "X-Session-Id":token
         }
     print("/api/v1/photos?count=5&offset=0")
-    conn.request("GET", '/api/v1/photos?count=1&offset=0&order=oldest',headers=header)
+    conn.request("GET", '/api/v1/photos?count=60&offset=0&order=oldest',headers=header)
     r2 = conn.getresponse()
     print(r2.status)
     print(r2.read())

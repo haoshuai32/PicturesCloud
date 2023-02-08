@@ -54,8 +54,30 @@ class CloudViewController: GridViewController {
                     return
                 }
                 let uid = photos.first!.UID!
+                
                 let list = photos.map { item in
-                    return GridItem.init(identifier: item.UID!, mediaType: .image, mediaSubtypes: .photoDepthEffect, pixelWidth: item.Width, pixelHeight: item.Height, creationDate: nil, location: nil, duration: 0, isFavorite: false, isHidden: false, isInCloud: true, imageURL: item.previewURL, asset: nil)
+                    
+                
+                    var mediaType: HPHAssetMediaType = .image
+                    var mediaSubtypes: HPHAssetMediaSubtype = .photoHDR
+                    
+                    switch item.PhotoType {
+                        
+                    case .live:
+                        debugPrint("photoLive")
+                        mediaSubtypes = .photoLive
+                    case .image:
+                        break
+                    case .video:
+                        debugPrint("video")
+                        mediaType = .video
+                    case .gif:
+                        debugPrint("git")
+                        mediaType = .audio
+                    }
+                    
+                    
+                    return GridItem.init(identifier: item.UID!, mediaType: mediaType, mediaSubtypes: mediaSubtypes, pixelWidth: item.Width, pixelHeight: item.Height, creationDate: nil, location: nil, duration: Double(item.Duration), isFavorite: false, isHidden: false, isInCloud: true, imageURL: item.previewURL, asset: nil)
                 }
                 let data = GridListItem(identifier: uid, dataSouce: list)
                 self.dataSource = [data]
@@ -64,7 +86,7 @@ class CloudViewController: GridViewController {
                     self.adapter.performUpdates(animated: true, completion: nil)
                 }
                 
-            case let .failure(error):
+            case let .failure(_):
                 break
                 
             }

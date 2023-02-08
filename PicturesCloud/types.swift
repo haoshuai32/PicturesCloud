@@ -73,6 +73,13 @@ struct Config: Mappable {
     var userID: String?
 }
 
+enum PhotoType:String {
+    case live = "live"
+    case image = "image"
+    case video = "video"
+    case gif = "animated"
+}
+
 //type Photos []Photo
 typealias Photos = [Photo]
 // Photo represents a photo, all its properties, and link to all its images and sidecar files.
@@ -85,7 +92,7 @@ public struct Photo: Mappable  {
     public mutating func mapping(map: ObjectMapper.Map) {
         ID <- map["ID"]
         UID <- map["UID"]
-        PhotoType <- map["Type"]
+        PhotoType <- (map["Type"],EnumTransform<PhotoType>())
         TypeSrc <- map["TypeSrc"]
         TakenAt <- map["TakenAt"]
         TakenAtLocal <- map["TakenAtLocal"]
@@ -146,7 +153,7 @@ public struct Photo: Mappable  {
     
     var ID: String?
     var UID: String?
-    var PhotoType: String?
+    var PhotoType: PhotoType = .image
     var TypeSrc: String?
     var TakenAt: String?
     var TakenAtLocal: String?
@@ -202,8 +209,14 @@ public struct Photo: Mappable  {
     var EditedAt: String?
     var CheckedAt: String?
     var DeletedAt: String?
-    var Files: String?
-    
+    var Files: [File] = []
+    var Duration: Int {
+        if Files.count == 2 , PhotoType == .video {
+//            27000000000
+            return Files[1].Duration / 1000000000
+        }
+        return 0
+    }
     var previewURL: URL {
         let root = API_ROOT + "/api/v1/t/"
         guard let hash = Hash, let toekn = Client.shared.previewToken
@@ -338,6 +351,131 @@ public struct Photo: Mappable  {
 //        let has = self.
 //        return
 //    }
+}
+
+typealias Files = [File]
+
+// File represents an image or sidecar file that belongs to a photo.
+public struct File: Mappable  {
+    
+    
+    public init?(map: ObjectMapper.Map) {
+        
+    }
+    
+    public mutating func mapping(map: ObjectMapper.Map) {
+        UID <- map["UID"]
+        Name <- map["Name"]
+        Root <- map["Root"]
+        OriginalName <- map["OriginalName"]
+        Hash <- map["Hash"]
+        Size <- map["Size"]
+        Codec <- map["Codec"]
+        FileType <- map["FileType"]
+        Mime <- map["Mime"]
+        Primary <- map["Primary"]
+        FileSidecar <- map["FileSidecar"]
+        FileMissing <- map["FileMissing"]
+        FilePortrait <- map["FilePortrait"]
+        Video <- map["Video"]
+        Duration <- map["Duration"]
+        Width <- map["Width"]
+        Height <- map["Height"]
+        Orientation <- map["Orientation"]
+        FileProjection <- map["FileProjection"]
+        AspectRatio <- map["AspectRatio"]
+        FileMainColor <- map["FileMainColor"]
+        Colors <- map["Colors"]
+        Luminance <- map["Luminance"]
+        Diff <- map["Diff"]
+        Chroma <- map["Chroma"]
+        FileError <- map["FileError"]
+        ModTime <- map["ModTime"]
+        CreatedAt <- map["CreatedAt"]
+        CreatedIn <- map["CreatedIn"]
+        UpdatedAt <- map["UpdatedAt"]
+        UpdatedIn <- map["UpdatedIn"]
+        DeletedAt <- map["DeletedAt"]
+    }
+    
+    /// `gorm:"primary_key" json:"-" yaml:"-"`
+    var UID : UInt?
+    /// `json:"-" yaml:"-"`
+//    var Photo           :Photo?
+    /// `gorm:"index;" json:"-" yaml:"-"`
+//    var PhotoID : UInt?
+    /// `gorm:"type:VARBINARY(42);index;" json:"PhotoUID" yaml:"PhotoUID"`
+//    var PhotoUID : String?
+    /// `gorm:"type:VARBINARY(42);index;" json:"InstanceID,omitempty" yaml:"InstanceID,omitempty"`
+//    var InstanceID : String?
+    /// `gorm:"type:VARBINARY(42);unique_index;" json:"UID" yaml:"UID"`
+//    var FileUID : String?
+    /// `gorm:"type:VARBINARY(755);unique_index:idx_files_name_root;" json:"Name" yaml:"Name"`
+    var Name : String?
+    /// `gorm:"type:VARBINARY(16);default:'/';unique_index:idx_files_name_root;" json:"Root" yaml:"Root,omitempty"`
+    var Root : String?
+    /// `gorm:"type:VARBINARY(755);" json:"OriginalName" yaml:"OriginalName,omitempty"`
+    var OriginalName : String?
+    /// `gorm:"type:VARBINARY(128);index" json:"Hash" yaml:"Hash,omitempty"`
+    var Hash : String?
+    /// `json:"Size" yaml:"Size,omitempty"`
+    var Size : Int64?
+    /// `gorm:"type:VARBINARY(32)" json:"Codec" yaml:"Codec,omitempty"`
+    var Codec : String?
+    /// `gorm:"type:VARBINARY(32)" json:"Type" yaml:"Type,omitempty"`
+    var FileType : String?
+    /// `gorm:"type:VARBINARY(64)" json:"Mime" yaml:"Mime,omitempty"`
+    var Mime : String?
+    /// `json:"Primary" yaml:"Primary,omitempty"`
+    var Primary : Bool = false
+    /// `json:"Sidecar" yaml:"Sidecar,omitempty"`
+    var FileSidecar : Bool?
+    /// `json:"Missing" yaml:"Missing,omitempty"`
+    var FileMissing : Bool?
+    /// `json:"Portrait" yaml:"Portrait,omitempty"`
+    var FilePortrait : Bool?
+    /// `json:"Video" yaml:"Video,omitempty"`
+    var Video : Bool = false
+    /// `json:"Duration" yaml:"Duration,omitempty"`
+    var Duration    :Int = 0
+    /// `json:"Width" yaml:"Width,omitempty"`
+    var Width : Int?
+    /// `json:"Height" yaml:"Height,omitempty"`
+    var Height : Int?
+    /// `json:"Orientation" yaml:"Orientation,omitempty"`
+    var Orientation : Int?
+    /// `gorm:"type:VARBINARY(16);" json:"Projection,omitempty" yaml:"Projection,omitempty"`
+    var FileProjection : String?
+    /// `gorm:"type:FLOAT;" json:"AspectRatio" yaml:"AspectRatio,omitempty"`
+    var AspectRatio : Float32?
+    /// `gorm:"type:VARBINARY(16);index;" json:"MainColor" yaml:"MainColor,omitempty"`
+    var FileMainColor : String?
+    /// `gorm:"type:VARBINARY(9);" json:"Colors" yaml:"Colors,omitempty"`
+    var Colors : String?
+    /// `gorm:"type:VARBINARY(9);" json:"Luminance" yaml:"Luminance,omitempty"`
+    var Luminance : String?
+    /// `json:"Diff" yaml:"Diff,omitempty"`
+    var Diff        :UInt32?
+    /// `json:"Chroma" yaml:"Chroma,omitempty"`
+    var Chroma:UInt8?
+    /// `gorm:"type:VARBINARY(512)" json:"Error" yaml:"Error,omitempty"`
+    var FileError : String?
+    /// `json:"ModTime" yaml:"-"`
+    var ModTime : Int64?
+    /// `json:"CreatedAt" yaml:"-"`
+    var CreatedAt : Date?
+    /// `json:"CreatedIn" yaml:"-"`
+    var CreatedIn : Int64?
+    /// `json:"UpdatedAt" yaml:"-"`
+    var UpdatedAt : Date?
+    /// `json:"UpdatedIn" yaml:"-"`
+    var UpdatedIn : Int64?
+    /// `sql:"index" json:"DeletedAt,omitempty" yaml:"-"`
+    var DeletedAt : Date?
+    /// `json:"-" yaml:"-"`
+    var Share           :[FileShare] = []
+    /// `json:"-" yaml:"-"`
+    var Sync            :[FileSync] = []
 }
 
 // Details stores additional metadata fields for each photo to improve search performance.
@@ -556,89 +694,7 @@ struct PhotoAlbum  {
     var Album     :Album?
 }
 
-typealias Files = [File]
 
-// File represents an image or sidecar file that belongs to a photo.
-struct File  {
-    /// `gorm:"primary_key" json:"-" yaml:"-"`
-    var ID : UInt?
-    /// `json:"-" yaml:"-"`
-    var Photo           :Photo?
-    /// `gorm:"index;" json:"-" yaml:"-"`
-    var PhotoID : UInt?
-    /// `gorm:"type:VARBINARY(42);index;" json:"PhotoUID" yaml:"PhotoUID"`
-    var PhotoUID : String?
-    /// `gorm:"type:VARBINARY(42);index;" json:"InstanceID,omitempty" yaml:"InstanceID,omitempty"`
-    var InstanceID : String?
-    /// `gorm:"type:VARBINARY(42);unique_index;" json:"UID" yaml:"UID"`
-    var FileUID : String?
-    /// `gorm:"type:VARBINARY(755);unique_index:idx_files_name_root;" json:"Name" yaml:"Name"`
-    var FileName : String?
-    /// `gorm:"type:VARBINARY(16);default:'/';unique_index:idx_files_name_root;" json:"Root" yaml:"Root,omitempty"`
-    var FileRoot : String?
-    /// `gorm:"type:VARBINARY(755);" json:"OriginalName" yaml:"OriginalName,omitempty"`
-    var OriginalName : String?
-    /// `gorm:"type:VARBINARY(128);index" json:"Hash" yaml:"Hash,omitempty"`
-    var FileHash : String?
-    /// `json:"Size" yaml:"Size,omitempty"`
-    var FileSize : Int64?
-    /// `gorm:"type:VARBINARY(32)" json:"Codec" yaml:"Codec,omitempty"`
-    var FileCodec : String?
-    /// `gorm:"type:VARBINARY(32)" json:"Type" yaml:"Type,omitempty"`
-    var FileType : String?
-    /// `gorm:"type:VARBINARY(64)" json:"Mime" yaml:"Mime,omitempty"`
-    var FileMime : String?
-    /// `json:"Primary" yaml:"Primary,omitempty"`
-    var FilePrimary : Bool?
-    /// `json:"Sidecar" yaml:"Sidecar,omitempty"`
-    var FileSidecar : Bool?
-    /// `json:"Missing" yaml:"Missing,omitempty"`
-    var FileMissing : Bool?
-    /// `json:"Portrait" yaml:"Portrait,omitempty"`
-    var FilePortrait : Bool?
-    /// `json:"Video" yaml:"Video,omitempty"`
-    var FileVideo : Bool?
-    /// `json:"Duration" yaml:"Duration,omitempty"`
-    var FileDuration    :Int?
-    /// `json:"Width" yaml:"Width,omitempty"`
-    var FileWidth : Int?
-    /// `json:"Height" yaml:"Height,omitempty"`
-    var FileHeight : Int?
-    /// `json:"Orientation" yaml:"Orientation,omitempty"`
-    var FileOrientation : Int?
-    /// `gorm:"type:VARBINARY(16);" json:"Projection,omitempty" yaml:"Projection,omitempty"`
-    var FileProjection : String?
-    /// `gorm:"type:FLOAT;" json:"AspectRatio" yaml:"AspectRatio,omitempty"`
-    var FileAspectRatio : Float32?
-    /// `gorm:"type:VARBINARY(16);index;" json:"MainColor" yaml:"MainColor,omitempty"`
-    var FileMainColor : String?
-    /// `gorm:"type:VARBINARY(9);" json:"Colors" yaml:"Colors,omitempty"`
-    var FileColors : String?
-    /// `gorm:"type:VARBINARY(9);" json:"Luminance" yaml:"Luminance,omitempty"`
-    var FileLuminance : String?
-    /// `json:"Diff" yaml:"Diff,omitempty"`
-    var FileDiff        :UInt32?
-    /// `json:"Chroma" yaml:"Chroma,omitempty"`
-    var FileChroma:UInt8?
-    /// `gorm:"type:VARBINARY(512)" json:"Error" yaml:"Error,omitempty"`
-    var FileError : String?
-    /// `json:"ModTime" yaml:"-"`
-    var ModTime : Int64?
-    /// `json:"CreatedAt" yaml:"-"`
-    var CreatedAt : Date?
-    /// `json:"CreatedIn" yaml:"-"`
-    var CreatedIn : Int64?
-    /// `json:"UpdatedAt" yaml:"-"`
-    var UpdatedAt : Date?
-    /// `json:"UpdatedIn" yaml:"-"`
-    var UpdatedIn : Int64?
-    /// `sql:"index" json:"DeletedAt,omitempty" yaml:"-"`
-    var DeletedAt : Date?
-    /// `json:"-" yaml:"-"`
-    var Share           :[FileShare] = []
-    /// `json:"-" yaml:"-"`
-    var Sync            :[FileSync] = []
-}
 
 // FileSync represents a one-to-many relation between File and Account for syncing with remote services.
 struct FileSync  {
