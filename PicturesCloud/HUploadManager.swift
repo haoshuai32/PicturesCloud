@@ -299,6 +299,8 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
             urlRequest.addValue(Client.shared.v1!.token, forHTTPHeaderField: "X-Session-Id")
 
+            
+            
 //            debugPrint(urlRequest.headers)
 //            let updata = try! Data(contentsOf: tempPath)
             
