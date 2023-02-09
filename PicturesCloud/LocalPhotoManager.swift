@@ -5,9 +5,16 @@
 //  Created by haoshuai on 2023/2/9.
 //
 
+
+
+// 原始数据
+
+
 import Foundation
 
 protocol PhotoRe {
+    var identifier: String {set get}
+    var photoType: PhotoType  {set get}
     
 }
 
