@@ -101,7 +101,8 @@ class DownloadOperation: Operation {
 }
 
 public class DownloadManager: NSObject, DownloadManagerDelegate, URLSessionDataDelegate {
-    var uploadDelegate: DownloadManagerDelegate?
+    
+    var downloadDelegate: DownloadManagerDelegate?
     
 //    struct UploadMetaData {
 //        // 只能是固定制
@@ -145,7 +146,7 @@ public class DownloadManager: NSObject, DownloadManagerDelegate, URLSessionDataD
         }
         // 移除已经上传成功的数据
 //        let updata = self.uploadDataSource.object(forKey: item.identifier as NSString)
-        self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
+        self.downloadDataSource.removeObject(forKey: item.identifier as NSString)
         completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
         self.uploadIndex += 1
         
@@ -155,7 +156,7 @@ public class DownloadManager: NSObject, DownloadManagerDelegate, URLSessionDataD
             self.uploadFailure.append(item)
         }
         
-        uploadDelegate?.uploadItemDidComplete(index: (self.uploadIndex, self.uploadCount),data:item, info: (response, self.uploadingReceiveData, error))
+        downloadDelegate?.downloadItemDidComplete(index: (self.uploadIndex, self.uploadCount),data:item, info: (response, self.uploadingReceiveData, error))
         debugPrint("一张照片上传完成",task.response as! HTTPURLResponse)
         
         
@@ -193,46 +194,46 @@ public class DownloadManager: NSObject, DownloadManagerDelegate, URLSessionDataD
     
     static let shared = HUploadManager()
     
-    private let tempPath = HFileManager.shared.uploadTemp
+//    private let tempPath = HFileManager.shared.uploadTemp
     
-    private var uploadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
+    private var downloadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
     
-    private var uploadSuccess: [DisplayAsset] = []
-    private var uploadFailure: [DisplayAsset] = []
-    private var uploadToken: String = ""
-    private var uploadCount = 0
-    private var uploadIndex = 0
+    private var downloadSuccess: [DisplayAsset] = []
+    private var downloadFailure: [DisplayAsset] = []
+    private var downloadToken: String = ""
+    private var downloadCount = 0
+    private var downloadIndex = 0
     
     func beginConfig() {
-        uploadSuccess.removeAll()
-        uploadFailure.removeAll()
-        uploadToken = String.randomString(length: 7)
-        uploadIndex = 0
-        uploadCount = 0
+        downloadSuccess.removeAll()
+        downloadFailure.removeAll()
+        downloadToken = String.randomString(length: 7)
+        downloadCount = 0
+        downloadIndex = 0
         
     }
     
     func doneConfig() {
-        uploadSuccess.removeAll()
-        uploadFailure.removeAll()
-        uploadSuccess.removeAll()
-        uploadFailure.removeAll()
-        uploadToken = ""
-        uploadIndex = 0
-        uploadCount = 0
+        downloadSuccess.removeAll()
+        downloadFailure.removeAll()
+//        uploadSuccess.removeAll()
+//        uploadFailure.removeAll()
+        downloadToken = ""
+        downloadCount = 0
+        downloadIndex = 0
         
     }
     
 //    private var dataSource: [DisplayAsset] = []
     
     // 上传中的数据处理
-    private var uploadingAsset: DisplayAsset?
+    private var downloadData: DownloadModel?
     
     private var uploadingTask: URLSessionUploadTask?
     
     private var uploadingCompletedHandler: ((HTTPURLResponse?,Data?,Error?) -> Void)?
     
-    private var uploadingReceiveData: Data?
+    private var downloadingReceiveData: Data?
     
     lazy var uploadOperationQueue: OperationQueue = {
         let queue = OperationQueue()
@@ -246,9 +247,9 @@ public class DownloadManager: NSObject, DownloadManagerDelegate, URLSessionDataD
         return String(format: "onelcat.github.io.boundary.%08x%08x", first, second)
     }
     
-    func uploadData(data: DisplayAsset, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
-        self.uploadingReceiveData = nil
-        self.uploadingReceiveData = Data()
+    func uploadData(data: DownloadModel, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
+        self.downloadingReceiveData = nil
+        self.downloadingReceiveData = Data()
         self.uploadingAsset = data
         self.uploadingCompletedHandler = completedHandler
         
