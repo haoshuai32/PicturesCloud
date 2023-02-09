@@ -150,8 +150,17 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
         completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
         self.uploadIndex += 1
+        
+        if response.statusCode == 200 {
+            self.uploadSuccess.append(item)
+        } else {
+            self.uploadFailure.append(item)
+        }
+        
         uploadDelegate?.uploadItemDidComplete(index: (self.uploadIndex, self.uploadCount),data:item, info: (response, self.uploadingReceiveData, error))
         debugPrint("一张照片上传完成",task.response as! HTTPURLResponse)
+        
+        
 //        debugPrint("一张照片上传完成",task.response, String(data: self.uploadingReceiveData!,encoding: .utf8),error)
 //        guard let response = task.response as? HTTPURLResponse else {
 //            fatalError()

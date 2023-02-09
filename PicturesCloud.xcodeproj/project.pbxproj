@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E0E8F27299526A200212C2D /* LocalPhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E8F26299526A200212C2D /* LocalPhotoManager.swift */; };
+		2E0E8F29299526AF00212C2D /* CloudPhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0E8F28299526AF00212C2D /* CloudPhotoManager.swift */; };
 		2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E0F9B28283D2428000358FD /* LocalPictureSectionController.swift */; };
 		2E3A99E2283E162A00F3D5D7 /* LocalDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E3A99E0283E162A00F3D5D7 /* LocalDisplayViewController.swift */; };
 		2E3A99E3283E162A00F3D5D7 /* LocalDisplayViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */; };
@@ -43,6 +45,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E0E8F26299526A200212C2D /* LocalPhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalPhotoManager.swift; sourceTree = "<group>"; };
+		2E0E8F28299526AF00212C2D /* CloudPhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudPhotoManager.swift; sourceTree = "<group>"; };
 		2E0F9B05283CC4EB000358FD /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Frameworks/Alamofire.framework; sourceTree = "<group>"; };
 		2E0F9B09283CC4F6000358FD /* IGListDiffKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IGListDiffKit.framework; path = Frameworks/IGListDiffKit.framework; sourceTree = "<group>"; };
 		2E0F9B0C283CC4FE000358FD /* IGListKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IGListKit.framework; path = Frameworks/IGListKit.framework; sourceTree = "<group>"; };
@@ -144,6 +148,8 @@
 				2E3CF481283BC8E500243139 /* HFileManager.swift */,
 				2E3CF489283BCCF400243139 /* LocalPictureModel.swift */,
 				2EC0D0652846684200253196 /* Display.swift */,
+				2E0E8F26299526A200212C2D /* LocalPhotoManager.swift */,
+				2E0E8F28299526AF00212C2D /* CloudPhotoManager.swift */,
 			);
 			name = Manager;
 			sourceTree = "<group>";
@@ -355,6 +361,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E0E8F29299526AF00212C2D /* CloudPhotoManager.swift in Sources */,
 				2E3CF488283BCCC500243139 /* HDownloadManager.swift in Sources */,
 				2E3A99E6283E374D00F3D5D7 /* LocalImageCell.swift in Sources */,
 				2E3CF484283BCA1600243139 /* LocalViewController.swift in Sources */,
@@ -367,6 +374,7 @@
 				2E3A99E2283E162A00F3D5D7 /* LocalDisplayViewController.swift in Sources */,
 				2EE7BE4A298ABC48006BD2B0 /* types.swift in Sources */,
 				2E3CF48C283BD40700243139 /* HPhotoManager.swift in Sources */,
+				2E0E8F27299526A200212C2D /* LocalPhotoManager.swift in Sources */,
 				2E3A99EF283E5B3500F3D5D7 /* HImageScrollView.swift in Sources */,
 				2E6BC60A29914A57003BE70D /* String+Extension.swift in Sources */,
 				2EC0D068284715A900253196 /* HPlayerView.swift in Sources */,
