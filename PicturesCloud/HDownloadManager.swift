@@ -83,7 +83,7 @@ class DownloadOperation: Operation {
            })
        }
   
-        self.delegate
+//        self.delegate
 //        self.delegate.uploadData(data: self.dataSource) {_,_,_ in
 //            completed()
 //        }
@@ -104,6 +104,11 @@ class DownloadOperation: Operation {
 public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDownloadDelegate {
     
 
+    
+    
+    
+    var downloadDelegate: DownloadManagerDelegate?
+  
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         
     }
@@ -118,9 +123,6 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
         
     }
     
-    
-    var downloadDelegate: DownloadManagerDelegate?
-  
     // MARK: - URLSession
     private lazy var urlSession: URLSession = { [unowned self] in
         let config = URLSessionConfiguration.default
@@ -134,11 +136,11 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
 
     }
     
-    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-
-        self.downloadingReceiveData?.append(data)
-
-    }
+//    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+//
+//        self.downloadingReceiveData?.append(data)
+//
+//    }
     
     public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         debugPrint(#function)
@@ -182,20 +184,15 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
     func doneConfig() {
         downloadSuccess.removeAll()
         downloadFailure.removeAll()
-//        uploadSuccess.removeAll()
-//        uploadFailure.removeAll()
         downloadToken = ""
         downloadCount = 0
         downloadIndex = 0
         
     }
     
-//    private var dataSource: [DisplayAsset] = []
-    
-    // 上传中的数据处理
     private var downloadData: DownloadModel?
     
-    private var uploadingTask: URLSessionUploadTask?
+    private var downloadingTask: URLSessionUploadTask?
     
     private var downloadingCompletedHandler: ((HTTPURLResponse?,Data?,Error?) -> Void)?
     
@@ -207,11 +204,6 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
         return queue
     }()
     
-    static func randomBoundary() -> String {
-        let first = UInt32.random(in: UInt32.min...UInt32.max)
-        let second = UInt32.random(in: UInt32.min...UInt32.max)
-        return String(format: "onelcat.github.io.boundary.%08x%08x", first, second)
-    }
     
     func downloadData(data: DownloadModel, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
         self.downloadingReceiveData = nil
@@ -239,118 +231,6 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
             }
         }
         
-//        // 比如livephoto 存在2个资源
-//        func upload(_ metaData: [UploadMetaData]) {
-//
-//            var bodyData = Data()
-//
-//            for i in 0..<metaData.count {
-//
-//                let data = metaData[i]
-//                bodyData.append("--\(boundary)\r\n".data(using: .utf8)!)
-//                bodyData.append("Content-Disposition: form-data; name=\"files\"; filename=\"\(data.filename)\"\r\n".data(using: .utf8)!)
-//                bodyData.append("Content-Type: \(data.contentType)\r\n\r\n".data(using: .utf8)!)
-//                bodyData.append(data.data)
-//
-//                if i != metaData.count {
-//                    bodyData.append("\r\n".data(using: .utf8)!)
-//                }
-//            }
-//
-//            // end data
-//            bodyData.append("\r\n--\(boundary)--\r\n".data(using: .utf8)!)
-//
-//#if false
-//            // 不进行文件的保存 直接把数据上传
-//            do {
-//                try HFileManager.shared.fileManager.removeItem(at: self.tempPath)
-//            } catch _ {
-////                assert(false,error.localizedDescription)
-//            }
-//
-//
-//            do {
-//                debugPrint("image data", bodyData.count)
-//                try bodyData.write(to: self.tempPath)
-//            } catch let error {
-//                assert(false,error.localizedDescription)
-//            }
-//#endif
-//            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/\(Client.shared.userID!)/upload/\(self.uploadToken)")!
-//            var urlRequest = URLRequest(url: url)
-//            urlRequest.httpMethod = "POST"
-//            urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
-//            urlRequest.addValue(Client.shared.v1!.token, forHTTPHeaderField: "X-Session-Id")
-//
-//
-//
-////            debugPrint(urlRequest.headers)
-////            let updata = try! Data(contentsOf: tempPath)
-//
-////            debugPrint("body data", bodyData.count)
-//            let uploadTask = urlSession.uploadTask(with: urlRequest, from: bodyData)
-//            uploadTask.resume()
-//
-//            self.uploadingTask = uploadTask
-//        } //。func end
-//
-//        guard let asset = uploadAsset.asset else {
-//            fatalError()
-//        }
-//        // read resources
-//        let resources = PHAssetResource.assetResources(for: asset)
-//        uploadAsset.resources = resources.map{DisplayAssetResource.init(resource: $0)}
-//
-//        var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(filename: "", contentType: "", data: Data()), count: resources.count)
-//
-//        var resultError: Error?
-//
-//        let group = DispatchGroup()
-//
-//        let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-//
-//        // read cover data
-//
-//        // read data
-//        for i in 0..<resources.count {
-//
-//            group.enter()
-//            requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
-//                let index = i
-//                let resource = resources[i]
-//                var itemData = Data()
-//                PHAssetResourceManager.default().requestData(for: resource, options: nil) { data in
-//                    itemData.append(data)
-//                } completionHandler: { error in
-//                    resultError = error
-//                    if let error = error {
-//                        assert(false,error.localizedDescription)
-//                    } else {
-//                        var nameEx:[String] = resource.originalFilename.split(separator: ".").map{String($0)}
-////                        assert(nameEx.count == 2,"name error")
-//                        nameEx[0] = resource.assetLocalIdentifier.replacingOccurrences(of: "/", with: "_")
-//                        let filename = nameEx.joined(separator: ".")
-//
-//                        let metaData = UploadMetaData(filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
-////                        debugPrint("image data", metaData)
-////                        debugPrint("original size", itemData.count, resource)
-//
-//                        uploadData[index] = metaData
-//                    }
-//                    group.leave()
-//                }
-//            }))
-//        }
-//
-//        group.notify(queue: requestAssetQueue, work: .init(block: {
-//            // 返回数据
-//            if let error = resultError {
-//                fatalError(error.localizedDescription)
-//            } else {
-////                debugPrint("资源数据", uploadData)
-//                upload(uploadData)
-//            }
-//        }))
     }
     
     
