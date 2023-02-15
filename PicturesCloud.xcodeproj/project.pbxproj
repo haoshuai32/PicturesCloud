@@ -33,6 +33,8 @@
 		2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2E650F4A283B8568000E74CC /* LaunchScreen.storyboard */; };
 		2E6BC60A29914A57003BE70D /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6BC60929914A57003BE70D /* String+Extension.swift */; };
 		2E6BC60C2992AB30003BE70D /* CloudSectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E6BC60B2992AB30003BE70D /* CloudSectionController.swift */; };
+		2E7CB55C299D1BE500183726 /* PHAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E7CB55A299D1BE500183726 /* PHAssetViewController.swift */; };
+		2E7CB55D299D1BE500183726 /* PHAssetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2E7CB55B299D1BE500183726 /* PHAssetViewController.xib */; };
 		2EC0D0662846684200253196 /* Display.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0652846684200253196 /* Display.swift */; };
 		2EC0D068284715A900253196 /* HPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D067284715A900253196 /* HPlayerView.swift */; };
 		2EC0D0892847561D00253196 /* GridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D0882847561D00253196 /* GridViewController.swift */; };
@@ -83,6 +85,8 @@
 		2E650F53283B8A24000E74CC /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		2E6BC60929914A57003BE70D /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		2E6BC60B2992AB30003BE70D /* CloudSectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudSectionController.swift; sourceTree = "<group>"; };
+		2E7CB55A299D1BE500183726 /* PHAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PHAssetViewController.swift; sourceTree = "<group>"; };
+		2E7CB55B299D1BE500183726 /* PHAssetViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PHAssetViewController.xib; sourceTree = "<group>"; };
 		2EC0D0652846684200253196 /* Display.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Display.swift; sourceTree = "<group>"; };
 		2EC0D067284715A900253196 /* HPlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HPlayerView.swift; sourceTree = "<group>"; };
 		2EC0D070284735A500253196 /* Alamofire.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Alamofire.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -219,6 +223,8 @@
 				2E3CF483283BCA1600243139 /* LocalViewController.swift */,
 				2EC0D08A2847564900253196 /* GridSectionController.swift */,
 				2EC0D0882847561D00253196 /* GridViewController.swift */,
+				2E7CB55A299D1BE500183726 /* PHAssetViewController.swift */,
+				2E7CB55B299D1BE500183726 /* PHAssetViewController.xib */,
 			);
 			name = VC;
 			sourceTree = "<group>";
@@ -303,6 +309,7 @@
 			files = (
 				2E3A99F1283E5D3600F3D5D7 /* LocalImageCell.xib in Resources */,
 				2E3CF480283BC04100243139 /* LocalPictureCell.xib in Resources */,
+				2E7CB55D299D1BE500183726 /* PHAssetViewController.xib in Resources */,
 				2E3A99EB283E376100F3D5D7 /* LocalVideoCell.xib in Resources */,
 				2EC0D08F284760D700253196 /* GridCell.xib in Resources */,
 				2E650F4C283B8568000E74CC /* LaunchScreen.storyboard in Resources */,
@@ -381,6 +388,7 @@
 				2E650F44283B8563000E74CC /* CloudViewController.swift in Sources */,
 				2ECE50D0298A9950005533C8 /* Client.swift in Sources */,
 				2E650F40283B8563000E74CC /* AppDelegate.swift in Sources */,
+				2E7CB55C299D1BE500183726 /* PHAssetViewController.swift in Sources */,
 				2E0F9B29283D2428000358FD /* LocalPictureSectionController.swift in Sources */,
 				2EC0D08B2847564900253196 /* GridSectionController.swift in Sources */,
 				2E3A99EA283E376100F3D5D7 /* LocalVideoCell.swift in Sources */,
