@@ -36,7 +36,7 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
             return []
         }
         
-        let item = PhotoAsset(identifier: firstObject.localIdentifier, assetType: .image, data: .local(firstObject), creationDate: firstObject.creationDate ?? Date())
+        let item = PhotoAsset(identifier: firstObject.localIdentifier, assetType: .image, data: .local(firstObject), creationDate: firstObject.creationDate ?? Date(), duration: 0)
         
         var list = Array<PhotoAsset>.init(repeating: item, count: assets.count)
         
@@ -48,13 +48,13 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
                 if asset.mediaSubtypes == .photoLive {
 //                    assetType = .live
 //                            resultHandler(.success(.photoLive(image)))
-                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .live, data: .local(asset), creationDate: asset.creationDate ?? Date())
+                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .live, data: .local(asset), creationDate: asset.creationDate ?? Date(),duration: asset.duration)
                 } else
                 // GIF
                 if let uniformType = asset.value(forKey: "uniformTypeIdentifier") as? NSString,
                     uniformType == "com.compuserve.gif" {
 //                    assetType = .gif
-                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .gif, data: .local(asset), creationDate: asset.creationDate ?? Date())
+                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .gif, data: .local(asset), creationDate: asset.creationDate ?? Date(), duration: asset.duration)
 //                            resultHandler(.success(.gif(image)))
                 }
                 // image
@@ -64,7 +64,7 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
                 break
             case .video:
 //                        resultHandler(.success(.video((image,asset.duration))))
-                list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .video(asset.duration), data: .local(asset), creationDate: asset.creationDate ?? Date())
+                list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .video(asset.duration), data: .local(asset), creationDate: asset.creationDate ?? Date(), duration: asset.duration)
                 break
             case .unknown:
                 fatalError()
@@ -124,14 +124,32 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         return imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: contentMode, options: options, resultHandler: resultHandler)
     }
     
-    func startCachingImages(assets:[DisplayAsset],targetSize size: CGSize) {
-        let data = assets.compactMap{$0.asset}
-        imageManager.startCachingImages(for: data, targetSize: size, contentMode: .default, options: nil)
+    func startCachingImages(assets:[PhotoAsset],targetSize size: CGSize) {
+        let data = assets.compactMap{$0.dataSource}
+        let list = data.compactMap { item in
+            switch item {
+            case .local(let asset):
+                return asset
+                break
+            case .cloud(_):
+                fatalError()
+            }
+        }
+        imageManager.startCachingImages(for: list, targetSize: size, contentMode: .default, options: nil)
     }
     
-    func stopCachingImages(assets:[DisplayAsset],targetSize size: CGSize) {
-        let data = assets.compactMap{$0.asset}
-        imageManager.stopCachingImages(for: data, targetSize: size, contentMode: .default, options: nil)
+    func stopCachingImages(assets:[PhotoAsset],targetSize size: CGSize) {
+        let data = assets.compactMap{$0.dataSource}
+        let list = data.compactMap { item in
+            switch item {
+            case .local(let asset):
+                return asset
+                break
+            case .cloud(_):
+                fatalError()
+            }
+        }
+        imageManager.stopCachingImages(for: list, targetSize: size, contentMode: .default, options: nil)
     }
     
     func cancelImageRequest(requestID: ImageRequestID) {

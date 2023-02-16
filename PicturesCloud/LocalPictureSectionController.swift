@@ -36,13 +36,26 @@ class LocalSectionController: GridSectionController {
                 }
                 switch item.assetType {
                 case .image:
-                    <#code#>
+                    cell.liveTypeView.isHidden = true
+                    cell.gifTypeView.isHidden = true
+                    cell.durationLabel.isHidden = true
+                    cell.imageView.image = image
                 case .gif:
-                    <#code#>
+                    cell.liveTypeView.isHidden = true
+                    cell.gifTypeView.isHidden = false
+                    cell.durationLabel.isHidden = true
+                    cell.imageView.image = image
                 case .live:
-                    <#code#>
+                    cell.liveTypeView.isHidden = false
+                    cell.gifTypeView.isHidden = true
+                    cell.durationLabel.isHidden = true
+                    cell.imageView.image = image
                 case .video(_):
-                    <#code#>
+                    cell.liveTypeView.isHidden = true
+                    cell.gifTypeView.isHidden = true
+                    cell.durationLabel.isHidden = false
+                    cell.imageView.image = image
+                    cell.duration = item.duration
                 }
     //            case .image:
     //                // photoLive

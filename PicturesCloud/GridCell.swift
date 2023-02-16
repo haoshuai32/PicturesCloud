@@ -19,40 +19,40 @@ class GridCell: UICollectionViewCell {
         
     @IBOutlet weak var durationLabel: UILabel!
     // var cloudDataSource:
-    var dataSource: DisplayAsset.AssetCoverImage? = nil {
-        didSet {
-            guard let dataSource = dataSource else {
-                return
-            }
-            switch dataSource {
-            case .image(let image):
-                liveTypeView.isHidden = true
-                gifTypeView.isHidden = true
-                durationLabel.isHidden = true
-                imageView.image = image
-                break
-            case .photoLive(let live):
-                liveTypeView.isHidden = false
-                gifTypeView.isHidden = true
-                durationLabel.isHidden = true
-                imageView.image = live
-                break
-            case .video(let value):
-                liveTypeView.isHidden = true
-                gifTypeView.isHidden = true
-                durationLabel.isHidden = false
-                imageView.image = value.0
-                duration = value.1
-                break
-            case .gif(let gif):
-                liveTypeView.isHidden = true
-                gifTypeView.isHidden = false
-                durationLabel.isHidden = true
-                imageView.image = gif
-                break
-            }
-        }
-    }
+//    var dataSource: DisplayAsset.AssetCoverImage? = nil {
+//        didSet {
+//            guard let dataSource = dataSource else {
+//                return
+//            }
+//            switch dataSource {
+//            case .image(let image):
+//                liveTypeView.isHidden = true
+//                gifTypeView.isHidden = true
+//                durationLabel.isHidden = true
+//                imageView.image = image
+//                break
+//            case .photoLive(let live):
+//                liveTypeView.isHidden = false
+//                gifTypeView.isHidden = true
+//                durationLabel.isHidden = true
+//                imageView.image = live
+//                break
+//            case .video(let value):
+//                liveTypeView.isHidden = true
+//                gifTypeView.isHidden = true
+//                durationLabel.isHidden = false
+//                imageView.image = value.0
+//                duration = value.1
+//                break
+//            case .gif(let gif):
+//                liveTypeView.isHidden = true
+//                gifTypeView.isHidden = false
+//                durationLabel.isHidden = true
+//                imageView.image = gif
+//                break
+//            }
+//        }
+//    }
     
     var duration: Double = 0 {
         didSet {

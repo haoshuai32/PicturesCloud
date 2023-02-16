@@ -32,13 +32,16 @@ class PhotoAsset: ListDiffable, Equatable {
     let assetType: AssetType
     let creationDate: Date
     let dataSource: Asset
-    
+    let duration: Double
     init(identifier: String, assetType: AssetType,
-         data: Asset, creationDate: Date) {
+         data: Asset, creationDate: Date,
+         duration: Double
+    ) {
         self.identifier = identifier
         self.assetType = assetType
         self.dataSource = data
         self.creationDate = creationDate
+        self.duration = duration
     }
     
 }
