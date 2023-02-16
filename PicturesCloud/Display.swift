@@ -154,85 +154,6 @@ extension HPHAsset {
     
 }
 
-//class LocalPHAsset: HPHAsset {
-//    var isInCloud: Bool = false
-////
-////    var identifier: String
-////
-////    var mediaType: PHAssetMediaType
-////
-////    var mediaSubtypes: PHAssetMediaSubtype
-////
-////    var pixelWidth: Int
-////
-////    var pixelHeight: Int
-////
-////    var creationDate: Date?
-////
-////    var location: CLLocation?
-////
-////    var duration: Double
-////
-////    var isFavorite: Bool
-////
-////    var isHidden: Bool
-////
-////    var resources: [HPHAssetResource]
-//
-//    let asset: PHAsset
-//
-//    var localIdentifier: String {
-//        return asset.localIdentifier
-//    }
-//    var mediaType: PHAssetMediaType {
-//        return asset.mediaType
-//    }
-//    var mediaSubtypes: PHAssetMediaSubtype {
-//        return asset.mediaSubtypes
-//    }
-//    var pixelWidth: Int {
-//        return asset.pixelWidth
-//    }
-//    var pixelHeight: Int {
-//        return asset.pixelHeight
-//    }
-//    var creationDate: Date? {
-//        return asset.creationDate
-//    }
-//    var location: CLLocation? {
-//        return asset.location
-//    }
-//    var duration: Double {
-//        return asset.duration
-//    }
-//    var isFavorite: Bool {
-//        return asset.isFavorite
-//    }
-//    var isHidden: Bool {
-//        return asset.isHidden
-//    }
-//
-//    init(asset: PHAsset) {
-//
-//    }
-//
-//}
-
-
-//class LocalAsset {
-//    let asset: PHAsset
-//    let resources: [PHAssetResource]
-//}
-//
-//class CloudAsset {
-//
-//}
-
-//class DisplayAsset {
-//    let isInCloud: Bool
-//    let asset: HPHAsset
-//    var sesource: [HPHAssetResource] = []
-//}
 
 import IGListDiffKit
 
@@ -269,6 +190,8 @@ class DisplayAssetResource {
 }
 
 typealias HPHAsset = PHAsset
+
+typealias LocalAsset = PHAsset
 
 class DisplayAsset {
     
