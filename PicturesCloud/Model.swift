@@ -12,7 +12,10 @@ typealias CloudAsset = Photo
 
 
 enum PhotoAssetType {
-    
+    case image
+    case gif
+    case live
+    case video(Double)
 }
 
 protocol PhotoAsset {
