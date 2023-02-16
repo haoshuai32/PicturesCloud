@@ -11,10 +11,37 @@ import CoreLocation
 typealias CloudAsset = Photo
 
 
-struct ViewAsset<T> {
-    
-    let asset: T?
-    
-    var isInCloud: Bool
+enum PhotoAssetType {
     
 }
+
+protocol PhotoAsset {
+    var identifier: String {set get}
+    var photoType: PhotoAssetType  {set get}
+    var pixelWidth: Int {set get}
+    var pixelHeight: Int {set get}
+    var creationDate: Date? {set get}
+    var location: CLLocation? {set get}
+    var duration: Double {set get}
+}
+
+
+struct LocalViewAsset: PhotoAsset {
+    
+}
+
+struct CloudViewAsset: PhotoAsset {
+    
+}
+
+
+
+
+
+//struct ViewAsset<T> {
+//
+//    let asset: T?
+//
+//    let isCloud: Bool
+//
+//}
