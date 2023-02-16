@@ -7,6 +7,7 @@
 
 import UIKit
 import IGListKit
+import Photos
 
 class LocalSectionController: GridSectionController {
     
@@ -28,77 +29,44 @@ class LocalSectionController: GridSectionController {
         // add tag
         cell.selelctButton.tag = index
         cell.selelctButton.addTarget(self, action: #selector(selectButtonAction(_:)), for: .touchUpInside)
-        switch item.dataSource {
-        case let .local(asset):
-            LocalPhotoManager.shared.requestImage(for: asset, targetSize: targetSize, contentMode: .default, options: nil) { [weak self] image, info in
-                guard let image = image,let self = self else {
-                    return
-                }
-                switch item.assetType {
-                case .image:
-                    cell.liveTypeView.isHidden = true
-                    cell.gifTypeView.isHidden = true
-                    cell.durationLabel.isHidden = true
-                    cell.imageView.image = image
-                case .gif:
-                    cell.liveTypeView.isHidden = true
-                    cell.gifTypeView.isHidden = false
-                    cell.durationLabel.isHidden = true
-                    cell.imageView.image = image
-                case .live:
-                    cell.liveTypeView.isHidden = false
-                    cell.gifTypeView.isHidden = true
-                    cell.durationLabel.isHidden = true
-                    cell.imageView.image = image
-                case .video(_):
-                    cell.liveTypeView.isHidden = true
-                    cell.gifTypeView.isHidden = true
-                    cell.durationLabel.isHidden = false
-                    cell.imageView.image = image
-                    cell.duration = item.duration
-                }
-    //            case .image:
-    //                // photoLive
-    //                if asset.mediaSubtypes == .photoLive {
-    ////                    resultHandler(.success(.photoLive(image)))
-    //                } else
-    //                // GIF
-    //                if let uniformType = asset.value(forKey: "uniformTypeIdentifier") as? NSString,
-    //                    uniformType == "com.compuserve.gif" {
-    ////                    resultHandler(.success(.gif(image)))
-    //                }
-    //                // image
-    //                else {
-    ////                    resultHandler(.success(.image(image)))
-    //                }
-    //                break
-    //            case .video:
-    ////                resultHandler(.success(.video((image,asset.duration))))
-    //                break
-    //            case .unknown:
-    //                fatalError()
-    //            case .audio:
-    //                fatalError()
-    //            @unknown default:
-    //                fatalError()
-                
-            }
-            break
-        case let .cloud(_):
-            break
+        
+        guard let asset = item.dataSource.data() as? PHAsset else {
+            fatalError()
         }
         
+        _ = LocalPhotoManager.shared.requestImage(for: asset, targetSize: targetSize, contentMode: .default, options: nil) { image, info in
+            
+            guard let image = image else {
+                return
+            }
+            
+            switch item.assetType {
+            case .image:
+                cell.liveTypeView.isHidden = true
+                cell.gifTypeView.isHidden = true
+                cell.durationLabel.isHidden = true
+                cell.imageView.image = image
+            case .gif:
+                cell.liveTypeView.isHidden = true
+                cell.gifTypeView.isHidden = false
+                cell.durationLabel.isHidden = true
+                cell.imageView.image = image
+            case .live:
+                cell.liveTypeView.isHidden = false
+                cell.gifTypeView.isHidden = true
+                cell.durationLabel.isHidden = true
+                cell.imageView.image = image
+            case .video(_):
+                cell.liveTypeView.isHidden = true
+                cell.gifTypeView.isHidden = true
+                cell.durationLabel.isHidden = false
+                cell.imageView.image = image
+                cell.duration = item.duration
+            }
+            
+            
+        }
         
-//        item.readCoverImage(targetSize: targetSize) { result in
-//            switch result {
-//            case let .success(resultData):
-//                cell.dataSource = resultData
-//            case let .failure(error):
-//                debugPrint(error.localizedDescription)
-//                fatalError()
-//
-//            }
-//        }
         return cell
     }
     
