@@ -57,12 +57,38 @@ class CloudViewController: GridViewController {
                 
                 let list = photos.map { item in
                     
+//                    switch item.mediaType {
+//                    case .image:
+//                        // photoLive
+//                        if item.mediaSubtypes == .photoLive {
+////                            resultHandler(.success(.photoLive(image)))
+//                        } else
+//                        // GIF
+//                        if let uniformType = asset.value(forKey: "uniformTypeIdentifier") as? NSString,
+//                            uniformType == "com.compuserve.gif" {
+////                            resultHandler(.success(.gif(image)))
+//                        }
+//                        // image
+//                        else {
+////                            resultHandler(.success(.image(image)))
+//                        }
+//                        break
+//                    case .video:
+////                        resultHandler(.success(.video((image,asset.duration))))
+//                        break
+//                    case .unknown:
+//                        fatalError()
+//                    case .audio:
+//                        fatalError()
+//                    @unknown default:
+//                        fatalError()
+//                    }
                 
 //                    var mediaType: HPHAssetMediaType = .image
 //                    var mediaSubtypes: HPHAssetMediaSubtype = .photoHDR
                     var assetType:AssetType = .image
                     switch item.PhotoType {
-                        
+
                     case .live:
                         assetType = .live
 //                        debugPrint("photoLive")

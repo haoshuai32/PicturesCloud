@@ -41,10 +41,41 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         var list = Array<PhotoAsset>.init(repeating: item, count: assets.count)
         
         assets.enumerateObjects(options: .concurrent) { asset, index, result in
+            let assetType = AssetType.image
+            switch asset.mediaType {
+            case .image:
+                // photoLive
+                if asset.mediaSubtypes == .photoLive {
+//                    assetType = .live
+//                            resultHandler(.success(.photoLive(image)))
+                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .live, data: .local(asset), creationDate: asset.creationDate ?? Date())
+                } else
+                // GIF
+                if let uniformType = asset.value(forKey: "uniformTypeIdentifier") as? NSString,
+                    uniformType == "com.compuserve.gif" {
+//                    assetType = .gif
+                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .gif, data: .local(asset), creationDate: asset.creationDate ?? Date())
+//                            resultHandler(.success(.gif(image)))
+                }
+                // image
+                else {
+//                            resultHandler(.success(.image(image)))
+                }
+                break
+            case .video:
+//                        resultHandler(.success(.video((image,asset.duration))))
+                list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .video(asset.duration), data: .local(asset), creationDate: asset.creationDate ?? Date())
+                break
+            case .unknown:
+                fatalError()
+            case .audio:
+                fatalError()
+            @unknown default:
+                fatalError()
+            }
             
             
             
-            list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .image, data: .local(asset), creationDate: asset.creationDate ?? Date())
             
         }
         return list
@@ -64,22 +95,22 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
     
-    func requestDataSource(_ type: Int = 0)->[DisplayAsset] {
+    func requestDataSource(_ type: Int = 0)->[PhotoAsset] {
         
         if self.dataSource.count <= 0 {
             return []
         }
         
-        var list = [DisplayAsset]()
+        var list = [PhotoAsset]()
         switch type {
         case 0:
             list = self.dataSource
             break
         case 1:
-            list = self.dataSource.filter{$0.mediaType == .video}
+            list = self.dataSource.filter{$0.assetType == .video}
             break
         case 2:
-            list = self.dataSource.filter{$0.mediaType == .image}
+            list = self.dataSource.filter{$0.assetType == .image}
             break
         default:
             fatalError()

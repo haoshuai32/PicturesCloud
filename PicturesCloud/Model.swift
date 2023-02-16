@@ -16,6 +16,10 @@ enum AssetType {
     case video(Double)
 }
 
+extension AssetType: Equatable {
+    
+}
+
 
 enum Asset {
     case local(PHAsset)

@@ -28,17 +28,64 @@ class LocalSectionController: GridSectionController {
         // add tag
         cell.selelctButton.tag = index
         cell.selelctButton.addTarget(self, action: #selector(selectButtonAction(_:)), for: .touchUpInside)
-        
-        item.readCoverImage(targetSize: targetSize) { result in
-            switch result {
-            case let .success(resultData):
-                cell.dataSource = resultData
-            case let .failure(error):
-                debugPrint(error.localizedDescription)
-                fatalError()
+        switch item.dataSource {
+        case let .local(asset):
+            LocalPhotoManager.shared.requestImage(for: asset, targetSize: targetSize, contentMode: .default, options: nil) { [weak self] image, info in
+                guard let image = image,let self = self else {
+                    return
+                }
+                switch item.assetType {
+                case .image:
+                    <#code#>
+                case .gif:
+                    <#code#>
+                case .live:
+                    <#code#>
+                case .video(_):
+                    <#code#>
+                }
+    //            case .image:
+    //                // photoLive
+    //                if asset.mediaSubtypes == .photoLive {
+    ////                    resultHandler(.success(.photoLive(image)))
+    //                } else
+    //                // GIF
+    //                if let uniformType = asset.value(forKey: "uniformTypeIdentifier") as? NSString,
+    //                    uniformType == "com.compuserve.gif" {
+    ////                    resultHandler(.success(.gif(image)))
+    //                }
+    //                // image
+    //                else {
+    ////                    resultHandler(.success(.image(image)))
+    //                }
+    //                break
+    //            case .video:
+    ////                resultHandler(.success(.video((image,asset.duration))))
+    //                break
+    //            case .unknown:
+    //                fatalError()
+    //            case .audio:
+    //                fatalError()
+    //            @unknown default:
+    //                fatalError()
                 
             }
+            break
+        case let .cloud(_):
+            break
         }
+        
+        
+//        item.readCoverImage(targetSize: targetSize) { result in
+//            switch result {
+//            case let .success(resultData):
+//                cell.dataSource = resultData
+//            case let .failure(error):
+//                debugPrint(error.localizedDescription)
+//                fatalError()
+//
+//            }
+//        }
         return cell
     }
     
