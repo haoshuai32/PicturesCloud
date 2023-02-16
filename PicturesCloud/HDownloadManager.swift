@@ -9,12 +9,14 @@ import Foundation
 import Photos
 import UIKit
 
-struct DownloadModel {
-    var uid: String = ""
-}
+//struct DownloadModel {
+//    var uid: String = ""
+//}
+
+typealias DownloadAsset = Photo
 
 protocol DownloadOperationDelegate {
-    func downloadData(data: DownloadModel,completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void)
+    func downloadData(data: DownloadAsset,completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void)
 }
 
 
@@ -25,7 +27,7 @@ protocol DownloadManagerDelegate {
     // 单条上传进度错误
     
     // 上传完成 （上传成功多少 上传失败多少）
-    func downloadDidComplete(success:[DownloadModel], failure: [DownloadModel])
+    func downloadDidComplete(success:[DownloadAsset], failure: [DownloadAsset])
 }
 class DownloadOperation: Operation {
     
@@ -190,7 +192,7 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
         
     }
     
-    private var downloadData: DownloadModel?
+    private var downloadData: Photo?
     
     private var downloadingTask: URLSessionUploadTask?
     
@@ -205,7 +207,7 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
     }()
     
     
-    func downloadData(data: DownloadModel, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
+    func downloadData(data: DownloadAsset, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
         self.downloadingReceiveData = nil
         self.downloadingReceiveData = Data()
         self.downloadData = data

@@ -9,13 +9,15 @@ import Foundation
 import Photos
 import UIKit
 
+typealias UploadAsset = DisplayAsset
+
 // 照片上传接口需要修改只能支持单张照片上传
 // 多张照片上传需要进行单张接口进行轮训然后
 // 最后照片上传完成后需要发送一个put方法进行处理照片
 // 上传队列 需要在最后进行数据汇总进行UI显示
 // 上传需要显示进度条
 protocol HUploadOperationDelegate {
-    func uploadData(data: DisplayAsset,completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void)
+    func uploadData(data: UploadAsset,completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void)
 }
 
 class HUploadOperation: Operation {
@@ -50,7 +52,7 @@ class HUploadOperation: Operation {
         }
     }
     
-    private let dataSource: DisplayAsset
+    private let dataSource: UploadAsset
     
     private let delegate: HUploadOperationDelegate
     
@@ -93,11 +95,11 @@ class HUploadOperation: Operation {
 protocol HUploadManagerDelegate {
     
     // 上传进度 当前上传到多少了
-    func uploadItemDidComplete(index:(Int,Int),data: DisplayAsset ,info: (HTTPURLResponse,Data?,Error?))
+    func uploadItemDidComplete(index:(Int,Int),data: UploadAsset ,info: (HTTPURLResponse,Data?,Error?))
     // 单条上传进度错误
     
     // 上传完成 （上传成功多少 上传失败多少）
-    func uploadDidComplete(success:[DisplayAsset], failure: [DisplayAsset])
+    func uploadDidComplete(success:[UploadAsset], failure: [UploadAsset])
 }
 
 // TODO: 后续实现 - 查看上传进度
@@ -197,10 +199,10 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     private let tempPath = HFileManager.shared.uploadTemp
     
-    private var uploadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
+    private var uploadDataSource: NSCache<NSString,UploadAsset> = NSCache<NSString,UploadAsset>()
     
-    private var uploadSuccess: [DisplayAsset] = []
-    private var uploadFailure: [DisplayAsset] = []
+    private var uploadSuccess: [UploadAsset] = []
+    private var uploadFailure: [UploadAsset] = []
     private var uploadToken: String = ""
     private var uploadCount = 0
     private var uploadIndex = 0
@@ -228,7 +230,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
 //    private var dataSource: [DisplayAsset] = []
     
     // 上传中的数据处理
-    private var uploadingAsset: DisplayAsset?
+    private var uploadingAsset: UploadAsset?
     
     private var uploadingTask: URLSessionUploadTask?
     
@@ -248,7 +250,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         return String(format: "onelcat.github.io.boundary.%08x%08x", first, second)
     }
     
-    func uploadData(data: DisplayAsset, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
+    func uploadData(data: UploadAsset, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
         self.uploadingReceiveData = nil
         self.uploadingReceiveData = Data()
         self.uploadingAsset = data
@@ -383,7 +385,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     // 开始
-    func start(data: [DisplayAsset]) {
+    func start(data: [UploadAsset]) {
         // Wi-Fi模式
         // 流量模式
         // 最多上传100张
