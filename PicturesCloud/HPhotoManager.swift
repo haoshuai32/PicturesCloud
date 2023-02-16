@@ -107,10 +107,10 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
             list = self.dataSource
             break
         case 1:
-            list = self.dataSource.filter{$0.assetType == .video}
+            list = self.dataSource.filter{$0.assetType.equatable() == AssetType.video(0).equatable()}
             break
         case 2:
-            list = self.dataSource.filter{$0.assetType == .image}
+            list = self.dataSource.filter{$0.assetType.equatable() == AssetType.image.equatable()}
             break
         default:
             fatalError()

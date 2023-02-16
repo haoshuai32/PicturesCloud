@@ -14,16 +14,51 @@ enum AssetType {
     case gif
     case live
     case video(Double)
+    func equatable() -> Int{
+        switch self {
+        case .image:
+            return 0
+        case .gif:
+            return 1
+        case .live:
+            return 2
+        case .video(_):
+            return 3
+        }
+    }
 }
 
-extension AssetType: Equatable {
-    
-}
+//extension AssetType: Equatable {
+//    static func == (lhs: Self, rhs: Self) -> Bool {
+//
+//        switch lhs {
+//        case .image:
+//
+//            break
+//        case .gif:
+//            break
+//        case .live:
+//            break
+//        case .video(_):
+//            break
+//        }
+//        return false
+//    }
+//}
 
 
 enum Asset {
     case local(PHAsset)
     case cloud(Photo)
+    
+    func data() -> Any {
+        switch self {
+        case .local(let asset):
+            return asset
+        case .cloud(let photo):
+            return photo
+        }
+    }
 }
 
 class PhotoAsset: ListDiffable, Equatable {

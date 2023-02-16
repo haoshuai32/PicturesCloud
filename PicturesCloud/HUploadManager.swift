@@ -409,9 +409,6 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         self.uploadCount = data.count
         
         
-//        self.dataSource.append(contentsOf: newElements)
-//        let data = self.dataSource
-//        self.dataSource.removeAll()
         for item in data {
             let operation = HUploadOperation(data: item, delegate: self)
             

@@ -26,36 +26,39 @@ class CloudSectionController: GridSectionController {
         cell.selelctButton.tag = index
         cell.selelctButton.addTarget(self, action: #selector(selectButtonAction(_:)), for: .touchUpInside)
         
-        cell.imageView.kf.setImage(with: item.imageURL)
-        
-        switch item.mediaType {
-            
-        case .unknown:
+        var itemPhoto: Photo
+        switch item.dataSource {
+        case .cloud(let photo):
+            itemPhoto = photo
             break
+        case .local(_):
+            fatalError()
+            break
+        }
+ 
+        cell.imageView.kf.setImage(with: itemPhoto.previewURL)
+        
+        switch item.assetType {
+            
         case .image:
-            if item.mediaSubtypes == .photoLive {
-                cell.liveTypeView.isHidden = false
-                cell.gifTypeView.isHidden = true
-                cell.durationLabel.isHidden = true
-            } else {
-                cell.liveTypeView.isHidden = true
-                cell.gifTypeView.isHidden = true
-                cell.durationLabel.isHidden = true
-                
-            }
+            cell.liveTypeView.isHidden = true
+            cell.gifTypeView.isHidden = true
+            cell.durationLabel.isHidden = true
         case .video:
             cell.liveTypeView.isHidden = true
             cell.gifTypeView.isHidden = true
             cell.durationLabel.isHidden = false
-
             cell.duration = item.duration
-        case .audio:
+        case .live:
+            cell.liveTypeView.isHidden = false
+            cell.gifTypeView.isHidden = true
+            cell.durationLabel.isHidden = true
+            break
+        case .gif:
             cell.liveTypeView.isHidden = true
             cell.gifTypeView.isHidden = false
             cell.durationLabel.isHidden = true
 
-        @unknown default:
-            break
         }
 
         return cell
