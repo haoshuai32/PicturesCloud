@@ -44,11 +44,11 @@ class CloudSectionController: GridSectionController {
             cell.liveTypeView.isHidden = true
             cell.gifTypeView.isHidden = true
             cell.durationLabel.isHidden = true
-        case .video:
+        case .video(let duration):
             cell.liveTypeView.isHidden = true
             cell.gifTypeView.isHidden = true
             cell.durationLabel.isHidden = false
-            cell.duration = item.duration
+            cell.duration = duration
         case .live:
             cell.liveTypeView.isHidden = false
             cell.gifTypeView.isHidden = true

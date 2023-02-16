@@ -62,8 +62,6 @@ class LocalViewController: GridViewController {
         
         HUploadManager.shared.start(data: self.selectedData.map{$0})
         
-        
-        
     }
     
     @IBAction func onSegmentControl(_ sender: UISegmentedControl) {

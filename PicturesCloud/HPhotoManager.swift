@@ -36,36 +36,28 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
             return []
         }
         
-        let item = PhotoAsset(identifier: firstObject.localIdentifier, assetType: .image, data: .local(firstObject), creationDate: firstObject.creationDate ?? Date(), duration: 0)
+        let item = PhotoAsset(identifier: firstObject.localIdentifier, assetType: .image, data: .local(firstObject), creationDate: firstObject.creationDate ?? Date())
         
         var list = Array<PhotoAsset>.init(repeating: item, count: assets.count)
         
         assets.enumerateObjects(options: .concurrent) { asset, index, result in
-            let assetType = AssetType.image
             switch asset.mediaType {
             case .image:
                 // photoLive
                 if asset.mediaSubtypes == .photoLive {
-//                    assetType = .live
-//                            resultHandler(.success(.photoLive(image)))
-                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .live, data: .local(asset), creationDate: asset.creationDate ?? Date(),duration: asset.duration)
+                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .live, data: .local(asset), creationDate: asset.creationDate ?? Date())
                 } else
                 // GIF
                 if let uniformType = asset.value(forKey: "uniformTypeIdentifier") as? NSString,
                     uniformType == "com.compuserve.gif" {
-//                    assetType = .gif
-                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .gif, data: .local(asset), creationDate: asset.creationDate ?? Date(), duration: asset.duration)
-//                            resultHandler(.success(.gif(image)))
+                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .gif, data: .local(asset), creationDate: asset.creationDate ?? Date())
                 }
                 // image
                 else {
-//                            resultHandler(.success(.image(image)))
+                    list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .image, data: .local(asset), creationDate: asset.creationDate ?? Date())
                 }
-                break
             case .video:
-//                        resultHandler(.success(.video((image,asset.duration))))
-                list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .video(asset.duration), data: .local(asset), creationDate: asset.creationDate ?? Date(), duration: asset.duration)
-                break
+                list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .video(asset.duration), data: .local(asset), creationDate: asset.creationDate ?? Date())
             case .unknown:
                 fatalError()
             case .audio:
@@ -73,10 +65,6 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
             @unknown default:
                 fatalError()
             }
-            
-            
-            
-            
         }
         return list
     }

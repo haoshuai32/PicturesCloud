@@ -62,21 +62,16 @@ class CloudViewController: GridViewController {
 
                     case .live:
                         assetType = .live
-//                        debugPrint("photoLive")
-//                        mediaSubtypes = .photoLive
                     case .image:
+                        assetType = .image
                         break
                     case .video:
                         assetType = .video(Double(item.Duration))
-//                        debugPrint("video")
-//                        mediaType = .video
                     case .gif:
                         assetType = .gif
-//                        debugPrint("git")
-//                        mediaType = .audio
                     }
                     
-                    return PhotoAsset(identifier: item.UID!, assetType: assetType, data: .cloud(item), creationDate: Date(), duration: 0)
+                    return PhotoAsset(identifier: item.UID!, assetType: assetType, data: .cloud(item), creationDate: Date())
                     
                 }
                 let data = GridListItem(identifier: uid, dataSouce: list)

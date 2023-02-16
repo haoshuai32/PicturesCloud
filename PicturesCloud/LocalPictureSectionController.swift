@@ -56,12 +56,12 @@ class LocalSectionController: GridSectionController {
                 cell.gifTypeView.isHidden = true
                 cell.durationLabel.isHidden = true
                 cell.imageView.image = image
-            case .video(_):
+            case .video(let duration):
                 cell.liveTypeView.isHidden = true
                 cell.gifTypeView.isHidden = true
                 cell.durationLabel.isHidden = false
                 cell.imageView.image = image
-                cell.duration = item.duration
+                cell.duration = duration
             }
             
             
