@@ -210,7 +210,7 @@ class DisplayAsset {
     let imageURL: URL?
     let asset: HPHAsset?
     
-    var resources: [DisplayAssetResource] = []
+//    var resources: [DisplayAssetResource] = []
     
     required init(identifier: String,
                   mediaType: HPHAssetMediaType,
@@ -446,72 +446,72 @@ extension DisplayAsset {
                 break
             }
         } else if isInCloud == true {
-            
-            // TODO: 读取 resource
-            let resources = self.resources
-            switch self.mediaType {
-            case .image:
-                // photoLive
-                if self.mediaSubtypes == .photoLive {
-                    
-//                    let request = URLRequest(url: <#T##URL#>)
-//                    URLSession.shared.downloadTask(with: <#T##URLRequest#>) { <#URL?#>, <#URLResponse?#>, <#Error?#> in
-//                        <#code#>
+            // 重新更改数据
+//            // TODO: 读取 resource
+//            let resources = self.resources
+//            switch self.mediaType {
+//            case .image:
+//                // photoLive
+//                if self.mediaSubtypes == .photoLive {
+//
+////                    let request = URLRequest(url: <#T##URL#>)
+////                    URLSession.shared.downloadTask(with: <#T##URLRequest#>) { <#URL?#>, <#URLResponse?#>, <#Error?#> in
+////                        <#code#>
+////                    }
+//
+//                    // 存在两条数据
+//                    // 需要先吧数据下载下来
+//
+//
+//                } else
+//                // GIF
+//                if self.mediaSubtypes.rawValue == 64 {
+//                    // gif 存在一条数据
+//                    guard let gifURL = resources.first?.fileURL else {
+//                        fatalError()
+//                        return
 //                    }
-                    
-                    // 存在两条数据
-                    // 需要先吧数据下载下来
-                    
-                    
-                } else
-                // GIF
-                if self.mediaSubtypes.rawValue == 64 {
-                    // gif 存在一条数据
-                    guard let gifURL = resources.first?.fileURL else {
-                        fatalError()
-                        return
-                    }
-                    KingfisherManager.shared.downloader.downloadImage(with: gifURL, options: KingfisherParsedOptionsInfo.init(nil)) { result in
-                        switch result {
-                        case let .success(imageResult):
-                            resultHandler(.success(.gif((imageResult.originalData,gifURL.absoluteString))))
-                            break
-                        case let .failure(error):
-                            resultHandler(.failure(error))
-                            break
-                        }
-                    }
-                }
-                // image
-                else {
-                    // 看是否存在多条数据
-                    guard let imageURL = resources.first?.fileURL else {
-                        fatalError()
-                        return
-                    }
-                    KingfisherManager.shared.downloader.downloadImage(with: imageURL, options: KingfisherParsedOptionsInfo.init(nil)) { result in
-                        switch result {
-                        case let .success(imageResult):
-                            resultHandler(.success(.image(imageResult.image)))
-                            break
-                        case let .failure(error):
-                            resultHandler(.failure(error))
-                            break
-                        }
-                    }
-                }
-                break
-            case .video:
-                guard let videoURL = resources.first?.fileURL else {
-                    fatalError()
-                    return
-                }
-                let playerItem = AVPlayerItem(url: videoURL)
-                resultHandler(.success(.video(playerItem)))
-                break
-            default:
-                break
-            }
+//                    KingfisherManager.shared.downloader.downloadImage(with: gifURL, options: KingfisherParsedOptionsInfo.init(nil)) { result in
+//                        switch result {
+//                        case let .success(imageResult):
+//                            resultHandler(.success(.gif((imageResult.originalData,gifURL.absoluteString))))
+//                            break
+//                        case let .failure(error):
+//                            resultHandler(.failure(error))
+//                            break
+//                        }
+//                    }
+//                }
+//                // image
+//                else {
+//                    // 看是否存在多条数据
+//                    guard let imageURL = resources.first?.fileURL else {
+//                        fatalError()
+//                        return
+//                    }
+//                    KingfisherManager.shared.downloader.downloadImage(with: imageURL, options: KingfisherParsedOptionsInfo.init(nil)) { result in
+//                        switch result {
+//                        case let .success(imageResult):
+//                            resultHandler(.success(.image(imageResult.image)))
+//                            break
+//                        case let .failure(error):
+//                            resultHandler(.failure(error))
+//                            break
+//                        }
+//                    }
+//                }
+//                break
+//            case .video:
+//                guard let videoURL = resources.first?.fileURL else {
+//                    fatalError()
+//                    return
+//                }
+//                let playerItem = AVPlayerItem(url: videoURL)
+//                resultHandler(.success(.video(playerItem)))
+//                break
+//            default:
+//                break
+//            }
             
             
 //            return -1

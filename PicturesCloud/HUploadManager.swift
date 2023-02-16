@@ -9,7 +9,7 @@ import Foundation
 import Photos
 import UIKit
 
-typealias UploadAsset = DisplayAsset
+typealias UploadAsset = PhotoAsset
 
 // 照片上传接口需要修改只能支持单张照片上传
 // 多张照片上传需要进行单张接口进行轮训然后
@@ -56,7 +56,7 @@ class HUploadOperation: Operation {
     
     private let delegate: HUploadOperationDelegate
     
-    init(data: DisplayAsset,delegate: HUploadOperationDelegate) {
+    init(data: UploadAsset,delegate: HUploadOperationDelegate) {
         self.dataSource = data
         self.delegate = delegate
         super.init()
@@ -313,63 +313,76 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             self.uploadingTask = uploadTask
         } //。func end
         
-        guard let asset = uploadAsset.asset else {
+        switch uploadAsset.dataSource {
+        case .local(let asset):
+            readAsset(asset)
+            break
+        case .cloud(_):
             fatalError()
         }
+        
+//        guard let asset = uploadAsset.asset else {
+//            fatalError()
+//        }
         // read resources
-        let resources = PHAssetResource.assetResources(for: asset)
-        uploadAsset.resources = resources.map{DisplayAssetResource.init(resource: $0)}
         
-        var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(filename: "", contentType: "", data: Data()), count: resources.count)
-        
-        var resultError: Error?
-        
-        let group = DispatchGroup()
-        
-        let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-        
-        // read cover data
-        
-        // read data
-        for i in 0..<resources.count {
+        func readAsset(_ asset: PHAsset) {
+            let resources = PHAssetResource.assetResources(for: asset)
             
-            group.enter()
-            requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
-                let index = i
-                let resource = resources[i]
-                var itemData = Data()
-                PHAssetResourceManager.default().requestData(for: resource, options: nil) { data in
-                    itemData.append(data)
-                } completionHandler: { error in
-                    resultError = error
-                    if let error = error {
-                        assert(false,error.localizedDescription)
-                    } else {
-                        var nameEx:[String] = resource.originalFilename.split(separator: ".").map{String($0)}
-//                        assert(nameEx.count == 2,"name error")
-                        nameEx[0] = resource.assetLocalIdentifier.replacingOccurrences(of: "/", with: "_")
-                        let filename = nameEx.joined(separator: ".")
-                        
-                        let metaData = UploadMetaData(filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
-//                        debugPrint("image data", metaData)
-//                        debugPrint("original size", itemData.count, resource)
-                        
-                        uploadData[index] = metaData
+//            uploadAsset.resources = resources.map{DisplayAssetResource.init(resource: $0)}
+            
+            var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(filename: "", contentType: "", data: Data()), count: resources.count)
+            
+            var resultError: Error?
+            
+            let group = DispatchGroup()
+            
+            let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+            
+            // read cover data
+            
+            // read data
+            for i in 0..<resources.count {
+                
+                group.enter()
+                requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+                    let index = i
+                    let resource = resources[i]
+                    var itemData = Data()
+                    PHAssetResourceManager.default().requestData(for: resource, options: nil) { data in
+                        itemData.append(data)
+                    } completionHandler: { error in
+                        resultError = error
+                        if let error = error {
+                            assert(false,error.localizedDescription)
+                        } else {
+                            var nameEx:[String] = resource.originalFilename.split(separator: ".").map{String($0)}
+    //                        assert(nameEx.count == 2,"name error")
+                            nameEx[0] = resource.assetLocalIdentifier.replacingOccurrences(of: "/", with: "_")
+                            let filename = nameEx.joined(separator: ".")
+                            
+                            let metaData = UploadMetaData(filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
+    //                        debugPrint("image data", metaData)
+    //                        debugPrint("original size", itemData.count, resource)
+                            
+                            uploadData[index] = metaData
+                        }
+                        group.leave()
                     }
-                    group.leave()
+                }))
+            }
+        
+            group.notify(queue: requestAssetQueue, work: .init(block: {
+                // 返回数据
+                if let error = resultError {
+                    fatalError(error.localizedDescription)
+                } else {
+    //                debugPrint("资源数据", uploadData)
+                    upload(uploadData)
                 }
             }))
         }
-    
-        group.notify(queue: requestAssetQueue, work: .init(block: {
-            // 返回数据
-            if let error = resultError {
-                fatalError(error.localizedDescription)
-            } else {
-//                debugPrint("资源数据", uploadData)
-                upload(uploadData)
-            }
-        }))
+        
     }
     
     
