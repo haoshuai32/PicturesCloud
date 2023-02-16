@@ -58,26 +58,30 @@ class CloudViewController: GridViewController {
                 let list = photos.map { item in
                     
                 
-                    var mediaType: HPHAssetMediaType = .image
-                    var mediaSubtypes: HPHAssetMediaSubtype = .photoHDR
-                    
+//                    var mediaType: HPHAssetMediaType = .image
+//                    var mediaSubtypes: HPHAssetMediaSubtype = .photoHDR
+                    var assetType:AssetType = .image
                     switch item.PhotoType {
                         
                     case .live:
-                        debugPrint("photoLive")
-                        mediaSubtypes = .photoLive
+                        assetType = .live
+//                        debugPrint("photoLive")
+//                        mediaSubtypes = .photoLive
                     case .image:
                         break
                     case .video:
-                        debugPrint("video")
-                        mediaType = .video
+                        assetType = .video(Double(item.Duration))
+//                        debugPrint("video")
+//                        mediaType = .video
                     case .gif:
-                        debugPrint("git")
-                        mediaType = .audio
+                        assetType = .gif
+//                        debugPrint("git")
+//                        mediaType = .audio
                     }
                     
+                    return PhotoAsset(identifier: item.UID!, assetType: assetType, data: .cloud(item), creationDate: Date())
                     
-                    return GridItem.init(identifier: item.UID!, mediaType: mediaType, mediaSubtypes: mediaSubtypes, pixelWidth: item.Width, pixelHeight: item.Height, creationDate: nil, location: nil, duration: Double(item.Duration), isFavorite: false, isHidden: false, isInCloud: true, imageURL: item.previewURL, asset: nil)
+//                    return GridItem.init(identifier: item.UID!, mediaType: mediaType, mediaSubtypes: mediaSubtypes, pixelWidth: item.Width, pixelHeight: item.Height, creationDate: nil, location: nil, duration: Double(item.Duration), isFavorite: false, isHidden: false, isInCloud: true, imageURL: item.previewURL, asset: nil)
                 }
                 let data = GridListItem(identifier: uid, dataSouce: list)
                 self.dataSource = [data]

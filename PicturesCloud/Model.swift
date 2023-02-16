@@ -6,45 +6,64 @@
 //
 
 import Foundation
-import CoreLocation
+import IGListDiffKit
+import Photos
 
-typealias CloudAsset = Photo
-
-
-enum PhotoAssetType {
+enum AssetType {
     case image
     case gif
     case live
     case video(Double)
 }
 
-protocol PhotoAsset {
-    var identifier: String {set get}
-    var photoType: PhotoAssetType  {set get}
-    var pixelWidth: Int {set get}
-    var pixelHeight: Int {set get}
-    var creationDate: Date? {set get}
-    var location: CLLocation? {set get}
-    var duration: Double {set get}
+
+enum Asset {
+    case local(PHAsset)
+    case cloud(Photo)
 }
 
+class PhotoAsset: ListDiffable, Equatable {
 
-struct LocalViewAsset: PhotoAsset {
+    let identifier: String
+    let assetType: AssetType
+    let creationDate: Date
+    let dataSource: Asset
+    
+    init(identifier: String, assetType: AssetType,
+         data: Asset, creationDate: Date) {
+        self.identifier = identifier
+        self.assetType = assetType
+        self.dataSource = data
+        self.creationDate = creationDate
+    }
     
 }
 
-struct CloudViewAsset: PhotoAsset {
+extension PhotoAsset: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(identifier)
+//        hasher.combine(assetType)
+    }
+}
+
+extension PhotoAsset {
+    
+    static func == (lhs: PhotoAsset, rhs: PhotoAsset) -> Bool {
+        return lhs.identifier == rhs.identifier
+    }
     
 }
 
+extension PhotoAsset {
+    
+    func diffIdentifier() -> NSObjectProtocol {
+        return identifier as NSObjectProtocol
+    }
 
-
-
-
-//struct ViewAsset<T> {
-//
-//    let asset: T?
-//
-//    let isCloud: Bool
-//
-//}
+    func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
+        guard self !== object else { return true }
+        guard let object = object as? (PhotoAsset) else { return false }
+        return identifier == object.identifier
+    }
+    
+}

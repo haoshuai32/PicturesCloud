@@ -28,16 +28,24 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     
     private var assets: PHFetchResult<PHAsset>
     
-    private var dataSource: [DisplayAsset] = []
+    private var dataSource: [PhotoAsset] = []
     
-    private static func loadDataSource(_ assets: PHFetchResult<PHAsset>) -> [DisplayAsset] {
+    private static func loadDataSource(_ assets: PHFetchResult<PHAsset>) -> [PhotoAsset] {
+        
         guard let firstObject = assets.firstObject else {
             return []
         }
         
-        var list = Array<DisplayAsset>.init(repeating: DisplayAsset(asset: firstObject), count: assets.count)
+        let item = PhotoAsset(identifier: firstObject.localIdentifier, assetType: .image, data: .local(firstObject), creationDate: firstObject.creationDate ?? Date())
+        
+        var list = Array<PhotoAsset>.init(repeating: item, count: assets.count)
+        
         assets.enumerateObjects(options: .concurrent) { asset, index, result in
-            list[index] = DisplayAsset(asset: asset)
+            
+            
+            
+            list[index] = PhotoAsset(identifier: asset.localIdentifier, assetType: .image, data: .local(asset), creationDate: asset.creationDate ?? Date())
+            
         }
         return list
     }

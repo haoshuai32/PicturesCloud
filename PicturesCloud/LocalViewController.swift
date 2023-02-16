@@ -12,7 +12,7 @@ import RxSwift
 import Photos
 
 protocol AssetChangeSelectedDelegate:AnyObject {
-    func photoChangeSelected(dataSource: Set<DisplayAsset>)
+    func photoChangeSelected(dataSource: Set<PhotoAsset>)
 }
 
 // TODO: 切换segment的时候没有记录滑动位置

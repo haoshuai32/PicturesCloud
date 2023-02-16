@@ -16,9 +16,9 @@ class GridSectionController: ListSectionController,
                              ListDisplayDelegate
 {
     
-    var dataSource:[GridItem] = []
+    var dataSource:[PhotoAsset] = []
     
-    var selectedData:Set<GridItem> = []
+    var selectedData:Set<PhotoAsset> = []
     
     weak var delegate: AssetChangeSelectedDelegate?
     
@@ -33,7 +33,7 @@ class GridSectionController: ListSectionController,
         return CGSize(width: itemSize.width * UIScreen.main.scale, height: itemSize.height * UIScreen.main.scale)
     }()
     
-    required init(selected: Set<DisplayAsset>,delegate: AssetChangeSelectedDelegate) {
+    required init(selected: Set<PhotoAsset>,delegate: AssetChangeSelectedDelegate) {
         self.selectedData = selected
         self.delegate = delegate
         

@@ -11,9 +11,9 @@ import IGListDiffKit
 
 class GridListItem {
     let identifier: String
-    let dataSouce: [GridItem]
+    let dataSouce: [PhotoAsset]
     required init(identifier: String,
-                  dataSouce: [GridItem]
+                  dataSouce: [PhotoAsset]
     ) {
         self.identifier = identifier
         self.dataSouce = dataSouce
@@ -28,7 +28,7 @@ extension GridListItem:ListDiffable {
     
     func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
         guard self !== object else { return true }
-        guard let object = object as? GridItem else { return false }
+        guard let object = object as? PhotoAsset else { return false }
         return object.identifier == identifier
     }
 }
@@ -45,7 +45,7 @@ class GridViewController: UIViewController,
     
     var dataSource: [GridListItem] = []
     
-    var selectedData: Set<GridItem> = []
+    var selectedData: Set<PhotoAsset> = []
     
     func collectionView() -> UICollectionView {
         fatalError()
@@ -85,7 +85,7 @@ class GridViewController: UIViewController,
         return nil
     }
     
-    func photoChangeSelected(dataSource: Set<DisplayAsset>) {
+    func photoChangeSelected(dataSource: Set<PhotoAsset>) {
         self.selectedData = dataSource
     }
     
