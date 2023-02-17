@@ -313,13 +313,10 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             self.uploadingTask = uploadTask
         } //。func end
         
-        switch uploadAsset.dataSource {
-        case .local(let asset):
-            readAsset(asset)
-            break
-        case .cloud(_):
+        guard let asset = uploadAsset.dataSource.data() as? PHAsset else {
             fatalError()
         }
+        readAsset(asset)
         
 //        guard let asset = uploadAsset.asset else {
 //            fatalError()
