@@ -148,7 +148,6 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             fatalError()
         }
         // 移除已经上传成功的数据
-//        let updata = self.uploadDataSource.object(forKey: item.identifier as NSString)
         self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
         completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
         self.uploadIndex += 1
@@ -162,21 +161,6 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         uploadDelegate?.uploadItemDidComplete(index: (self.uploadIndex, self.uploadCount),data:item, info: (response, self.uploadingReceiveData, error))
         debugPrint("一张照片上传完成",task.response as! HTTPURLResponse)
         
-        
-//        debugPrint("一张照片上传完成",task.response, String(data: self.uploadingReceiveData!,encoding: .utf8),error)
-//        guard let response = task.response as? HTTPURLResponse else {
-//            fatalError()
-//            return
-//        }
-//        let uptask = task as! URLSessionUploadTask
-//        debugPrint(uptask,uptask.response,uptask.currentRequest ,uptask.response as? NSHTTPURLResponse)
-//        debugPrint("task", )
-//        task.response?.url
-//        debugPrint(task.response)
-//        debugPrint("update data Complete",self.uploadingAsset?.asset, self.uploadingTask)
-//        debugPrint("一张照片上传完成", String(data: self.uploadingReceiveData!,encoding: .utf8))
-        
-//        debugPrint(#function)
     }
     
     public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
@@ -226,8 +210,6 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         uploadCount = 0
         
     }
-    
-//    private var dataSource: [DisplayAsset] = []
     
     // 上传中的数据处理
     private var uploadingAsset: UploadAsset?
@@ -302,11 +284,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             urlRequest.addValue(Client.shared.v1!.token, forHTTPHeaderField: "X-Session-Id")
 
             
-            
-//            debugPrint(urlRequest.headers)
-//            let updata = try! Data(contentsOf: tempPath)
-            
-//            debugPrint("body data", bodyData.count)
+        
             let uploadTask = urlSession.uploadTask(with: urlRequest, from: bodyData)
             uploadTask.resume()
 
@@ -316,18 +294,14 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         guard let asset = uploadAsset.dataSource.data() as? PHAsset else {
             fatalError()
         }
+        
         readAsset(asset)
         
-//        guard let asset = uploadAsset.asset else {
-//            fatalError()
-//        }
-        // read resources
-        
+
         func readAsset(_ asset: PHAsset) {
+            
             let resources = PHAssetResource.assetResources(for: asset)
-            
-//            uploadAsset.resources = resources.map{DisplayAssetResource.init(resource: $0)}
-            
+                        
             var uploadData = Array<UploadMetaData>.init(repeating: UploadMetaData(filename: "", contentType: "", data: Data()), count: resources.count)
             
             var resultError: Error?
@@ -336,9 +310,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             
             let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
             
-            // read cover data
-            
-            // read data
+            // 读取原始数据
             for i in 0..<resources.count {
                 
                 group.enter()
@@ -354,27 +326,24 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                             assert(false,error.localizedDescription)
                         } else {
                             var nameEx:[String] = resource.originalFilename.split(separator: ".").map{String($0)}
-    //                        assert(nameEx.count == 2,"name error")
+    
                             nameEx[0] = resource.assetLocalIdentifier.replacingOccurrences(of: "/", with: "_")
                             let filename = nameEx.joined(separator: ".")
                             
                             let metaData = UploadMetaData(filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
-    //                        debugPrint("image data", metaData)
-    //                        debugPrint("original size", itemData.count, resource)
                             
                             uploadData[index] = metaData
                         }
                         group.leave()
                     }
                 }))
-            }
+            } //for
         
             group.notify(queue: requestAssetQueue, work: .init(block: {
                 // 返回数据
                 if let error = resultError {
                     fatalError(error.localizedDescription)
                 } else {
-    //                debugPrint("资源数据", uploadData)
                     upload(uploadData)
                 }
             }))
@@ -383,12 +352,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     
-    // 实现消息队列
-  
-//    func append(_ newElements: [DisplayAsset]) {
-//
-//        self.dataSource.append(contentsOf: newElements)
-//    }
+
     
     func remove(identifiers: [String]) {
         

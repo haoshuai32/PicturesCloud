@@ -31,18 +31,7 @@ class CloudViewController: GridViewController {
     }
     
     override func reloadDataSource() -> [GridListItem] {
-//        let list = photoManager.requestDataSource(selectTypeIndex)
-//        guard let fr = list.first else {
-//            return []
-//        }
-//        let item = GridListItem(identifier: fr.identifier, dataSouce: list)
-//        return [item]
-//        let list = photoManager.requestDataSource(selectTypeIndex)
-//        guard let fr = list.first else {
-//            return []
-//        }
-//        let item = GridListItem(identifier: fr.identifier, dataSouce: list)
-        
+
         Client.shared.api.requestNormal(.getPhotos(PhotoOptions()), callbackQueue: nil, progress: nil) { result in
             switch result {
             case let .success(reponse):

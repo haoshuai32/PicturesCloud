@@ -28,25 +28,6 @@ enum AssetType {
     }
 }
 
-//extension AssetType: Equatable {
-//    static func == (lhs: Self, rhs: Self) -> Bool {
-//
-//        switch lhs {
-//        case .image:
-//
-//            break
-//        case .gif:
-//            break
-//        case .live:
-//            break
-//        case .video(_):
-//            break
-//        }
-//        return false
-//    }
-//}
-
-
 enum Asset {
     case local(PHAsset)
     case cloud(Photo)
@@ -67,16 +48,13 @@ class PhotoAsset: ListDiffable, Equatable {
     let assetType: AssetType
     let creationDate: Date
     let dataSource: Asset
-//    let duration: Double
     init(identifier: String, assetType: AssetType,
          data: Asset, creationDate: Date
-//         duration: Double
     ) {
         self.identifier = identifier
         self.assetType = assetType
         self.dataSource = data
         self.creationDate = creationDate
-//        self.duration = duration
     }
     
 }
@@ -84,7 +62,7 @@ class PhotoAsset: ListDiffable, Equatable {
 extension PhotoAsset: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(identifier)
-//        hasher.combine(assetType)
+        hasher.combine(assetType.equatable())
     }
 }
 

@@ -365,6 +365,7 @@ public struct File: Mappable  {
     
     public mutating func mapping(map: ObjectMapper.Map) {
         UID <- map["UID"]
+        FileUID <- map["FileUID"]
         Name <- map["Name"]
         Root <- map["Root"]
         OriginalName <- map["OriginalName"]
@@ -409,7 +410,7 @@ public struct File: Mappable  {
     /// `gorm:"type:VARBINARY(42);index;" json:"InstanceID,omitempty" yaml:"InstanceID,omitempty"`
 //    var InstanceID : String?
     /// `gorm:"type:VARBINARY(42);unique_index;" json:"UID" yaml:"UID"`
-//    var FileUID : String?
+    var FileUID : String?
     /// `gorm:"type:VARBINARY(755);unique_index:idx_files_name_root;" json:"Name" yaml:"Name"`
     var Name : String?
     /// `gorm:"type:VARBINARY(16);default:'/';unique_index:idx_files_name_root;" json:"Root" yaml:"Root,omitempty"`

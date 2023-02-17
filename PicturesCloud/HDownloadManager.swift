@@ -9,10 +9,6 @@ import Foundation
 import Photos
 import UIKit
 
-//struct DownloadModel {
-//    var uid: String = ""
-//}
-
 typealias DownloadAsset = Photo
 
 protocol DownloadOperationDelegate {
@@ -22,11 +18,11 @@ protocol DownloadOperationDelegate {
 
 protocol DownloadManagerDelegate {
     
-    // 上传进度 当前上传到多少了
+    // 下载进行
     func downloadItemDidComplete(index:(Int,Int) ,info: (HTTPURLResponse,Data?,Error?))
-    // 单条上传进度错误
     
-    // 上传完成 （上传成功多少 上传失败多少）
+    
+    // 下载完成 （上传成功多少 上传失败多少）
     func downloadDidComplete(success:[DownloadAsset], failure: [DownloadAsset])
 }
 class DownloadOperation: Operation {
@@ -213,25 +209,58 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
         self.downloadData = data
         self.downloadingCompletedHandler = completedHandler
         
-//        let uploadAsset = data
+        var resultError: Error?
+        let group = DispatchGroup()
         
-        func download(uid: String, token: String) {
-            let root = API_ROOT + "/api/v1/photos/\(uid)/dl" + "?t=\(token)"
-            guard let url = URL(string: root) else {
-                return
-            }
-            var urlRequest = URLRequest(url: url)
-            urlRequest.httpMethod = "get"
-            
-            urlRequest.addValue(Client.shared.v1!.token, forHTTPHeaderField: "X-Session-Id")
-            urlSession.downloadTask(with: urlRequest) { url, reponse, error in
+        let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.download.asset", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        // 需要验证数据
+        for item in data.Files {
+            group.enter()
+            requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
                 
-                guard let path = url, let htp = reponse as? HTTPURLResponse, htp.statusCode == 200 else {
-                    return
+                Client.shared.api.requestNormal(.getPhotoDownload(item.FileUID ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+                    switch result {
+                    case .success(let reponse):
+                        guard reponse.statusCode == 200 else {
+                            group.leave()
+                            return
+                        }
+    //                    reponse.data
+    //
+                    case .failure(let error):
+                        assert(false,"error")
+                        break;
+                    }
+                    group.leave()
                 }
-                // TODO: 写入照片
-            }
+            }))
         }
+        
+        group.notify(queue: requestAssetQueue, work: .init(block: {
+            // 返回数据
+            if let error = resultError {
+                fatalError(error.localizedDescription)
+            } else {
+                // 写入数据
+//                upload(uploadData)
+                //
+//                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: <#T##URL#>)
+                // Add the asset to the photo library.
+                PHPhotoLibrary.shared().performChanges({
+                    let creationRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+                    if let assetCollection = self.assetCollection {
+                        let addAssetRequest = PHAssetCollectionChangeRequest(for: assetCollection)
+                        addAssetRequest?.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
+                    }
+                }, completionHandler: {success, error in
+                    if !success { print("Error creating the asset: \(String(describing: error))") }
+                })
+                
+                
+                PHImageManager.default().
+            }
+        }))
+        
         
     }
     
