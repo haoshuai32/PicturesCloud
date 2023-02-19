@@ -101,10 +101,6 @@ class DownloadOperation: Operation {
 
 public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDownloadDelegate {
     
-
-    
-    
-    
     var downloadDelegate: DownloadManagerDelegate?
   
     public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
@@ -246,18 +242,18 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
                 //
 //                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: <#T##URL#>)
                 // Add the asset to the photo library.
-                PHPhotoLibrary.shared().performChanges({
-                    let creationRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
-                    if let assetCollection = self.assetCollection {
-                        let addAssetRequest = PHAssetCollectionChangeRequest(for: assetCollection)
-                        addAssetRequest?.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
-                    }
-                }, completionHandler: {success, error in
-                    if !success { print("Error creating the asset: \(String(describing: error))") }
-                })
-                
-                
-                PHImageManager.default().
+//                PHPhotoLibrary.shared().performChanges({
+//                    let creationRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
+//                    if let assetCollection = self.assetCollection {
+//                        let addAssetRequest = PHAssetCollectionChangeRequest(for: assetCollection)
+//                        addAssetRequest?.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
+//                    }
+//                }, completionHandler: {success, error in
+//                    if !success { print("Error creating the asset: \(String(describing: error))") }
+//                })
+//                
+//                
+//                
             }
         }))
         
