@@ -323,5 +323,34 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
         self.doneConfig()
     }
     
+    func writeGIF(data: Data,completionHandl: @escaping ((Bool, Error?) -> Void)) {
+        
+        PHPhotoLibrary.shared().performChanges {
+            let request = PHAssetCreationRequest()
+            request.addResource(with: PHAssetResourceType.photo, data: data, options: nil)
+        } completionHandler: { result, error in
+            completionHandl(result,error)
+        }
+//        PHPhotoLibrary.shared().performChanges {
+//            let request = PHAssetCreationRequest()
+//            request.addResource(with: PHAssetResourceType.photo, data: data, options: nil)
+//
+//        }completionHandler: { result, error in
+//
+//        }
+    }
     
+    func saveLivePhoto() {
+        PHPhotoLibrary.shared().performChanges {
+            let request = PHAssetCreationRequest()
+            request.addResource(with: PHAssetResourceType.photo, data: Data(), options: nil)
+            request.addResource(with: PHAssetResourceType.pairedVideo, data: Data(), options: nil)
+        }completionHandler: { result, error in
+            
+        }
+        
+//        PHLivePhoto.request(withResourceFileURLs: [], placeholderImage: mil, targetSize: CGSize.zero, contentMode: PHImageContentMode.aspectFill) { lievePhoto, info in
+//
+//        }
+    }
 }
