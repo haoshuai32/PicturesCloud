@@ -277,7 +277,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
                 assert(false,error.localizedDescription)
             }
 #endif
-            let url: URL = URL(string: "http://127.0.0.1:2342/api/v1/users/\(Client.shared.userID!)/upload/\(self.uploadToken)")!
+            let url: URL = URL(string: "\(API_ROOT)/api/v1/users/\(Client.shared.userID!)/upload/\(self.uploadToken)")!
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "POST"
             urlRequest.addValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")

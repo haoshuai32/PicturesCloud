@@ -99,64 +99,64 @@ class DownloadOperation: Operation {
     }
 }
 
-public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDownloadDelegate {
-    
+public class DownloadManager: NSObject, DownloadOperationDelegate  {
+//    URLSessionDownloadDelegate
     var downloadDelegate: DownloadManagerDelegate?
   
-    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        
-    }
-
-    
-    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-        
-    }
-
-    
-    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
-        
-    }
-    
-    // MARK: - URLSession
-    private lazy var urlSession: URLSession = { [unowned self] in
-        let config = URLSessionConfiguration.default
-        config.isDiscretionary = true
-        config.sessionSendsLaunchEvents = true
-        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
-    }()
-    
-    // MARK: - URLSessionDataDelegate
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-
-    }
-    
-//    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-//
-//        self.downloadingReceiveData?.append(data)
+//    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
 //
 //    }
+//
+//
+//    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+//
+//    }
+//
+//
+//    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
+//
+//    }
+//
+//    // MARK: - URLSession
+//    private lazy var urlSession: URLSession = { [unowned self] in
+//        let config = URLSessionConfiguration.default
+//        config.isDiscretionary = true
+//        config.sessionSendsLaunchEvents = true
+//        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
+//    }()
+//
+//    // MARK: - URLSessionDataDelegate
+//    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
+//
+//    }
+//
+////    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
+////
+////        self.downloadingReceiveData?.append(data)
+////
+////    }
+//
+//    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
+//        debugPrint(#function)
+//    }
+//
+//    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+//
+//    }
+//
+//    public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+//
+//        DispatchQueue.main.async {
+//            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+//                let backgroundCompletionHandler =
+//                appDelegate.backgroundCompletionHandler else {
+//                    return
+//            }
+//            backgroundCompletionHandler()
+//        }
+//    }
     
-    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-        debugPrint(#function)
-    }
-    
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-
-    }
-    
-    public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        
-        DispatchQueue.main.async {
-            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-                let backgroundCompletionHandler =
-                appDelegate.backgroundCompletionHandler else {
-                    return
-            }
-            backgroundCompletionHandler()
-        }
-    }
-    
-    static let shared = HUploadManager()
+    static let shared = DownloadManager()
     
     private var downloadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
     
@@ -209,6 +209,13 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
         let group = DispatchGroup()
         
         let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.download.asset", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        
+        // 判断资源类型
+        
+        // 然后在更具类型进行判断需要下载多少数据 live（2）
+        
+        // 对数据下载的时候 需要进行判断
+        
         // 需要验证数据
         for item in data.Files {
             group.enter()
@@ -323,14 +330,19 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
         self.doneConfig()
     }
     
-    func writeGIF(data: Data,completionHandl: @escaping ((Bool, Error?) -> Void)) {
+    func writeGIF(data: Data,completionHandler: @escaping ((Bool, Error?) -> Void)) {
         
-        PHPhotoLibrary.shared().performChanges {
+        PHPhotoLibrary.shared().performChanges({
             let request = PHAssetCreationRequest()
             request.addResource(with: PHAssetResourceType.photo, data: data, options: nil)
-        } completionHandler: { result, error in
-            completionHandl(result,error)
-        }
+        },completionHandler: completionHandler)
+        
+//        PHPhotoLibrary.shared().performChanges {
+//            let request = PHAssetCreationRequest()
+//            request.addResource(with: PHAssetResourceType.photo, data: data, options: nil)
+//        } completionHandler: { result, error in
+//            completionHandl(result,error)
+//        }
 //        PHPhotoLibrary.shared().performChanges {
 //            let request = PHAssetCreationRequest()
 //            request.addResource(with: PHAssetResourceType.photo, data: data, options: nil)
@@ -340,14 +352,23 @@ public class DownloadManager: NSObject, DownloadOperationDelegate, URLSessionDow
 //        }
     }
     
-    func saveLivePhoto() {
-        PHPhotoLibrary.shared().performChanges {
+    func writeLivePhoto(_ photo: Data, liveData: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
+        
+        
+        PHPhotoLibrary.shared().performChanges({
             let request = PHAssetCreationRequest()
-            request.addResource(with: PHAssetResourceType.photo, data: Data(), options: nil)
-            request.addResource(with: PHAssetResourceType.pairedVideo, data: Data(), options: nil)
-        }completionHandler: { result, error in
-            
-        }
+            request.addResource(with: PHAssetResourceType.photo, data: photo, options: nil)
+            request.addResource(with: PHAssetResourceType.pairedVideo, data: liveData, options: nil)
+        },completionHandler: completionHandler)
+        
+        
+//        PHPhotoLibrary.shared().performChanges {
+//            let request = PHAssetCreationRequest()
+//            request.addResource(with: PHAssetResourceType.photo, data: Data(), options: nil)
+//            request.addResource(with: PHAssetResourceType.pairedVideo, data: Data(), options: nil)
+//        }completionHandler: { result, error in
+//
+//        }
         
 //        PHLivePhoto.request(withResourceFileURLs: [], placeholderImage: mil, targetSize: CGSize.zero, contentMode: PHImageContentMode.aspectFill) { lievePhoto, info in
 //

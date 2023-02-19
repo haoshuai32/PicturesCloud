@@ -196,6 +196,36 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         }
     }
     
+    func writeGIF2Album(data: Data,completionHandler: @escaping ((Bool, Error?) -> Void)) {
+        
+        PHPhotoLibrary.shared().performChanges({
+            let request = PHAssetCreationRequest.forAsset()
+            request.addResource(with: PHAssetResourceType.photo, data: data, options: nil)
+        },completionHandler: completionHandler)
+        
+    }
+    
+    func writeLivePhoto2Album(_ photo: Data, liveData: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
+        
+        
+        PHPhotoLibrary.shared().performChanges({
+            let request = PHAssetCreationRequest.forAsset()
+            request.addResource(with: PHAssetResourceType.photo, data: photo, options: nil)
+            request.addResource(with: PHAssetResourceType.pairedVideo, data: liveData, options: nil)
+//            request.location
+//            request.creationDate
+            
+        },completionHandler: completionHandler)
+    }
+    
+    func writePhoto2Album(photo: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
+        
+    }
+    
+    func writeVideo2Album(file: URL, completionHandler: @escaping ((Bool, Error?) -> Void)) {
+        
+    }
+    
 }
 
 extension NSNotification.Name {

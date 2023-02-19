@@ -126,7 +126,7 @@ public enum PhotoPrismAPI {
 
 
 var down_token = ""
-let API_ROOT = "http://127.0.0.1:2342"
+let API_ROOT = "http://172.20.10.2:2342"
 //https://demo-zh.photoprism.app/api/v1/users/urpi8tzdfqwlfsgf/upload/xli9k9
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
