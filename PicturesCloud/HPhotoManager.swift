@@ -206,12 +206,13 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     }
     
     static func writeLivePhoto2Album(_ photo: Data, liveData: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
-        
-        
+                
         PHPhotoLibrary.shared().performChanges({
+
+            let options = PHAssetResourceCreationOptions()
             let request = PHAssetCreationRequest.forAsset()
-            request.addResource(with: .photo, data: photo, options: nil)
-            request.addResource(with: .pairedVideo, data: liveData, options: nil)
+            request.addResource(with: .photo, data: photo, options: options)
+            request.addResource(with: .pairedVideo, data: liveData, options: options)
 //            request.location
 //            request.creationDate
             

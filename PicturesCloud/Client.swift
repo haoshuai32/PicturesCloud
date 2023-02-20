@@ -121,7 +121,12 @@ public enum PhotoPrismAPI {
     case photoPrimary(String,String)
     //POST /users/:uid/upload/:token
     case uploadUserFiles(Data,String,String)
+    // 源文件上传完成后 put完所有的数据
     case uploadUserFilesP(String,String)
+    
+    case downloadFile(String,String)
+    
+    
 }
 
 
@@ -231,6 +236,8 @@ extension PhotoPrismAPI: TargetType {
         case let .uploadUserFilesP(uuid, token):
             return "/api/v1/users/\(uuid)/upload/\(token)"
             
+        case let .downloadFile(hash,_):
+            return "/api/v1/dl/\(hash)"
         }
         return "root"
     }
@@ -296,6 +303,9 @@ extension PhotoPrismAPI: TargetType {
             
         case .uploadUserFilesP(_, _):
             return .put
+            
+        case .downloadFile(_):
+            return .get
         }
     }
     
@@ -317,7 +327,8 @@ extension PhotoPrismAPI: TargetType {
             
         case .getPhotoDownload(_,let downloadToken):
             return .requestParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default)
-            
+        case .downloadFile(_, let downloadToken):
+            return .requestParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default)
         case .uploadUserFiles(let data, _, _):
             debugPrint("测试接口")
 //            let testData = "hello my body text".data(using: .utf8)!

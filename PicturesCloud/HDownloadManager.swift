@@ -249,13 +249,11 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                 group.enter()
                 requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
                     
-                        Client.shared.api.requestNormal(.getPhotoDownload(imageFile.PhotoUID ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
-                            
-                            
+                        Client.shared.api.requestNormal(.downloadFile(imageFile.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
                             
                         switch result {
                         case .success(let reponse):
-                            debugPrint(reponse.request)
+                            debugPrint("下载 image",reponse.request)
                             guard reponse.statusCode == 200 else {
                                 group.leave()
                                 return
@@ -276,10 +274,10 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                 group.enter()
                 requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
                     
-                    Client.shared.api.requestNormal(.getPhotoDownload(movFile.PhotoUID ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+                    Client.shared.api.requestNormal(.downloadFile(movFile.Hash ?? "",Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
                         switch result {
                         case .success(let reponse):
-                            debugPrint(reponse.request)
+                            debugPrint("下载 video",reponse.request)
                             guard reponse.statusCode == 200 else {
                                 group.leave()
                                 return
