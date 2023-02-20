@@ -196,7 +196,7 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         }
     }
     
-    func writeGIF2Album(data: Data,completionHandler: @escaping ((Bool, Error?) -> Void)) {
+    static func writeGIF2Album(data: Data,completionHandler: @escaping ((Bool, Error?) -> Void)) {
         
         PHPhotoLibrary.shared().performChanges({
             let request = PHAssetCreationRequest.forAsset()
@@ -205,13 +205,13 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
         
     }
     
-    func writeLivePhoto2Album(_ photo: Data, liveData: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
+    static func writeLivePhoto2Album(_ photo: Data, liveData: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
         
         
         PHPhotoLibrary.shared().performChanges({
             let request = PHAssetCreationRequest.forAsset()
-            request.addResource(with: PHAssetResourceType.photo, data: photo, options: nil)
-            request.addResource(with: PHAssetResourceType.pairedVideo, data: liveData, options: nil)
+            request.addResource(with: .photo, data: photo, options: nil)
+            request.addResource(with: .pairedVideo, data: liveData, options: nil)
 //            request.location
 //            request.creationDate
             

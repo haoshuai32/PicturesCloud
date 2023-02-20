@@ -159,6 +159,9 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" image="icloud.and.arrow.down" catalog="system"/>
+                                <connections>
+                                    <action selector="downloadButtonAction:" destination="HVB-uc-gc7" eventType="touchUpInside" id="fP9-Hz-6rC"/>
+                                </connections>
                             </button>
                         </barButtonItem>
                     </navigationItem>

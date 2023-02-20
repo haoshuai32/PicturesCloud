@@ -73,6 +73,8 @@ struct Config: Mappable {
     var userID: String?
 }
 
+
+
 enum PhotoType:String {
     case live = "live"
     case image = "image"
@@ -237,6 +239,13 @@ public struct Photo: Mappable  {
 
 typealias Files = [File]
 
+enum FileType: String {
+    case jpg = "jpg"
+    case mov = "mov"
+    case png = "png"
+    case gif = "gif"
+}
+
 // File represents an image or sidecar file that belongs to a photo.
 public struct File: Mappable  {
     
@@ -247,14 +256,14 @@ public struct File: Mappable  {
     
     public mutating func mapping(map: ObjectMapper.Map) {
         UID <- map["UID"]
-        FileUID <- map["FileUID"]
+        PhotoUID <- map["PhotoUID"]
         Name <- map["Name"]
         Root <- map["Root"]
         OriginalName <- map["OriginalName"]
         Hash <- map["Hash"]
         Size <- map["Size"]
         Codec <- map["Codec"]
-        FileType <- map["FileType"]
+        FileType <- (map["FileType"],EnumTransform<FileType>())
         Mime <- map["Mime"]
         Primary <- map["Primary"]
         FileSidecar <- map["FileSidecar"]
@@ -292,7 +301,7 @@ public struct File: Mappable  {
     /// `gorm:"type:VARBINARY(42);index;" json:"InstanceID,omitempty" yaml:"InstanceID,omitempty"`
 //    var InstanceID : String?
     /// `gorm:"type:VARBINARY(42);unique_index;" json:"UID" yaml:"UID"`
-    var FileUID : String?
+//    var FileUID : String?
     /// `gorm:"type:VARBINARY(755);unique_index:idx_files_name_root;" json:"Name" yaml:"Name"`
     var Name : String?
     /// `gorm:"type:VARBINARY(16);default:'/';unique_index:idx_files_name_root;" json:"Root" yaml:"Root,omitempty"`
@@ -306,7 +315,7 @@ public struct File: Mappable  {
     /// `gorm:"type:VARBINARY(32)" json:"Codec" yaml:"Codec,omitempty"`
     var Codec : String?
     /// `gorm:"type:VARBINARY(32)" json:"Type" yaml:"Type,omitempty"`
-    var FileType : String?
+    var FileType : FileType = .jpg
     /// `gorm:"type:VARBINARY(64)" json:"Mime" yaml:"Mime,omitempty"`
     var Mime : String?
     /// `json:"Primary" yaml:"Primary,omitempty"`

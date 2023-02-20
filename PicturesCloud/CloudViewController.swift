@@ -86,7 +86,16 @@ class CloudViewController: GridViewController {
         self.adapter.performUpdates(animated: true, completion: nil)
     }
     
-    
+    @IBAction func downloadButtonAction(_ sender: Any?) {
+        guard let data = self.selectedData.first?.dataSource.data() as? Photo else {
+            return
+        }
+        
+        DownloadManager.shared.downloadData(data: data) { reponse, data, error in
+            
+        }
+        
+    }
 
 //    func loadDataSource() {
 ////        Client.shared.api.rx.request(.getPhotos(PhotoOptions()))

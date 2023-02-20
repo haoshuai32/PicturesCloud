@@ -199,13 +199,14 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
     }()
     
     
-    func downloadData(data: DownloadAsset, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
+    func downloadData(data: DownloadAsset,
+                      completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
         self.downloadingReceiveData = nil
         self.downloadingReceiveData = Data()
         self.downloadData = data
         self.downloadingCompletedHandler = completedHandler
         
-        var resultError: Error?
+//        var resultError: Error?
         let group = DispatchGroup()
         
         let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.download.asset", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
@@ -216,54 +217,103 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
         
         // 对数据下载的时候 需要进行判断
         
-        // 需要验证数据
-        for item in data.Files {
-            group.enter()
-            requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+        if data.PhotoType == .live {
+            if data.Files.count == 2 {
+                // 需要验证数据
+                var imageFile: File!
+                var imageData: Data?
                 
-                Client.shared.api.requestNormal(.getPhotoDownload(item.FileUID ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
-                    switch result {
-                    case .success(let reponse):
-                        guard reponse.statusCode == 200 else {
-                            group.leave()
-                            return
-                        }
-    //                    reponse.data
-    //
-                    case .failure(let error):
-                        assert(false,"error")
-                        break;
-                    }
-                    group.leave()
+                var movFile: File!
+                var movData: Data?
+                
+                var resultError: Error?
+                
+                if data.Files[0].FileType == .jpg {
+                    imageFile = data.Files[0]
                 }
-            }))
-        }
-        
-        group.notify(queue: requestAssetQueue, work: .init(block: {
-            // 返回数据
-            if let error = resultError {
-                fatalError(error.localizedDescription)
+                else if data.Files[0].FileType == .mov {
+                    movFile = data.Files[0]
+                } else {
+                    assert(false)
+                }
+                
+                if data.Files[1].FileType == .jpg {
+                    imageFile = data.Files[1]
+                }
+                else if data.Files[1].FileType == .mov {
+                    movFile = data.Files[1]
+                } else {
+                    assert(false)
+                }
+                
+                group.enter()
+                requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+                    
+                        Client.shared.api.requestNormal(.getPhotoDownload(imageFile.PhotoUID ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+                            
+                            
+                            
+                        switch result {
+                        case .success(let reponse):
+                            debugPrint(reponse.request)
+                            guard reponse.statusCode == 200 else {
+                                group.leave()
+                                return
+                            }
+                            
+                            imageData = reponse.data
+                            group.leave()
+                        case .failure(let error):
+                            assert(false,"error")
+                            resultError = error
+                            group.leave()
+                            break;
+                        }
+                        
+                    }
+                }))
+                
+                group.enter()
+                requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+                    
+                    Client.shared.api.requestNormal(.getPhotoDownload(movFile.PhotoUID ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+                        switch result {
+                        case .success(let reponse):
+                            debugPrint(reponse.request)
+                            guard reponse.statusCode == 200 else {
+                                group.leave()
+                                return
+                            }
+                            movData = reponse.data
+                            group.leave()
+                        case .failure(let error):
+                            assert(false,"error")
+                            resultError = error
+                            group.leave()
+                            break;
+                        }
+                    }
+                }))
+                
+                group.notify(queue: requestAssetQueue, work: .init(block: {
+                    // 返回数据
+                    if let error = resultError {
+//                        assert(false,)
+                        fatalError(error.localizedDescription)
+                    } else {
+                        // 写入数据
+                        debugPrint("开始写入数据", imageData?.count , movData?.count)
+                        LocalPhotoManager.writeLivePhoto2Album(imageData!, liveData: movData!) { result, error in
+                            debugPrint("写入照片结果", result,error)
+                        }
+        //
+                    }
+                }))
             } else {
-                // 写入数据
-//                upload(uploadData)
-                //
-//                PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: <#T##URL#>)
-                // Add the asset to the photo library.
-//                PHPhotoLibrary.shared().performChanges({
-//                    let creationRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
-//                    if let assetCollection = self.assetCollection {
-//                        let addAssetRequest = PHAssetCollectionChangeRequest(for: assetCollection)
-//                        addAssetRequest?.addAssets([creationRequest.placeholderForCreatedAsset!] as NSArray)
-//                    }
-//                }, completionHandler: {success, error in
-//                    if !success { print("Error creating the asset: \(String(describing: error))") }
-//                })
-//                
-//                
-//                
+                assert(false)
             }
-        }))
-        
+            
+        }
         
     }
     
