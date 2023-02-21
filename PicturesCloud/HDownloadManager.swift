@@ -12,14 +12,14 @@ import UIKit
 typealias DownloadAsset = Photo
 
 protocol DownloadOperationDelegate {
-    func downloadData(data: DownloadAsset,completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void)
+    func downloadData(data: DownloadAsset,completedHandler: @escaping (Bool,Error?) -> Void)
 }
 
 
 protocol DownloadManagerDelegate {
     
     // 下载进行
-    func downloadItemDidComplete(index:(Int,Int) ,info: (HTTPURLResponse,Data?,Error?))
+    func downloadItemDidComplete(index:(Int,Int) ,info: (Bool,Error?))
     
     
     // 下载完成 （上传成功多少 上传失败多少）
@@ -103,59 +103,6 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
 //    URLSessionDownloadDelegate
     var downloadDelegate: DownloadManagerDelegate?
   
-//    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-//
-//    }
-//
-//
-//    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-//
-//    }
-//
-//
-//    public func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didResumeAtOffset fileOffset: Int64, expectedTotalBytes: Int64) {
-//
-//    }
-//
-//    // MARK: - URLSession
-//    private lazy var urlSession: URLSession = { [unowned self] in
-//        let config = URLSessionConfiguration.default
-//        config.isDiscretionary = true
-//        config.sessionSendsLaunchEvents = true
-//        return URLSession(configuration: config, delegate: self, delegateQueue: nil)
-//    }()
-//
-//    // MARK: - URLSessionDataDelegate
-//    public func urlSession(_ session: URLSession, task: URLSessionTask, didSendBodyData bytesSent: Int64, totalBytesSent: Int64, totalBytesExpectedToSend: Int64) {
-//
-//    }
-//
-////    public func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-////
-////        self.downloadingReceiveData?.append(data)
-////
-////    }
-//
-//    public func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-//        debugPrint(#function)
-//    }
-//
-//    public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-//
-//    }
-//
-//    public func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-//
-//        DispatchQueue.main.async {
-//            guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-//                let backgroundCompletionHandler =
-//                appDelegate.backgroundCompletionHandler else {
-//                    return
-//            }
-//            backgroundCompletionHandler()
-//        }
-//    }
-    
     static let shared = DownloadManager()
     
     private var downloadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
@@ -188,7 +135,7 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
     
     private var downloadingTask: URLSessionUploadTask?
     
-    private var downloadingCompletedHandler: ((HTTPURLResponse?,Data?,Error?) -> Void)?
+    private var downloadingCompletedHandler: ((Bool,Error?) -> Void)?
     
     private var downloadingReceiveData: Data?
     
@@ -200,34 +147,16 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
     
     
     func downloadData(data: DownloadAsset,
-                      completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
+                      completedHandler: @escaping (Bool,Error?) -> Void) {
         self.downloadingReceiveData = nil
         self.downloadingReceiveData = Data()
         self.downloadData = data
         self.downloadingCompletedHandler = completedHandler
         
-//        var resultError: Error?
-        let group = DispatchGroup()
-        
-        let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.download.asset", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
-        
-        // 判断资源类型
-        
-        // 然后在更具类型进行判断需要下载多少数据 live（2）
-        
-        // 对数据下载的时候 需要进行判断
-        
         if data.PhotoType == .live {
             if data.Files.count == 2 {
-                // 需要验证数据
                 var imageFile: File!
-                var imageData: Data?
-                
                 var movFile: File!
-                var movData: Data?
-                
-                var resultError: Error?
-                
                 if data.Files[0].FileType == .jpg {
                     imageFile = data.Files[0]
                 }
@@ -246,72 +175,122 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                     assert(false)
                 }
                 
-                group.enter()
-                requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
-                    
-                        Client.shared.api.requestNormal(.downloadFile(imageFile.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
-                            
-                        switch result {
-                        case .success(let reponse):
-                            debugPrint("下载 image",reponse.request)
-                            guard reponse.statusCode == 200 else {
-                                group.leave()
-                                return
-                            }
-                            
-                            imageData = reponse.data
-                            group.leave()
-                        case .failure(let error):
-                            assert(false,"error")
-                            resultError = error
-                            group.leave()
-                            break;
-                        }
-                        
-                    }
-                }))
-                
-                group.enter()
-                requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
-                    
-                    Client.shared.api.requestNormal(.downloadFile(movFile.Hash ?? "",Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
-                        switch result {
-                        case .success(let reponse):
-                            debugPrint("下载 video",reponse.request)
-                            guard reponse.statusCode == 200 else {
-                                group.leave()
-                                return
-                            }
-                            movData = reponse.data
-                            group.leave()
-                        case .failure(let error):
-                            assert(false,"error")
-                            resultError = error
-                            group.leave()
-                            break;
-                        }
-                    }
-                }))
-                
-                group.notify(queue: requestAssetQueue, work: .init(block: {
-                    // 返回数据
-                    if let error = resultError {
-//                        assert(false,)
-                        fatalError(error.localizedDescription)
-                    } else {
-                        // 写入数据
-                        debugPrint("开始写入数据", imageData?.count , movData?.count)
-                        LocalPhotoManager.writeLivePhoto2Album(imageData!, liveData: movData!) { result, error in
-                            debugPrint("写入照片结果", result,error)
-                        }
-        //
-                    }
-                }))
+                downloadLivePhoto(imageFile: imageFile, movFile: movFile, completedHandler: completedHandler)
+
             } else {
                 assert(false)
             }
             
         }
+        
+    }
+    
+    func downloadFile(_ file:File,resourceType: PHAssetResourceType,
+                      completedHandler: @escaping (Bool,Error?) -> Void) {
+        
+        Client.shared.api.requestNormal(.downloadFile(file.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+            
+            switch result {
+            case .success(let reponse):
+                debugPrint("下载 file",resourceType,reponse.request ?? "")
+                guard reponse.statusCode == 200 else {
+                    return
+                }
+                
+                PHPhotoLibrary.shared().performChanges({
+                    
+                    let options = PHAssetResourceCreationOptions()
+                    let request = PHAssetCreationRequest.forAsset()
+                    
+                    request.addResource(with: resourceType, data: reponse.data, options: nil)
+                    
+                }) { result, error in
+                    
+                }
+                
+            case .failure(let error):
+                assert(false,"error")
+                
+                break;
+            }
+        }
+    }
+    
+    func downloadLivePhoto(imageFile:File, movFile: File,
+                           completedHandler: @escaping (Bool,Error?) -> Void) {
+        let group = DispatchGroup()
+        
+        let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.download.asset", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        
+        // 需要验证数据
+        var imageData: Data?
+        
+        var movData: Data?
+        
+        var resultError: Error?
+        
+        group.enter()
+        requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+            
+                Client.shared.api.requestNormal(.downloadFile(imageFile.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+                    
+                switch result {
+                case .success(let reponse):
+                    debugPrint("下载 image",reponse.request)
+                    guard reponse.statusCode == 200 else {
+                        group.leave()
+                        return
+                    }
+                    
+                    imageData = reponse.data
+                    group.leave()
+                case .failure(let error):
+                    assert(false,"error")
+                    resultError = error
+                    group.leave()
+                    break;
+                }
+                
+            }
+        }))
+        
+        group.enter()
+        requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+            
+            Client.shared.api.requestNormal(.downloadFile(movFile.Hash ?? "",Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+                switch result {
+                case .success(let reponse):
+                    debugPrint("下载 video",reponse.request)
+                    guard reponse.statusCode == 200 else {
+                        group.leave()
+                        return
+                    }
+                    movData = reponse.data
+                    group.leave()
+                case .failure(let error):
+                    assert(false,"error")
+                    resultError = error
+                    group.leave()
+                    break;
+                }
+            }
+        }))
+        
+        group.notify(queue: requestAssetQueue, work: .init(block: {
+            // 返回数据
+            if let error = resultError {
+//                        assert(false,)
+                fatalError(error.localizedDescription)
+            } else {
+                // 写入数据
+                debugPrint("开始写入数据", imageData?.count , movData?.count)
+                LocalPhotoManager.writeLivePhoto2Album(imageData!, liveData: movData!) { result, error in
+                    debugPrint("写入照片结果", result,error)
+                    completedHandler(result,error)
+                }
+//
+            }
+        }))
         
     }
     

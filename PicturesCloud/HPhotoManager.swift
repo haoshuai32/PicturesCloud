@@ -221,8 +221,10 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
 
             let options = PHAssetResourceCreationOptions()
             let request = PHAssetCreationRequest.forAsset()
+            
             request.addResource(with: .photo, data: photo, options: nil)
             request.addResource(with: .pairedVideo, data: liveData, options: nil)
+            
 //            request.addResource(with: .photo, fileURL: image, options: nil)
 //            request.addResource(with: .pairedVideo, fileURL: mov, options: nil)
             

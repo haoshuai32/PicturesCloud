@@ -10,6 +10,7 @@ import IGListKit
 import IGListDiffKit
 import RxSwift
 import ObjectMapper
+import Photos
 // 云册照片
 class CloudViewController: GridViewController {
     
@@ -91,6 +92,16 @@ class CloudViewController: GridViewController {
             return
         }
         
+        PHPhotoLibrary.requestAuthorization { status in
+            if status != .authorized {
+                debugPrint("相机没有权限")
+                return
+            }
+        }
+        
+        let available = PHAssetCreationRequest.supportsAssetResourceTypes([PHAssetResourceType.photo.rawValue as NSNumber,
+                                    PHAssetResourceType.pairedVideo.rawValue as NSNumber])
+        debugPrint("是否可以 livephoto", available)
         DownloadManager.shared.downloadData(data: data) { reponse, data, error in
             
         }
