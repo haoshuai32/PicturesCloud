@@ -102,7 +102,7 @@ class CloudViewController: GridViewController {
         let available = PHAssetCreationRequest.supportsAssetResourceTypes([PHAssetResourceType.photo.rawValue as NSNumber,
                                     PHAssetResourceType.pairedVideo.rawValue as NSNumber])
         debugPrint("是否可以 livephoto", available)
-        DownloadManager.shared.downloadData(data: data) { reponse, data, error in
+        DownloadManager.shared.downloadData(data: data) { result, error in
             
         }
         
