@@ -57,13 +57,15 @@ class DownloadOperation: Operation {
         }
     }
     // uid token
-    let token: (String,String)
-//    private let d ataSource: DisplayAsset
+//    let token: (String,String)
+    private let dataSource: DownloadAsset
+    
     
     private let delegate: DownloadOperationDelegate
     
-    init(data: (String,String),delegate: DownloadOperationDelegate) {
-        self.token = data
+    init(data: DownloadAsset,delegate: DownloadOperationDelegate) {
+//        self.token = data
+        self.dataSource = data
         self.delegate = delegate
         super.init()
         
@@ -80,7 +82,10 @@ class DownloadOperation: Operation {
                self.done()
            })
        }
-  
+
+        self.delegate.downloadData(data: self.dataSource) { _, _ in
+            completed()
+        }
 //        self.delegate
 //        self.delegate.uploadData(data: self.dataSource) {_,_,_ in
 //            completed()
@@ -105,10 +110,10 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
   
     static let shared = DownloadManager()
     
-    private var downloadDataSource: NSCache<NSString,DisplayAsset> = NSCache<NSString,DisplayAsset>()
+    private var downloadDataSource: NSCache<NSString,DownloadAsset> = NSCache<NSString,DownloadAsset>()
     
-    private var downloadSuccess: [DisplayAsset] = []
-    private var downloadFailure: [DisplayAsset] = []
+    private var downloadSuccess: [DownloadAsset] = []
+    private var downloadFailure: [DownloadAsset] = []
     private var downloadToken: String = ""
     private var downloadCount = 0
     private var downloadIndex = 0
@@ -119,7 +124,6 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
         downloadToken = String.randomString(length: 7)
         downloadCount = 0
         downloadIndex = 0
-        
     }
     
     func doneConfig() {
@@ -128,16 +132,11 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
         downloadToken = ""
         downloadCount = 0
         downloadIndex = 0
-        
     }
     
-    private var downloadData: Photo?
-    
-    private var downloadingTask: URLSessionUploadTask?
-    
+    private var downloadingDataSource: DownloadAsset?
+
     private var downloadingCompletedHandler: ((Bool,Error?) -> Void)?
-    
-    private var downloadingReceiveData: Data?
     
     lazy var uploadOperationQueue: OperationQueue = {
         let queue = OperationQueue()
@@ -148,9 +147,8 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
     
     func downloadData(data: DownloadAsset,
                       completedHandler: @escaping (Bool,Error?) -> Void) {
-        self.downloadingReceiveData = nil
-        self.downloadingReceiveData = Data()
-        self.downloadData = data
+        self.downloadingDataSource = data
+
         self.downloadingCompletedHandler = completedHandler
         
         if data.PhotoType == .live {
@@ -188,7 +186,7 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
     func downloadFile(_ file:File,resourceType: PHAssetResourceType,
                       completedHandler: @escaping (Bool,Error?) -> Void) {
         
-        Client.shared.api.requestNormal(.downloadFile(file.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+        _ = Client.shared.api.requestNormal(.downloadFile(file.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
             
             switch result {
             case .success(let reponse):
@@ -307,29 +305,32 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
     }
     
     // 开始
-    func start(data: [DisplayAsset]) {
+    func start(data: [DownloadAsset]) {
         // Wi-Fi模式
         // 流量模式
         // 最多上传100张
         // 总共最多不能超过 一万张
         
 //
-//        self.beginConfig()
+        self.beginConfig()
+//        downloadingDataSource
 //        self.uploadCount = data.count
         
         
-//        self.dataSource.append(contentsOf: newElements)
+//        self.dataSource.append(contentsOf: data)
 //        let data = self.dataSource
 //        self.dataSource.removeAll()
-//        for item in data {
+        for item in data {
+            let operation = DownloadOperation(data: item, delegate: self)
+            
 //            let operation = HUploadOperation(data: item, delegate: self)
-//
-//            self.uploadDataSource.setObject(item, forKey: item.identifier as NSString)
-//            uploadOperationQueue.addOperation(operation)
-//        }
+
+            self.downloadDataSource.setObject(item, forKey: item.UID! as NSString)
+            uploadOperationQueue.addOperation(operation)
+        }
 //        let uploadToken = self.uploadToken
-//        uploadOperationQueue.addBarrierBlock { [weak self] in
-//            debugPrint("照片上传完成")
+        uploadOperationQueue.addBarrierBlock { [weak self] in
+            debugPrint("照片下载完成")
 //            Client.shared.api.requestNormal(.uploadUserFilesP(Client.shared.userID!, uploadToken), callbackQueue: nil, progress: nil) { result in
 //                switch result {
 //                case .success(let reponse):
@@ -341,9 +342,9 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
 //                    debugPrint("错误 error",error)
 //                }
 //            }
-//
-//            // 执行到最后
-//        }
+
+            // 执行到最后
+        }
     }
     
     // 暂停

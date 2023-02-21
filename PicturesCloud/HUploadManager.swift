@@ -141,7 +141,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
 //        debugPrint(#function,error)
-        guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingAsset else {
+        guard let completedHandler = self.uploadingCompletedHandler,let item = self.uploadingDataSource else {
             fatalError()
         }
         guard let response = task.response as? HTTPURLResponse else {
@@ -212,7 +212,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     }
     
     // 上传中的数据处理
-    private var uploadingAsset: UploadAsset?
+    private var uploadingDataSource: UploadAsset?
     
     private var uploadingTask: URLSessionUploadTask?
     
@@ -235,7 +235,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     func uploadData(data: UploadAsset, completedHandler: @escaping (HTTPURLResponse?,Data?,Error?) -> Void) {
         self.uploadingReceiveData = nil
         self.uploadingReceiveData = Data()
-        self.uploadingAsset = data
+        self.uploadingDataSource = data
         self.uploadingCompletedHandler = completedHandler
         
         let uploadAsset = data
@@ -368,14 +368,14 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         
         self.beginConfig()
         self.uploadCount = data.count
-        
+//        self.uploadDataSource = data
         
         for item in data {
             let operation = HUploadOperation(data: item, delegate: self)
-            
             self.uploadDataSource.setObject(item, forKey: item.identifier as NSString)
             uploadOperationQueue.addOperation(operation)
         }
+        
         let uploadToken = self.uploadToken
         uploadOperationQueue.addBarrierBlock { [weak self] in
             debugPrint("照片上传完成")

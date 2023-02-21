@@ -39,7 +39,7 @@ class CloudViewController: GridViewController {
                 guard reponse.statusCode == 200, let jsonStr = String.init(data: reponse.data, encoding: .utf8) else {
                     return
                 }
-                debugPrint(jsonStr)
+                debugPrint("photo list",jsonStr)
                 guard let photos = Mapper<Photo>().mapArray(JSONString: jsonStr) else {
                     return
                 }

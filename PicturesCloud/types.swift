@@ -85,13 +85,13 @@ enum PhotoType:String {
 //type Photos []Photo
 typealias Photos = [Photo]
 // Photo represents a photo, all its properties, and link to all its images and sidecar files.
-public struct Photo: Mappable  {
+public class Photo: Mappable  {
     
-    public init?(map: ObjectMapper.Map) {
+    required public init?(map: ObjectMapper.Map) {
         
     }
     
-    public mutating func mapping(map: ObjectMapper.Map) {
+    public func mapping(map: ObjectMapper.Map) {
         ID <- map["ID"]
         UID <- map["UID"]
         PhotoType <- (map["Type"],EnumTransform<PhotoType>())
