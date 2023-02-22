@@ -30,9 +30,13 @@ class CloudAssetManager: AssetManager {
     }
     
     func getFile() {
-        <#code#>
+        
     }
     
+    
+    func download() {
+        
+    }
     
     // TODO: 列表数据
     // TODO: 选择数据

@@ -8,6 +8,33 @@
 import Foundation
 
 class LocalAssetManager: AssetManager {
+    var dataSource: [PhotoAsset] = []
+    
+    var selectDataSource: Set<PhotoAsset> = Set<PhotoAsset>()
+    
+    func read() {
+        
+    }
+    
+    func readMore() {
+        
+    }
+    
+    func delete() {
+        
+    }
+    
+    func image() {
+        
+    }
+    
+    func getFile() {
+        
+    }
+    
+    func upload() {
+        
+    }
     
     // TODO: 上传部分可以后台运行 不在这里进行管理
     
