@@ -8,7 +8,7 @@
 import UIKit
 import IGListKit
 
-typealias GridItem = DisplayAsset
+//typealias GridItem = DisplayAsset
 
 // noti: 必须子类化
 class GridSectionController: ListSectionController,
