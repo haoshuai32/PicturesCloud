@@ -225,8 +225,8 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
             request.addResource(with: .photo, fileURL: image, options: nil)
             request.addResource(with: .pairedVideo, fileURL: mov, options: nil)
             
-//            request.addResource(with: .photo, fileURL: image, options: nil)
-//            request.addResource(with: .pairedVideo, fileURL: mov, options: nil)
+//            request.addResource(with: .photo, data: photo, options: nil)
+//            request.addResource(with: .pairedVideo, data: liveData, options: nil)
             
         },completionHandler: completionHandler)
     }
