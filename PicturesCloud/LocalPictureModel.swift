@@ -154,21 +154,21 @@ extension LocalPictureModel: ListDiffable {
     }
     
 }
-
-class LocalPictureSectionModel {
-    var createData: Date = Date()
-    var dataSource: [LocalPictureModel] = []
-}
-
-extension LocalPictureSectionModel: ListDiffable {
-    
-    func diffIdentifier() -> NSObjectProtocol {
-        return createData as NSObjectProtocol
-    }
-    
-    func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
-        guard self !== object else { return true }
-        guard let object = object as? LocalPictureSectionModel else { return false }
-        return object.createData.timeIntervalSince1970 == createData.timeIntervalSince1970
-    }
-}
+//
+//class LocalPictureSectionModel {
+//    var createData: Date = Date()
+//    var dataSource: [LocalPictureModel] = []
+//}
+//
+//extension LocalPictureSectionModel: ListDiffable {
+//    
+//    func diffIdentifier() -> NSObjectProtocol {
+//        return createData as NSObjectProtocol
+//    }
+//    
+//    func isEqual(toDiffableObject object: ListDiffable?) -> Bool {
+//        guard self !== object else { return true }
+//        guard let object = object as? LocalPictureSectionModel else { return false }
+//        return object.createData.timeIntervalSince1970 == createData.timeIntervalSince1970
+//    }
+//}

@@ -33,8 +33,7 @@ extension GridListItem:ListDiffable {
     }
 }
 
-
-// noti: 必须子类化
+// MARK: 必须子类化
 class GridViewController: UIViewController,
                           ListAdapterDataSource,
                           AssetChangeSelectedDelegate
