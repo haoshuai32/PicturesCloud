@@ -207,23 +207,23 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     
     static func writeLivePhoto2Album(_ photo: Data, liveData: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
                 
-//        var path =  HFileManager.shared.downloadTemp
-//        try! FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
-//        path.appendPathComponent("test")
-//        let image = path.appendingPathExtension("gif")
-//        let mov = path.appendingPathExtension("mov")
-//        debugPrint(image)
-//
-//        try! photo.write(to: image)
-//        try! liveData.write(to: mov)
+        var path =  HFileManager.shared.downloadTemp
+        try! FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
+        path.appendPathComponent("test")
+        let image = path.appendingPathExtension("jpg")
+        let mov = path.appendingPathExtension("mov")
+        debugPrint(image)
+
+        try! photo.write(to: image)
+        try! liveData.write(to: mov)
         
         PHPhotoLibrary.shared().performChanges({
 
             let options = PHAssetResourceCreationOptions()
             let request = PHAssetCreationRequest.forAsset()
             
-            request.addResource(with: .photo, data: photo, options: nil)
-            request.addResource(with: .pairedVideo, data: liveData, options: nil)
+            request.addResource(with: .photo, fileURL: image, options: nil)
+            request.addResource(with: .pairedVideo, fileURL: mov, options: nil)
             
 //            request.addResource(with: .photo, fileURL: image, options: nil)
 //            request.addResource(with: .pairedVideo, fileURL: mov, options: nil)
