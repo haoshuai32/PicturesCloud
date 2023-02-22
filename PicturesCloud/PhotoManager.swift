@@ -9,12 +9,19 @@ import Foundation
 
 
 
-protocol PhotoManager {
+protocol AssetManager {
 
     // dataSource
+    var dataSource: [PhotoAsset] {set get}
+    var selectDataSource: Set<PhotoAsset> {set get}
 
     // selectDataSource
 
+    func read()
+    func readMore()
+    func delete()
+    func image()
+    func getFile()
     // reload()
 
     // loadmore()
@@ -28,5 +35,6 @@ protocol PhotoManager {
     // 缓存照片
 
     // 显示大照片
+    
 
 }
