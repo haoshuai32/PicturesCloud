@@ -14,6 +14,7 @@ struct HFileManager {
     let fileManager: FileManager
     
     lazy var downloadTemp: URL = {
+//        NSTemporaryDirectory()
         let temp = NSTemporaryDirectory()
         var url = URL(fileURLWithPath: temp)
         url.appendPathComponent("download/temp/")
