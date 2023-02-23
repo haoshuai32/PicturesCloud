@@ -62,7 +62,7 @@ class CloudAssetManager: AssetManager {
     
     
     func download() {
-        
+        // 单条数据下载
     }
     
     // TODO: 列表数据

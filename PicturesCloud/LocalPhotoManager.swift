@@ -225,11 +225,78 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
     }
     
     func upload() {
-        
+        // 单挑数据上传
     }
     
+    struct MetaData {
+        // 只能是固定制
+        let name: String = "files"
+        let filename: String
+        let contentType: String
+        let data: Data
+    }
     
-    static func createPhotoLiveAsset(lievPhoto:(imgPath:URL,movPath:URL), completionHandler: @escaping ((Bool, Error?) -> Void)){
+    // 读取原始数据
+    func readAsset(_ asset: PHAsset,completionHandler: @escaping (([MetaData], Error?) -> Void)) {
+
+        let resources = PHAssetResource.assetResources(for: asset)
+             
+        var resultData = Array<MetaData>.init(repeating: MetaData(filename: "", contentType: "", data: Data()), count: resources.count)
+        
+        var resultError: Error?
+        
+        let group = DispatchGroup()
+        
+        let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.requestAssetData", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
+        
+        // 读取原始数据
+        for i in 0..<resources.count {
+            
+            group.enter()
+            requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
+                
+                let index = i
+                
+                let resource = resources[i]
+                
+                var itemData = Data()
+                
+                PHAssetResourceManager.default().requestData(for: resource, options: nil) { data in
+                    
+                    itemData.append(data)
+                    
+                } completionHandler: { error in
+                    resultError = error
+                    if let error = error {
+                        assert(false,error.localizedDescription)
+                    } else {
+                        var nameEx:[String] = resource.originalFilename.split(separator: ".").map{String($0)}
+
+                        nameEx[0] = resource.assetLocalIdentifier.replacingOccurrences(of: "/", with: "_")
+                        let filename = nameEx.joined(separator: ".")
+                        
+                        let metaData = MetaData(filename: filename, contentType: resource.uniformTypeIdentifier, data: itemData)
+                        
+                        resultData[index] = metaData
+                    }
+                    group.leave()
+                }
+            }))
+        } //for
+    
+        group.notify(queue: requestAssetQueue, work: .init(block: {
+            // 返回数据
+            if let error = resultError {
+                completionHandler([],error)
+            } else {
+                completionHandler(resultData,nil)
+            }
+        }))
+        
+    }
+    // 保存数据
+    
+    static func writePhotoLive(lievPhoto:(imgPath:URL,movPath:URL), completionHandler: @escaping ((Bool, Error?) -> Void)){
         PHPhotoLibrary.shared().performChanges({
 
             let options = PHAssetResourceCreationOptions()
@@ -241,14 +308,14 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
         },completionHandler: completionHandler)
     }
     
-    static func createPhotoLiveAsset(lievPhoto:(imgData:Data,movData:Data), completionHandler: @escaping ((Bool, Error?) -> Void)) {
+    static func writePhotoLive(lievPhoto:(imgData:Data,movData:Data), completionHandler: @escaping ((Bool, Error?) -> Void)) {
                 
         let imgPath = HFileManager.shared.tempImg
         let movPath = HFileManager.shared.tempMov
         do {
             try lievPhoto.imgData.write(to: imgPath)
             try lievPhoto.movData.write(to: movPath)
-            Self.createPhotoLiveAsset(lievPhoto: (imgPath: imgPath, movPath: movPath), completionHandler: completionHandler)
+            Self.writePhotoLive(lievPhoto: (imgPath: imgPath, movPath: movPath), completionHandler: completionHandler)
             
         } catch let error {
             
@@ -257,12 +324,12 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
         
     }
     
-    static func createFileAsset(data: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
+    static func writeFile(type: PHAssetResourceType, data: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
         // 把数据保存到文件中
         let tempPath = HFileManager.shared.tempFile
         do {
             try data.write(to: tempPath)
-            Self.createFileAsset(file: tempPath, completionHandler: completionHandler)
+            Self.writeFile(type: type,file: tempPath, completionHandler: completionHandler)
         } catch let error {
             
         }
@@ -271,8 +338,14 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
     }
     
     
-    static func createFileAsset(file: URL, completionHandler: @escaping ((Bool, Error?) -> Void)) {
-        
+    static func writeFile(type: PHAssetResourceType, file: URL, completionHandler: @escaping ((Bool, Error?) -> Void)) {
+        PHPhotoLibrary.shared().performChanges({
+
+            let options = PHAssetResourceCreationOptions()
+            let request = PHAssetCreationRequest.forAsset()
+            request.addResource(with: type, fileURL: file, options: options)
+
+        },completionHandler: completionHandler)
     }
     
     // TODO: 上传部分可以后台运行 不在这里进行管理
