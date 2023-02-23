@@ -99,26 +99,23 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
         
     }
     
-    
-    
-    
     func requestImage(for asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) -> ImageRequestID {
         return imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: contentMode, options: options, resultHandler: resultHandler)
     }
     
-    func requestImage() {
+    static func requestImage() {
         
     }
     
-    func requestGIF() {
+    static func requestGIF() {
         
     }
     
-    func requestLivePhoto() {
+    static func requestLivePhoto() {
         
     }
     
-    func requestVideo() {
+    static func requestVideo() {
         
     }
     

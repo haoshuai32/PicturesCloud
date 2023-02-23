@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import Photos
+import UIKit
 
 class CloudAssetManager: AssetManager {
     
@@ -14,6 +16,29 @@ class CloudAssetManager: AssetManager {
     var dataSource: [PhotoAsset] = []
     
     var selectDataSource: Set<PhotoAsset> = Set<PhotoAsset>()
+    
+    // 九宫格
+    func requestImage(for photo: Photo, targetSize: CGSize, contentMode: PHImageContentMode, options: PHImageRequestOptions?, resultHandler: @escaping (UIImage?, [AnyHashable : Any]?) -> Void) {
+        
+    }
+    
+    // 大图
+    static func requestImage(for photo: Photo) {
+        
+    }
+    
+    static func requestGIF(for photo: Photo) {
+        
+    }
+    
+    static func requestLivePhoto(for photo: Photo) {
+        
+    }
+    
+    static func requestVideo(for photo: Photo) {
+        
+    }
+    
     
     func read() {
         
