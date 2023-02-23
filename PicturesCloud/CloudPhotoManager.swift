@@ -9,6 +9,8 @@ import Foundation
 
 class CloudAssetManager: AssetManager {
     
+    typealias T = Photo
+    
     var dataSource: [PhotoAsset] = []
     
     var selectDataSource: Set<PhotoAsset> = Set<PhotoAsset>()

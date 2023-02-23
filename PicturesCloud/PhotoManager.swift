@@ -10,7 +10,7 @@ import Foundation
 
 
 protocol AssetManager {
-
+    associatedtype T
     // dataSource
     var dataSource: [PhotoAsset] {set get}
     var selectDataSource: Set<PhotoAsset> {set get}

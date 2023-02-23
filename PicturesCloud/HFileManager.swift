@@ -13,6 +13,33 @@ struct HFileManager {
     
     let fileManager: FileManager
     
+    lazy var tempFile: URL = {
+//        NSTemporaryDirectory()
+        let temp = NSTemporaryDirectory()
+        var url = URL(fileURLWithPath: temp)
+        url.appendPathComponent("download/temp/")
+//        debugPrint("upload temp", url)
+        return url
+    }()
+    
+    lazy var tempImg: URL = {
+//        NSTemporaryDirectory()
+        let temp = NSTemporaryDirectory()
+        var url = URL(fileURLWithPath: temp)
+        url.appendPathComponent("download/temp/")
+//        debugPrint("upload temp", url)
+        return url
+    }()
+    
+    lazy var tempMov: URL = {
+//        NSTemporaryDirectory()
+        let temp = NSTemporaryDirectory()
+        var url = URL(fileURLWithPath: temp)
+        url.appendPathComponent("download/temp/")
+//        debugPrint("upload temp", url)
+        return url
+    }()
+    
     lazy var downloadTemp: URL = {
 //        NSTemporaryDirectory()
         let temp = NSTemporaryDirectory()
