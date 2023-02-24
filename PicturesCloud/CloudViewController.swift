@@ -88,23 +88,30 @@ class CloudViewController: GridViewController {
     }
     
     @IBAction func downloadButtonAction(_ sender: Any?) {
-        guard let data = self.selectedData.first?.dataSource.data() as? Photo else {
+//        guard let data = self.selectedData as? Photo else {
+//            return
+//        }
+        
+//        PHPhotoLibrary.requestAuthorization { status in
+//            if status != .authorized {
+//                debugPrint("相机没有权限")
+//                return
+//            }
+//        }
+//
+//        let available = PHAssetCreationRequest.supportsAssetResourceTypes([PHAssetResourceType.photo.rawValue as NSNumber,
+//                                    PHAssetResourceType.pairedVideo.rawValue as NSNumber])
+//        debugPrint("是否可以 livephoto", available)
+        guard self.selectedData.count > 0 else {
             return
         }
+
         
-        PHPhotoLibrary.requestAuthorization { status in
-            if status != .authorized {
-                debugPrint("相机没有权限")
-                return
-            }
-        }
+        DownloadManager.shared.start(data: self.selectedData.map{$0.dataSource.data() as! Photo})
         
-        let available = PHAssetCreationRequest.supportsAssetResourceTypes([PHAssetResourceType.photo.rawValue as NSNumber,
-                                    PHAssetResourceType.pairedVideo.rawValue as NSNumber])
-        debugPrint("是否可以 livephoto", available)
-        DownloadManager.shared.downloadData(data: data) { result, error in
-            
-        }
+//        DownloadManager.shared.downloadData(data: data) { result, error in
+//
+//        }
         
     }
 

@@ -13,6 +13,8 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
     
     typealias T = PHAsset
     
+    static let shared = LocalAssetManager()
+    
     var dataSource: [PhotoAsset] = []
     
     var selectDataSource: Set<PhotoAsset> = Set<PhotoAsset>()
@@ -103,20 +105,18 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
         return imageManager.requestImage(for: asset, targetSize: targetSize, contentMode: contentMode, options: options, resultHandler: resultHandler)
     }
     
-    static func requestImage() {
+    func requestGIF(for asset: PHAsset, options: PHImageRequestOptions?, resultHandler: @escaping (Data?, String?, CGImagePropertyOrientation, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
+        return imageManager.requestImageDataAndOrientation(for: asset, options: options, resultHandler: resultHandler)
+    }
+    
+    func requestLivePhoto(for asset: PHAsset, targetSize: CGSize, contentMode: PHImageContentMode, options: PHLivePhotoRequestOptions?, resultHandler: @escaping (PHLivePhoto?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
+        
+        return imageManager.requestLivePhoto(for: asset, targetSize: targetSize, contentMode: contentMode, options: options, resultHandler: resultHandler)
         
     }
     
-    static func requestGIF() {
-        
-    }
-    
-    static func requestLivePhoto() {
-        
-    }
-    
-    static func requestVideo() {
-        
+    func requestVideo(forVideo asset: PHAsset, options: PHVideoRequestOptions?, resultHandler: @escaping (AVPlayerItem?, [AnyHashable : Any]?) -> Void) -> PHImageRequestID {
+        return imageManager.requestPlayerItem(forVideo: asset, options: options, resultHandler: resultHandler)
     }
     
     func startCachingImages(assets:[PhotoAsset],targetSize size: CGSize) {
@@ -299,11 +299,11 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
     static func writePhotoLive(lievPhoto:(imgPath:URL,movPath:URL), completionHandler: @escaping ((Bool, Error?) -> Void)){
         PHPhotoLibrary.shared().performChanges({
 
-            let options = PHAssetResourceCreationOptions()
+//            let options = PHAssetResourceCreationOptions()
             let request = PHAssetCreationRequest.forAsset()
             
-            request.addResource(with: .photo, fileURL: lievPhoto.imgPath, options: options)
-            request.addResource(with: .pairedVideo, fileURL: lievPhoto.movPath, options: options)
+            request.addResource(with: .photo, fileURL: lievPhoto.imgPath, options: nil)
+            request.addResource(with: .pairedVideo, fileURL: lievPhoto.movPath, options: nil)
           
         },completionHandler: completionHandler)
     }
@@ -313,12 +313,13 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
         let imgPath = HFileManager.shared.tempImg
         let movPath = HFileManager.shared.tempMov
         do {
-            try lievPhoto.imgData.write(to: imgPath)
-            try lievPhoto.movData.write(to: movPath)
+  
+//            try lievPhoto.imgData.write(to: imgPath)
+//            try lievPhoto.movData.write(to: movPath)
             Self.writePhotoLive(lievPhoto: (imgPath: imgPath, movPath: movPath), completionHandler: completionHandler)
             
         } catch let error {
-            
+            assert(false,error.localizedDescription)
         }
         
         
@@ -327,11 +328,13 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
     static func writeFile(type: PHAssetResourceType, data: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
         // 把数据保存到文件中
         let tempPath = HFileManager.shared.tempFile
+        
         do {
+            try HFileManager.shared.fileManager.removeItem(at: tempPath)
             try data.write(to: tempPath)
             Self.writeFile(type: type,file: tempPath, completionHandler: completionHandler)
         } catch let error {
-            
+            assert(false)
         }
         
         
@@ -343,7 +346,7 @@ class LocalAssetManager: NSObject,AssetManager, PHPhotoLibraryChangeObserver {
 
             let options = PHAssetResourceCreationOptions()
             let request = PHAssetCreationRequest.forAsset()
-            request.addResource(with: type, fileURL: file, options: options)
+            request.addResource(with: type, fileURL: file, options: nil)
 
         },completionHandler: completionHandler)
     }

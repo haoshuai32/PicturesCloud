@@ -239,6 +239,11 @@ public class Photo: Mappable  {
 
 typealias Files = [File]
 
+enum MediaType: String {
+    case video = "video"
+    case image = "image"
+}
+
 enum FileType: String {
     case jpg = "jpg"
     case mov = "mov"
@@ -264,6 +269,7 @@ public struct File: Mappable  {
         Size <- map["Size"]
         Codec <- map["Codec"]
         FileType <- (map["FileType"],EnumTransform<FileType>())
+        MediaType <- (map["MediaType"],EnumTransform<MediaType>())
         Mime <- map["Mime"]
         Primary <- map["Primary"]
         FileSidecar <- map["FileSidecar"]
@@ -316,6 +322,7 @@ public struct File: Mappable  {
     var Codec : String?
     /// `gorm:"type:VARBINARY(32)" json:"Type" yaml:"Type,omitempty"`
     var FileType : FileType = .jpg
+    var MediaType: MediaType = .image
     /// `gorm:"type:VARBINARY(64)" json:"Mime" yaml:"Mime,omitempty"`
     var Mime : String?
     /// `json:"Primary" yaml:"Primary,omitempty"`

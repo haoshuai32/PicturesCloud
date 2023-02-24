@@ -9,51 +9,50 @@ import Foundation
 
 struct HFileManager {
     
+    
+    
     static var shared = HFileManager()
     
     let fileManager: FileManager
     
+
+    lazy var downloadDirectory: URL = {
+        let directoryURLs = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
+        return directoryURLs.first!
+    }()
+    
     lazy var tempFile: URL = {
-//        NSTemporaryDirectory()
-        let temp = NSTemporaryDirectory()
-        var url = URL(fileURLWithPath: temp)
-        url.appendPathComponent("download/temp/")
-//        debugPrint("upload temp", url)
+
+        let url = downloadDirectory.appendingPathComponent("temp.file")
+        
+//        if (fileManager.fileExists(atPath: url.path)) {
+//            try! fileManager.removeItem(at: url)
+//        }
+
         return url
     }()
     
     lazy var tempImg: URL = {
-//        NSTemporaryDirectory()
-        let temp = NSTemporaryDirectory()
-        var url = URL(fileURLWithPath: temp)
-        url.appendPathComponent("download/temp/")
-//        debugPrint("upload temp", url)
+        
+        let url = downloadDirectory.appendingPathComponent("temp.jpg")
+        
+//        if (fileManager.fileExists(atPath: url.path)) {
+//            try! fileManager.removeItem(at: url)
+//        }
+
+        
+        
         return url
     }()
     
     lazy var tempMov: URL = {
-//        NSTemporaryDirectory()
-        let temp = NSTemporaryDirectory()
-        var url = URL(fileURLWithPath: temp)
-        url.appendPathComponent("download/temp/")
-//        debugPrint("upload temp", url)
-        return url
-    }()
-    
-    lazy var downloadTemp: URL = {
-//        NSTemporaryDirectory()
-        let temp = NSTemporaryDirectory()
-        var url = URL(fileURLWithPath: temp)
-        url.appendPathComponent("download/temp/")
-//        debugPrint("upload temp", url)
-        return url
-    }()
-    
-    lazy var uploadTemp: URL = {
-        let temp = NSTemporaryDirectory()
-        var url = URL(fileURLWithPath: temp)
-        url.appendPathComponent("upload.temp")
-//        debugPrint("upload temp", url)
+      
+        let url = downloadDirectory.appendingPathComponent("temp.mov")
+        
+//        if (fileManager.fileExists(atPath: url.path)) {
+//            try! fileManager.removeItem(at: url)
+//        }
+
         return url
     }()
     

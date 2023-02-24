@@ -131,8 +131,8 @@ public enum PhotoPrismAPI {
 
 
 var down_token = ""
-let API_ROOT = "http://172.20.10.4:2342"
-//let API_ROOT = "http://127.0.0.1:2342"
+//let API_ROOT = "http://172.20.10.4:2342"
+let API_ROOT = "http://127.0.0.1:2342"
 //https://demo-zh.photoprism.app/api/v1/users/urpi8tzdfqwlfsgf/upload/xli9k9
 extension PhotoPrismAPI: TargetType {
     public var baseURL: URL {
@@ -329,7 +329,20 @@ extension PhotoPrismAPI: TargetType {
         case .getPhotoDownload(_,let downloadToken):
             return .requestParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default)
         case .downloadFile(_, let downloadToken):
-            return .requestParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default)
+            return .downloadParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default) { temporaryURL, response in
+                debugPrint("下载数据", temporaryURL, response)
+//                FileManager.default.g
+                let fh = try! FileHandle.init(forReadingFrom: temporaryURL)
+                if #available(iOS 13.4, *) {
+                    let data = try! fh.readToEnd()!
+                    debugPrint("下载总数", data.count)
+                } else {
+                    // Fallback on earlier versions
+                }
+                let op = Alamofire.DownloadRequest.Options(rawValue: Alamofire.DownloadRequest.Options.createIntermediateDirectories.rawValue)
+                return (destinationURL: HFileManager.shared.downloadDirectory, options: op)
+            }
+//            return .requestParameters(parameters: ["t":downloadToken], encoding: URLEncoding.default)
         case .uploadUserFiles(let data, _, _):
             debugPrint("测试接口")
 //            let testData = "hello my body text".data(using: .utf8)!

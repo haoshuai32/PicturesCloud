@@ -7,6 +7,7 @@
 
 import UIKit
 import IGListKit
+import Photos
 
 //typealias GridItem = DisplayAsset
 
@@ -50,6 +51,12 @@ class GridSectionController: ListSectionController,
         
         let index = button.tag
         let item = self.dataSource[index]
+//        guard let asset = item.dataSource.data() as? PHAsset else {
+//            return
+//        }
+//        let vc = LocalAssetViewController()
+//        vc.asset = asset
+//        self.viewController?.navigationController?.pushViewController(vc, animated: true)
         
         button.isSelected = !button.isSelected
         if button.isSelected {

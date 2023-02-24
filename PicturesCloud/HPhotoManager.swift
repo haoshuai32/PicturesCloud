@@ -207,11 +207,11 @@ class LocalPhotoManager: NSObject, HPhotoManager, PHPhotoLibraryChangeObserver {
     
     static func writeLivePhoto2Album(_ photo: Data, liveData: Data, completionHandler: @escaping ((Bool, Error?) -> Void)) {
                 
-        var path =  HFileManager.shared.downloadTemp
-        try! FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
-        path.appendPathComponent("test")
-        let image = path.appendingPathExtension("jpg")
-        let mov = path.appendingPathExtension("mov")
+//        var path =  HFileManager.shared.downloadTemp
+//        try! FileManager.default.createDirectory(at: path, withIntermediateDirectories: true)
+//        path.appendPathComponent("test")
+        let image = HFileManager.shared.tempImg
+        let mov = HFileManager.shared.tempMov
         debugPrint(image)
 
         try! photo.write(to: image)

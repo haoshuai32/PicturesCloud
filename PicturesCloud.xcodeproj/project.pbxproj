@@ -43,6 +43,8 @@
 		2EC0D08E284760D700253196 /* GridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC0D08C284760D700253196 /* GridCell.swift */; };
 		2EC0D08F284760D700253196 /* GridCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC0D08D284760D700253196 /* GridCell.xib */; };
 		2EC80D6229A6542200387A4F /* PhotoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC80D6129A6542200387A4F /* PhotoManager.swift */; };
+		2EC80D6729A8DA0300387A4F /* LocalAssetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EC80D6529A8DA0300387A4F /* LocalAssetViewController.swift */; };
+		2EC80D6829A8DA0300387A4F /* LocalAssetViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2EC80D6629A8DA0300387A4F /* LocalAssetViewController.xib */; };
 		2ECE50D0298A9950005533C8 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ECE50CF298A9950005533C8 /* Client.swift */; };
 		2EE7BE4A298ABC48006BD2B0 /* types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EE7BE49298ABC48006BD2B0 /* types.swift */; };
 		821953546EF4A3BB39CF901B /* Pods_PicturesCloud.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88936EC631460B4C08C7C8E7 /* Pods_PicturesCloud.framework */; };
@@ -104,6 +106,8 @@
 		2EC0D08C284760D700253196 /* GridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridCell.swift; sourceTree = "<group>"; };
 		2EC0D08D284760D700253196 /* GridCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = GridCell.xib; sourceTree = "<group>"; };
 		2EC80D6129A6542200387A4F /* PhotoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoManager.swift; sourceTree = "<group>"; };
+		2EC80D6529A8DA0300387A4F /* LocalAssetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalAssetViewController.swift; sourceTree = "<group>"; };
+		2EC80D6629A8DA0300387A4F /* LocalAssetViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LocalAssetViewController.xib; sourceTree = "<group>"; };
 		2ECE50CF298A9950005533C8 /* Client.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
 		2EE7BE49298ABC48006BD2B0 /* types.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = types.swift; sourceTree = "<group>"; };
 		88936EC631460B4C08C7C8E7 /* Pods_PicturesCloud.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_PicturesCloud.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -229,6 +233,8 @@
 				2E3A99E1283E162A00F3D5D7 /* LocalDisplayViewController.xib */,
 				2E3A99EC283E3C5F00F3D5D7 /* LocalImageSectionController.swift */,
 				2E3A99EE283E5B3500F3D5D7 /* HImageScrollView.swift */,
+				2EC80D6529A8DA0300387A4F /* LocalAssetViewController.swift */,
+				2EC80D6629A8DA0300387A4F /* LocalAssetViewController.xib */,
 			);
 			name = VC;
 			sourceTree = "<group>";
@@ -330,6 +336,7 @@
 				2E650F49283B8568000E74CC /* Assets.xcassets in Resources */,
 				2E650F47283B8563000E74CC /* Main.storyboard in Resources */,
 				2E3A99E3283E162A00F3D5D7 /* LocalDisplayViewController.xib in Resources */,
+				2EC80D6829A8DA0300387A4F /* LocalAssetViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -409,6 +416,7 @@
 				2E3A99EA283E376100F3D5D7 /* LocalVideoCell.swift in Sources */,
 				2EC0D0662846684200253196 /* Display.swift in Sources */,
 				2E3CF47F283BC04100243139 /* LocalPictureCell.swift in Sources */,
+				2EC80D6729A8DA0300387A4F /* LocalAssetViewController.swift in Sources */,
 				2EC80D6229A6542200387A4F /* PhotoManager.swift in Sources */,
 				2EC0D08E284760D700253196 /* GridCell.swift in Sources */,
 			);

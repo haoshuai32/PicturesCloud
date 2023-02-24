@@ -83,7 +83,8 @@ class DownloadOperation: Operation {
            })
        }
 
-        self.delegate.downloadData(data: self.dataSource) { _, _ in
+        self.delegate.downloadData(data: self.dataSource) { result, error in
+            debugPrint("下载完成", result,error)
             completed()
         }
 //        self.delegate
@@ -107,7 +108,7 @@ class DownloadOperation: Operation {
 public class DownloadManager: NSObject, DownloadOperationDelegate  {
 //    URLSessionDownloadDelegate
     var downloadDelegate: DownloadManagerDelegate?
-  
+    let session = URLSession(configuration: URLSessionConfiguration.default)
     static let shared = DownloadManager()
     
     private var downloadDataSource: NSCache<NSString,DownloadAsset> = NSCache<NSString,DownloadAsset>()
@@ -173,7 +174,9 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                     assert(false)
                 }
                 
-                downloadLivePhoto(imageFile: imageFile, movFile: movFile, completedHandler: completedHandler)
+                downloadLivePhoto(imageFile: imageFile,
+                                  movFile: movFile,
+                                  completedHandler: completedHandler)
 
             } else {
                 assert(false)
@@ -181,41 +184,79 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
             
         }
         
+        else if data.PhotoType == .video {
+            var file: File!
+            for item in data.Files {
+                if item.MediaType == .video {
+                    file = item
+                }
+            }
+            downloadFile(file, resourceType: .video, completedHandler: completedHandler)
+            
+        }
+        else if data.PhotoType == .gif {
+            var file: File!
+            for item in data.Files {
+                if item.FileType == .gif {
+                    file = item
+                }
+            }
+            downloadFile(file, resourceType: .fullSizePhoto, completedHandler: completedHandler)
+        } else if data.PhotoType == .image {
+            var file: File!
+            for item in data.Files {
+                if item.FileType == .jpg {
+                    file = item
+                }
+            }
+            downloadFile(file, resourceType: .photo, completedHandler: completedHandler)
+        }
+        
     }
     
     func downloadFile(_ file:File,resourceType: PHAssetResourceType,
                       completedHandler: @escaping (Bool,Error?) -> Void) {
         
-        _ = Client.shared.api.requestNormal(.downloadFile(file.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+        
+        let url = "http://127.0.0.1:2342/api/v1/dl/\(file.Hash!)?t=\(Client.shared.v1!.downloadToken)"
+        
+        debugPrint("下载文件",url,resourceType)
+        
+        let request = try! URLRequest(url: URL(string: url)!, method: .get)
+        let downloadTask = self.session.downloadTask(with: request) { tempURL, reponse, error in
             
-            switch result {
-            case .success(let reponse):
-                debugPrint("下载 file",resourceType,reponse.request ?? "")
-                guard reponse.statusCode == 200 else {
-                    return
+            if let tURL = tempURL,
+               let rs = reponse as? HTTPURLResponse,
+               rs.statusCode == 200,
+               let cd = rs.headers.value(for: "Content-Disposition") {
+                
+                var filename = cd.split(separator: " ")[1].split(separator: "=")[1]
+                filename.removeFirst()
+                filename.removeLast()
+
+                let tmpURL =  HFileManager.shared.downloadDirectory.appendingPathComponent(String(filename))
+                
+                if(FileManager.default.fileExists(atPath: tmpURL.path)) {
+                    try! FileManager.default.removeItem(at: tmpURL)
                 }
                 
-                PHPhotoLibrary.shared().performChanges({
-                    
-                    let options = PHAssetResourceCreationOptions()
-                    let request = PHAssetCreationRequest.forAsset()
-                    
-                    request.addResource(with: resourceType, data: reponse.data, options: nil)
-                    
-                }) { result, error in
-                    
-                }
-                
-            case .failure(let error):
-                assert(false,"error")
-                
-                break;
+                try! FileManager.default.moveItem(at: tURL, to: tmpURL)
+                debugPrint("缓存文件",tURL,tmpURL);
+                LocalAssetManager.writeFile(type: resourceType, file: tmpURL, completionHandler: completedHandler)
+            } else if let error = error {
+                completedHandler(false,error)
+            } else {
+                assert(false)
             }
         }
+        downloadTask.resume()
     }
     
     func downloadLivePhoto(imageFile:File, movFile: File,
                            completedHandler: @escaping (Bool,Error?) -> Void) {
+        
+        var tmpImgURL: URL?
+        var tmpMovURL: URL?
         let group = DispatchGroup()
         
         let requestAssetQueue = DispatchQueue(label: "onelcat.github.io.download.asset", qos: .background, attributes: .concurrent, autoreleaseFrequency: .inherit, target: nil)
@@ -230,48 +271,65 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
         group.enter()
         requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
             
-                Client.shared.api.requestNormal(.downloadFile(imageFile.Hash ?? "", Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
+            let url = "http://127.0.0.1:2342/api/v1/dl/\(imageFile.Hash!)?t=\(Client.shared.v1!.downloadToken)"
+            let request = try! URLRequest(url: URL(string: url)!, method: .get)
+            let downloadTask = self.session.downloadTask(with: request) { tmpURL, reponse, error in
+                
+                if let tURL = tmpURL,
+                   let rs = reponse as? HTTPURLResponse,
+                   rs.statusCode == 200,
+                   let cd = rs.headers.value(for: "Content-Disposition") {
                     
-                switch result {
-                case .success(let reponse):
-                    debugPrint("下载 image",reponse.request)
-                    guard reponse.statusCode == 200 else {
-                        group.leave()
-                        return
+                    var filename = cd.split(separator: " ")[1].split(separator: "=")[1]
+                    filename.removeFirst()
+                    filename.removeLast()
+
+                    tmpImgURL =  HFileManager.shared.downloadDirectory.appendingPathComponent(String(filename))
+                    
+                    if(FileManager.default.fileExists(atPath: tmpImgURL!.path)) {
+                        try! FileManager.default.removeItem(at: tmpImgURL!)
                     }
                     
-                    imageData = reponse.data
-                    group.leave()
-                case .failure(let error):
-                    assert(false,"error")
-                    resultError = error
-                    group.leave()
-                    break;
+                    try! FileManager.default.moveItem(at: tURL, to: tmpImgURL!)
+                    
                 }
-                
+                resultError = error
+                group.leave()
             }
+            downloadTask.resume()
+
         }))
         
         group.enter()
         requestAssetQueue.async(group: group, execute: DispatchWorkItem.init(block: {
             
-            Client.shared.api.requestNormal(.downloadFile(movFile.Hash ?? "",Client.shared.v1?.downloadToken ?? ""), callbackQueue: nil, progress: nil) { result in
-                switch result {
-                case .success(let reponse):
-                    debugPrint("下载 video",reponse.request)
-                    guard reponse.statusCode == 200 else {
-                        group.leave()
-                        return
+            
+            let url = "http://127.0.0.1:2342/api/v1/dl/\(movFile.Hash!)?t=\(Client.shared.v1!.downloadToken)"
+            let request = try! URLRequest(url: URL(string: url)!, method: .get)
+            let downloadTask = self.session.downloadTask(with: request) { tmpURL, reponse, error in
+                if let tURL = tmpURL,
+                   let rs = reponse as? HTTPURLResponse,
+                   rs.statusCode == 200,
+                   let cd = rs.headers.value(for: "Content-Disposition") {
+                    
+                    var filename = cd.split(separator: " ")[1].split(separator: "=")[1]
+                    filename.removeFirst()
+                    filename.removeLast()
+                    
+                    tmpMovURL =  HFileManager.shared.downloadDirectory.appendingPathComponent(String(filename))
+                    
+                    if(FileManager.default.fileExists(atPath: tmpMovURL!.path)) {
+                        try! FileManager.default.removeItem(at: tmpMovURL!)
                     }
-                    movData = reponse.data
-                    group.leave()
-                case .failure(let error):
-                    assert(false,"error")
-                    resultError = error
-                    group.leave()
-                    break;
+                    
+                    try! FileManager.default.moveItem(at: tURL, to: tmpMovURL!)
+                    
                 }
+                resultError = error
+                group.leave()
             }
+            downloadTask.resume()
+
         }))
         
         group.notify(queue: requestAssetQueue, work: .init(block: {
@@ -281,12 +339,13 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                 fatalError(error.localizedDescription)
             } else {
                 // 写入数据
-                debugPrint("开始写入数据", imageData?.count , movData?.count)
-                LocalPhotoManager.writeLivePhoto2Album(imageData!, liveData: movData!) { result, error in
-                    debugPrint("写入照片结果", result,error)
-                    completedHandler(result,error)
-                }
-//
+                                
+//                debugPrint("开始写入数据", HFileManager.shared.tempImg)
+                LocalAssetManager.writePhotoLive(
+                    lievPhoto: (imgPath: tmpImgURL!,
+                                movPath: tmpMovURL!),
+                    completionHandler: completedHandler)
+
             }
         }))
         
@@ -306,43 +365,14 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
     
     // 开始
     func start(data: [DownloadAsset]) {
-        // Wi-Fi模式
-        // 流量模式
-        // 最多上传100张
-        // 总共最多不能超过 一万张
-        
-//
         self.beginConfig()
-//        downloadingDataSource
-//        self.uploadCount = data.count
-        
-        
-//        self.dataSource.append(contentsOf: data)
-//        let data = self.dataSource
-//        self.dataSource.removeAll()
         for item in data {
             let operation = DownloadOperation(data: item, delegate: self)
-            
-//            let operation = HUploadOperation(data: item, delegate: self)
-
             self.downloadDataSource.setObject(item, forKey: item.UID! as NSString)
             uploadOperationQueue.addOperation(operation)
         }
-//        let uploadToken = self.uploadToken
         uploadOperationQueue.addBarrierBlock { [weak self] in
             debugPrint("照片下载完成")
-//            Client.shared.api.requestNormal(.uploadUserFilesP(Client.shared.userID!, uploadToken), callbackQueue: nil, progress: nil) { result in
-//                switch result {
-//                case .success(let reponse):
-//
-//                    debugPrint("reponse", String.init(data: reponse.data, encoding: String.Encoding.utf8))
-//                    debugPrint("照片处理完成")
-//                    self?.doneConfig()
-//                case let .failure(error):
-//                    debugPrint("错误 error",error)
-//                }
-//            }
-
             // 执行到最后
         }
     }

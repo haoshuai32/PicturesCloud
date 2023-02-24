@@ -181,7 +181,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
     
     static let shared = HUploadManager()
     
-    private let tempPath = HFileManager.shared.uploadTemp
+//    private let tempPath = HFileManager.shared.uploadTemp
     
     private var uploadDataSource: NSCache<NSString,UploadAsset> = NSCache<NSString,UploadAsset>()
     
