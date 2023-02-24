@@ -201,6 +201,8 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                     file = item
                 }
             }
+            UIImageWriteToSavedPhotosAlbum(<#T##UIImage#>, <#T##Any?#>, <#T##Selector?#>, <#T##void?#>)
+            // TODO: GIF写入出错
             downloadFile(file, resourceType: .fullSizePhoto, completedHandler: completedHandler)
         } else if data.PhotoType == .image {
             var file: File!
@@ -242,7 +244,9 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                 
                 try! FileManager.default.moveItem(at: tURL, to: tmpURL)
                 debugPrint("缓存文件",tURL,tmpURL);
-                LocalAssetManager.writeFile(type: resourceType, file: tmpURL, completionHandler: completedHandler)
+                LocalAssetManager.writeFile(type: resourceType,
+                                            file: tmpURL,
+                                            completionHandler: completedHandler)
             } else if let error = error {
                 completedHandler(false,error)
             } else {
