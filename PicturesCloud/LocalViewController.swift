@@ -54,13 +54,14 @@ class LocalViewController: GridViewController {
     }
     
     @IBAction func uploadButtonAction(_ sender: Any?) {
+        
         debugPrint("开始上传",self.selectedData.count)
         
         guard self.selectedData.count > 0 else {
             return
         }
         
-        HUploadManager.shared.start(data: self.selectedData.map{$0})
+        HUploadManager.shared.start(data: self.selectedData.map{$0.dataSource.data() as! PHAsset})
         
     }
     

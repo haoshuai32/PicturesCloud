@@ -9,7 +9,7 @@ import Foundation
 import Photos
 import UIKit
 
-typealias UploadAsset = PhotoAsset
+typealias UploadAsset = PHAsset
 
 // 照片上传接口需要修改只能支持单张照片上传
 // 多张照片上传需要进行单张接口进行轮训然后
@@ -148,7 +148,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             fatalError()
         }
         // 移除已经上传成功的数据
-        self.uploadDataSource.removeObject(forKey: item.identifier as NSString)
+        self.uploadDataSource.removeObject(forKey: item.localIdentifier as NSString)
         completedHandler(task.response as? HTTPURLResponse, self.uploadingReceiveData, error)
         self.uploadIndex += 1
         
@@ -291,11 +291,11 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
             self.uploadingTask = uploadTask
         } //。func end
         
-        guard let asset = uploadAsset.dataSource.data() as? PHAsset else {
-            fatalError()
-        }
+//        guard let asset = uploadAsset.dataSource.data() as? PHAsset else {
+//            fatalError()
+//        }
         
-        readAsset(asset)
+        readAsset(uploadAsset)
         
 
         func readAsset(_ asset: PHAsset) {
@@ -372,7 +372,7 @@ public class HUploadManager: NSObject, HUploadOperationDelegate, URLSessionDataD
         
         for item in data {
             let operation = HUploadOperation(data: item, delegate: self)
-            self.uploadDataSource.setObject(item, forKey: item.identifier as NSString)
+            self.uploadDataSource.setObject(item, forKey: item.localIdentifier as NSString)
             uploadOperationQueue.addOperation(operation)
         }
         
