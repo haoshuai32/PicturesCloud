@@ -201,7 +201,7 @@ public class DownloadManager: NSObject, DownloadOperationDelegate  {
                     file = item
                 }
             }
-            UIImageWriteToSavedPhotosAlbum(<#T##UIImage#>, <#T##Any?#>, <#T##Selector?#>, <#T##void?#>)
+//            UIImageWriteToSavedPhotosAlbum(<#T##UIImage#>, <#T##Any?#>, <#T##Selector?#>, <#T##void?#>)
             // TODO: GIF写入出错
             downloadFile(file, resourceType: .fullSizePhoto, completedHandler: completedHandler)
         } else if data.PhotoType == .image {
